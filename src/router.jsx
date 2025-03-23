@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import App from "./App";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/Dashboard";
 import Forgotpass from "./pages/Forgotpass";
 import Create_new_password from "./pages/Create_newpassword";
 import Subscription from "./pages/Subscription";
