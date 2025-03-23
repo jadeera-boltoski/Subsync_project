@@ -26,6 +26,11 @@ export const adduser=(body)=>{
     return commonRequest("POST",`${BASE_URL}/create-user/`,body)
 }
 
+// post details for change password
+export const changepassword=(body)=>{
+    return commonRequest("POST",`${BASE_URL}/change-password/`,body)
+}
+
 
 // get dashboard counting content
 export const getdashboard_content=async()=>{
@@ -135,6 +140,14 @@ export const addhardware=(body)=>{
 
     return commonRequest("POST",`${BASE_URL}/hardware/add/`,body)
 }
+
+
+// get the details of all hardware
+export const get_hardware=()=>{
+    return commonRequest("GET",`${BASE_URL}/hardware/`,"")
+
+}
+
 
 
 

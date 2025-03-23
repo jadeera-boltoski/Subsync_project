@@ -13,6 +13,7 @@ function Add_user() {
     initialValues: {
       name: '',
       email: '',
+      phoneNumber: '',
       role: 'regular'
     },
 
@@ -23,6 +24,9 @@ function Add_user() {
       email: Yup.string()
         .email('Invalid email address')
         .required('Email is required'),
+      phoneNumber: Yup.string()
+        .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
+        .required('Phone number is required'),
       role: Yup.string()
         .required('Role is required')
     }),
@@ -33,10 +37,9 @@ function Add_user() {
         const response = await adduser(values)
         console.log(values);
         
-        console.log('API Response:', response.data);
-        console.log(response);
+        console.log('API Response: add user', response);
 
-        if (response.status==200){
+        if (response.status==201){
           alert('User created successfully!');
           resetForm();
           navigate('/dashboard/users/viewuser'); // Redirect after success
@@ -96,6 +99,26 @@ function Add_user() {
           />
           {formik.touched.email && formik.errors.email ? (
             <div className="text-sm text-red-600">{formik.errors.email}</div>
+          ) : null}
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="1234567890"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.phoneNumber}
+            className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${formik.errors.phoneNumber && formik.touched.phoneNumber ? 'border-red-500' : 'border-gray-300'
+              }`}
+          />
+          {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+            <div className="text-sm text-red-600">{formik.errors.phoneNumber}</div>
           ) : null}
         </div>
 

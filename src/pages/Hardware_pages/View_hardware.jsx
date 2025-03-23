@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { get_hardware } from "../../services/allapi";
 
 // import React from "react";
-useNavigate
+
 
 const devices = [
   { id: 1, name: "Laptop X1", type: "Laptop", manufacturer: "Brand A", status: "Active" },
@@ -10,8 +12,25 @@ const devices = [
   { id: 4, name: "Monitor W4", type: "Monitor", manufacturer: "Brand D", status: "Active" },
 ];
 
+
+
+
+
 const View_hardware = () => {
   const navigate=useNavigate()
+  console.log("kjkkjkjkj");
+  
+  
+  useEffect(()=>{
+    alert("dfsfd")
+    const getdata=async()=>{
+      const response=await get_hardware()
+      console.log("hardwaew",response);
+      
+    }
+    getdata()
+  },[])
+
   return (
     <div className="w-full">
        <h1 className="font-bold text-l mb-2 ml-1  text-gray-500">All Hardware Details</h1>

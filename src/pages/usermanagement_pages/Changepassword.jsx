@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import { changepassword } from '../../services/allapi';
 
 
 const SimplePasswordForm = () => {
@@ -37,9 +38,19 @@ const SimplePasswordForm = () => {
       
       return errors;
     },
-    onSubmit: values => {
+    onSubmit:async(values)  => {
       // Handle password change logic here
       console.log('Changing password...', values);
+      const response=await changepassword(values)
+      console.log(response);
+      if(response.status==201){
+        alert(response.message)
+        navigate("/")
+      }else{
+        alert(response.message)
+      }
+      
+
     }
   });
 
