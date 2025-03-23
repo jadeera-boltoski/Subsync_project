@@ -12,6 +12,8 @@ const Expiringsubscription = () => {
         const fetchSubscriptions = async () => {
             try {
                 const response = await getexpiredsub();
+                console.log("expires",response);
+                
                 setSubscriptions(response || []);
             } catch (error) {
                 console.error("Error fetching subscription data:", error);

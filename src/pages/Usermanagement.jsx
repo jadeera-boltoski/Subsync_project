@@ -1,6 +1,7 @@
 // import React from 'react'
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { getuser_role } from '../services/allapi';
 // import View_user from './usermanagement_pages/View_user'
 
 
@@ -17,8 +18,8 @@ function Usermanagement() {
 
   useEffect(()=>{
     const getdata=async()=>{
-      const user=await getuser_role()
-      console.log(user);
+      const response=await getuser_role()
+      console.log("user",response);
       
     }
     getdata()
