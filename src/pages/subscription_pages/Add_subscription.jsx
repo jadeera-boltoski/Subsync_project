@@ -1474,7 +1474,7 @@ function Add_subscription() {
                     </div>
                 </form >
                 {isAddingNewProvider && (
-                                            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg  z-[9999] w-[90%] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+                                            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red p-6 rounded-lg  z-[9999] w-[90%] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
                                                
     
                                                     {/* Open Popup Button */}
