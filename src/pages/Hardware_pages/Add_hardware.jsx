@@ -52,7 +52,7 @@ const Add_hardware = () => {
       console.log("addhardware",response);
       if(response.status==201){
         alert("New hardware successfully added")
-        navigate("view_hardware")
+        navigate("/dashboard/hardware/view_hardware")
       }
       else{
         alert("something went wrong")

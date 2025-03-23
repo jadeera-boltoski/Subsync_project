@@ -18,7 +18,8 @@ function Viewsubscription() {
       try {
         const result = await getsubscription(); // Fetch data
         console.log(result);
-        setSubscriptions(result)
+        const sortedResources = [...result].sort((a, b) => b.id - a.id);
+        setSubscriptions(sortedResources)
       } catch (error) {
         console.error("Error fetching provider name:", error);
         setError(error)
