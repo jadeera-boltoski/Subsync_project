@@ -18,11 +18,11 @@ const devices = [
 
 const View_hardware = () => {
   const navigate=useNavigate()
-  console.log("kjkkjkjkj");
+  
   
   
   useEffect(()=>{
-    alert("dfsfd")
+    
     const getdata=async()=>{
       const response=await get_hardware()
       console.log("hardwaew",response);

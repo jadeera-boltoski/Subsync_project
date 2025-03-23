@@ -134,7 +134,7 @@ function Add_customers() {
                   >
                     <option value="">--Choose customer type--</option>
                     <option value="inhouse">Inhouse</option>
-                    <option value="inhouse">External</option>
+                    <option value="external">External</option>
                   </select>
                   {formik.touched.customer_type && formik.errors.customer_type && (
                     <div className="text-red-500 text-xs w-full p-2">
