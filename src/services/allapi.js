@@ -214,7 +214,10 @@ export const getcustomers=()=>{
 
 
 
-
+// get user role
+export const getuser_role=()=>{
+    // return commonRequest("GET",`${BASE_URL}/customers/`,"")
+}
 
 
 

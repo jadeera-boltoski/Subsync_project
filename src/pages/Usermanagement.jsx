@@ -1,4 +1,5 @@
 // import React from 'react'
+import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 // import View_user from './usermanagement_pages/View_user'
 
@@ -13,6 +14,15 @@ function Usermanagement() {
     return location.pathname === path;
     
   };
+
+  useEffect(()=>{
+    const getdata=async()=>{
+      const user=await getuser_role()
+      console.log(user);
+      
+    }
+    getdata()
+  })
   return (
     <div>
       <div className="flex border-b">
