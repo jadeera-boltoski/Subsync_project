@@ -1,5 +1,13 @@
-import { BASE_URL } from "./baseurl";
+// import { BASE_URL } from "./baseurl";
+
 import { commonRequest } from "./commonrequest";
+
+const BASE_URL = import.meta.env.VITE_BASE_PATH;
+
+console.log("API URL:", BASE_URL);
+
+
+
 
 // LOGIN
 export const adddetails=async(body)=>{
@@ -87,6 +95,13 @@ export const getsubs_category=()=>{
 // delete particular subscription from  database soft delete
 export const deleteSubscription=(body)=>{
     return commonRequest("DELETE",`${BASE_URL}/subscriptions/delete/${encodeURIComponent(body)}/`,"")
+}
+
+// edit subscription details
+export const updateSubscription=(body)=>{
+    console.log(body);
+    
+    return commonRequest("PUT",`${BASE_URL}/subscriptions/delete/${encodeURIComponent(body.id)}/`,body)
 }
 
 

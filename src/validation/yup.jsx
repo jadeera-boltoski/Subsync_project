@@ -204,6 +204,26 @@ export const validationsubscription = Yup.object({
 
 
 
+// validation for edit subscription
+export const subscriptionValidationSchema = Yup.object().shape({
+  version: Yup.string().required('Version is required'),
+  autoRenewal: Yup.boolean(),
+  id:Yup.string().required("need id"),
+  numberOfUsers: Yup.number()
+    .positive('Number of users must be positive')
+    .integer('Number of users must be an integer')
+    .required('Number of users is required'),
+  // paymentStatus: Yup.string()
+  //   .oneOf(['paid', 'unpaid'], 'Invalid payment status')
+  //   .required('Payment status is required'),
+  // nextPaymentDate: Yup.date().required('Next payment date is required'),
+  cost: Yup.number()
+    .positive('Cost must be a positive number')
+    .required('Cost is required')
+});
+
+
+
 
 // validation for add hardware
 
