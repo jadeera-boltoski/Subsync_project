@@ -101,7 +101,7 @@ export const deleteSubscription=(body)=>{
 export const updateSubscription=(body)=>{
     console.log(body);
     
-    return commonRequest("PUT",`${BASE_URL}/subscriptions/delete/${encodeURIComponent(body.id)}/`,body)
+    return commonRequest("PUT",`${BASE_URL}/subscriptions/${encodeURIComponent(body.id)}/`,body)
 }
 
 
