@@ -2,7 +2,7 @@
 
 import { commonRequest } from "./commonrequest";
 
-const BASE_URL = import.meta.env.VITE_BASE_PATH;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 console.log("API URL:", BASE_URL);
 
