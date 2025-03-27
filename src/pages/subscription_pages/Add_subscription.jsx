@@ -1,8 +1,8 @@
 import { useFormik } from "formik";
 import { validationsubscription } from "../../validation/yup";
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { addsubscription, getprovidername, getsubs_category } from "../../services/allapi";
 // import { useRef } from "react";
 import Add_providers from "./Add_providers";
@@ -19,17 +19,33 @@ import { useNavigate } from "react-router-dom";
 
 function Add_subscription() {
 
+    // end date
+    const [dateType, setDateType] = useState();
+    const handleDateTypeChange = (e) => {
+        const selectedType = e.target.value;
+        setDateType(selectedType);
+
+        if (selectedType === 'lifelong') {
+            // Clear the end date when 'Life Long' is selected
+            formik.setFieldValue('endDate', null);
+            formik.setFieldValue('isLifelong', true);
+        } else {
+            formik.setFieldValue('isLifelong', false);
+        }
+    };
+
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     // const dispatch = useDispatch();
     // const subscription = useSelector((state) => state.subscription);
     // const navigate = useNavigate()
 
 
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const [categories, setCategories] = useState([]);
 
     // const [autoRenewal, setAutoRenewal] = useState(null);
     const [extraReminder, setExtraReminder] = useState(false);
+    const[needrem,setneedrem]=useState(false)
     // Create a reference for the input field
     // const inputRef = useRef(null);
 
@@ -40,7 +56,7 @@ function Add_subscription() {
     const formik = useFormik({
         initialValues:
         {
-            providerid:"",
+            providerid: "",
             providerName: "",
             providerContact: "",
             providerEmail: "",
@@ -84,7 +100,7 @@ function Add_subscription() {
             // Call API
             const response = await addsubscription(filteredValues);
             console.log("API Response:", response);
-            if(response.code==201){
+            if (response.code == 201) {
                 alert("successfully added")
                 navigate('/dashboard/subscriptions/Viewsubscription')
             }
@@ -106,7 +122,7 @@ function Add_subscription() {
         const fetchdata = async () => {
             try {
                 const responseprovider = await getprovidername(); // Fetch data
-                console.log("hello response",responseprovider);
+                console.log("hello response", responseprovider);
 
 
                 // Extract provider details
@@ -117,21 +133,14 @@ function Add_subscription() {
                     phone: provider.providerContact,
                     website: provider.websiteLink
                 }));
-               
+
                 setProviders(providerNames);
-                console.log("jadeera",Providers);
+                console.log("jadeera", Providers);
 
                 // subscription category
                 const responsecategory = await getsubs_category()
                 console.log(responsecategory);
                 setCategories(responsecategory.category_choices)
-
-
-
-
-
-
-
 
 
             } catch (error) {
@@ -140,15 +149,17 @@ function Add_subscription() {
         };
 
         fetchdata();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
     const handleCategoryChange = (e) => {
         const selectedcategory = e.target.value
         // formik.setFieldValue("subscriptionCategory", selectedcategory)
+        const hasAdditionalDetails = formik.values.additionalDetails
+            && Object.values(formik.values.additionalDetails).some(value => value !== "");
 
-        if (formik.values.subscriptionId) {
+        if (hasAdditionalDetails) {
             const confirmChange = window.confirm(
                 "Changing the subscription category will reset all entered data. Do you want to proceed?"
             );
@@ -175,7 +186,7 @@ function Add_subscription() {
             case "Billing":
                 additionalFields = {
                     // subscription: "",
-                    consumer_no:"",
+                    consumer_no: "",
                     utility_name: "",
                     utility_type: "",
                     location: "",
@@ -209,26 +220,22 @@ function Add_subscription() {
         // Update Formik state
         formik.setFieldValue("additionalDetails", additionalFields);
 
-        formik.resetForm({
-            values: {
+        // formik.resetForm({
+        //     values: {
 
-                ...formik.initialValues,
-                subscriptionCategory: selectedcategory, // Set new category
+        //         ...formik.initialValues,
+        //         subscriptionCategory: selectedcategory, // Set new category
 
-                // providerName:"",
-                // providerContact:"",
-                // providerEmail:"",
-                // websiteLink:"",
-                subscriptionId: "",
-                additionalDetails: additionalFields, // Reset additional fields
-            },
-        });
+        //         // providerName:"",
+        //         // providerContact:"",
+        //         // providerEmail:"",
+        //         // websiteLink:"",
+        //         subscriptionId: "",
+        //         additionalDetails: additionalFields, // Reset additional fields
+        //     },
+        // });
 
     }
-
-
-
-
 
 
 
@@ -237,18 +244,8 @@ function Add_subscription() {
         formik.setFieldValue(`additionalDetails.${name}`, value);
     };
 
-    // useEffect(() => {
-    //     console.log(formik.values);
 
-
-    //     console.log("Updated Provider Name:", formik.values.providerName, formik.values.providerContact, formik.values.providerEmail, formik.values.websiteLink,);
-    // }, [formik.values]);
-
-    console.log("Formik Errors:", formik.errors);   
-
-    // Sync Formik state with Redux
-
-
+    console.log("Formik Errors:", formik.errors);
 
 
     return (
@@ -258,44 +255,42 @@ function Add_subscription() {
                 Add New Subscription
             </h1>
 
-           <div className="w-full  mx-auto p-4 bg-white">
+            <div className="w-full p-4 bg-white">
                 <form onSubmit={formik.handleSubmit} className="space-y-8 ">
-    
+
                     {/* Provider Details */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2">
-                            <div className="bg-white p-4 rounded-lg">
-    
+                            <div className="bg-white p-2 rounded-lg">
+
                                 <h2 className="text-xl font-bold mb-4">Provider Details</h2>
-    
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
                                     <div>
                                         <label htmlFor="providerName" className="block mb-1 text-sm">
                                             Provider name :
                                         </label>
-    
-    
+
+
                                         <select
                                             name="providerName"
                                             id="providerName"
                                             className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
-                                            // style={{ display: formik.values.providerName === "add_new_provider" ? "none" : "block" }}
-    
                                             value={formik.values.providerName}
-    
+
                                             onChange={(e) => {
                                                 e.preventDefault(); // Prevent form submission
                                                 const selectedValue = e.target.value;
                                                 console.log("hello", selectedValue);
-    
-    
+
+
                                                 // if (selectedValue === "add_new_provider") {
                                                 //     setIsAddingNewProvider(true); 
                                                 //     setNewProviderName(" "); // Clear previous input
                                                 //     setTimeout(() => inputRef.current?.focus(), 0); // Auto-focus the input field
                                                 // }
-    
-    
+
+
                                                 if (selectedValue === "add_new_provider") {
                                                     setIsAddingNewProvider(true);
                                                     setIsPopupOpen(true);
@@ -306,18 +301,14 @@ function Add_subscription() {
                                                 } else {
                                                     // Handle regular provider selection
                                                     formik.setFieldValue("providerName", selectedValue);
-    
-    
-    
-    
-    
+
+
                                                     // Find the selected provider's details
                                                     const selectedProvider = Providers.find(provider =>
                                                         provider.name === selectedValue
                                                     );
-                                                    console.log("ggggggggggggggggg",selectedProvider.id);
-                                                    
-    
+
+
                                                     if (selectedProvider) {
                                                         formik.setFieldValue("providerid", selectedProvider.id || "")
                                                         formik.setFieldValue("providerContact", selectedProvider.phone || "");
@@ -328,47 +319,37 @@ function Add_subscription() {
                                             }}
                                             onBlur={formik.handleBlur}
                                         >
-    
+
                                             <option value="" selected disabled >
                                                 -- Select a Provider --
                                             </option>
-    
+
                                             {Providers.map((provider) => (
-    
+
                                                 <option key={provider.id} value={provider.name}>
                                                     {provider.name}
                                                 </option>
                                             ))}
-    
+
                                             <option value="add_new_provider" className="text-blue-600 font-semibold">
                                                 + Add New Provider
                                             </option>
-    
-    
-    
+
+
+
                                         </select>
-    
-    
-    
-    
-                                       
-    
-    
-    
-    
-    
-    
+
                                         {formik.touched.providerName && formik.errors.providerName && (
                                             <div className="text-red-500 text-xs mt-1">
                                                 {formik.errors.providerName}
                                             </div>
                                         )}
-    
-    
-    
+
+
+
                                     </div>
-    
-    
+
+
                                     <div>
                                         <label htmlFor="providerContact" className="block mb-1 text-sm">
                                             Provider Contact Number:
@@ -389,7 +370,7 @@ function Add_subscription() {
                                             </div>
                                         )}
                                     </div>
-    
+
                                     <div>
                                         <label htmlFor="providerEmail" className="block mb-1 text-sm">
                                             Provider email :
@@ -410,7 +391,7 @@ function Add_subscription() {
                                             </div>
                                         )}
                                     </div>
-    
+
                                     <div>
                                         <label htmlFor="websiteLink" className="block mb-1 text-sm">
                                             website link :
@@ -433,43 +414,24 @@ function Add_subscription() {
                                     </div>
                                 </div>
                             </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
                             {/* Subscription Details Section */}
-                            <div className="bg-white p-4 rounded-lg mt-6 ">
+                            <div className="bg-white p-4 rounded-lg mt-4 ">
                                 <h2 className="text-xl font-bold mb-4">Subscription Details</h2>
                                 <div className="flex flex-col md:flex-row w-full gap-4">
                                     {/* Left Column */}
-                                    <div className="w-full md:w-1/2  ">
-                                        {/* <div className="mb-4">
-                                            <label htmlFor="subscriptionId" className="block mb-1  text-sm">
-                                                Subscription id / Number :
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="subscriptionId"
-                                                name="subscriptionId"
-                                                value={formik.values.subscriptionId}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                            />
-                                            {formik.touched.subscriptionId && formik.errors.subscriptionId && (
-                                                <div className="text-red-500 text-xs mt-1">
-                                                    {formik.errors.subscriptionId}
-                                                </div>
-                                            )}
-                                        </div> */}
-    
-    
-                                        <div className="mb-4">
+                                    <div className="w-full md:w-1/2 mt-8  ">
+                                       
+
+                                        <div className="mb-2">
                                             <label htmlFor="subscriptionCategory" className="block mb-1 text-sm">
                                                 subscription Category :
                                             </label>
@@ -479,8 +441,8 @@ function Add_subscription() {
                                                 onChange={handleCategoryChange}
                                                 onBlur={formik.handleBlur}
                                                 className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ">
-    
-    
+
+
                                                 <option value="" selected> -- Choose a category --</option>
                                                 {categories.map((category, index) => (
                                                     <option key={index} value={category}>
@@ -488,7 +450,7 @@ function Add_subscription() {
                                                     </option>
                                                 ))
                                                 }
-    
+
                                             </select>
                                             {formik.touched.subscriptionCategory && formik.errors.subscriptionCategory && (
                                                 <div className="text-red-500 text-xs mt-1">
@@ -496,8 +458,8 @@ function Add_subscription() {
                                                 </div>
                                             )}
                                         </div>
-    
-    
+
+
                                         <div>
                                             {/* for software */}
                                             {formik.values.subscriptionCategory === "Software" && (
@@ -514,12 +476,12 @@ function Add_subscription() {
                                                         onBlur={() => formik.setFieldTouched("additionalDetails.software_id", true)}
                                                         className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     />
-                                                       {formik.touched.additionalDetails?.software_id && formik.errors.additionalDetails?.software_id && (
+                                                    {formik.touched.additionalDetails?.software_id && formik.errors.additionalDetails?.software_id && (
                                                         <div className="text-red-500 text-xs mt-1">
                                                             {formik.errors.additionalDetails?.software_id}
                                                         </div>
                                                     )}
-    
+
                                                     <label htmlFor="software_name" className="block mt-4 text-sm">
                                                         Software Name
                                                     </label>
@@ -537,8 +499,8 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.software_name}
                                                         </div>
                                                     )}
-    
-    
+
+
                                                     <label htmlFor="version" className="block mt-4 text-sm">
                                                         version <span className="text-gray-500">(Optional)</span>                                               </label>
                                                     <input
@@ -555,8 +517,8 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.version}
                                                         </div>
                                                     )}
-    
-    
+
+
                                                     {/* <label htmlFor="features" className="block mt-4 text-sm">
                                                         features                                                </label>
                                                     <input
@@ -568,8 +530,8 @@ function Add_subscription() {
                                                         onBlur={formik.handleBlur}
                                                         className="w-full p-2  border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     /> */}
-    
-    
+
+
                                                     {/* <label htmlFor="license_type" className="block mt-4 text-sm">
                                                         License Key               </label>
                                                     <input
@@ -586,8 +548,8 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.license_type}
                                                         </div>
                                                     )} */}
-    
-    
+
+
                                                     <label htmlFor="no_of_users" className="block mt-4 text-sm">
                                                         Number of users                     </label>
                                                     <input
@@ -604,17 +566,17 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.no_of_users}
                                                         </div>
                                                     )}
-    
+
                                                 </div>
-    
+
                                             )}
-    
+
                                             {/* For Billing */}
                                             {formik.values.subscriptionCategory === "Billing" && (
                                                 <div>
 
 
-                                                    
+
                                                     <label htmlFor="consumer_no" className="block mb-1  text-sm">
                                                         Account number
                                                     </label>
@@ -632,10 +594,10 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.consumer_no}
                                                         </div>
                                                     )}
-    
-    
-    
-    
+
+
+
+
                                                     <label htmlFor="utility_name" className="block mt-4 text-sm">
                                                         Utility Name
                                                     </label>
@@ -653,7 +615,7 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.utility_name}
                                                         </div>
                                                     )}
-    
+
                                                     <label htmlFor="utility_type" className="block mt-4 text-sm">
                                                         Utility Type
                                                     </label>
@@ -667,8 +629,8 @@ function Add_subscription() {
                                                         <option value="" disabled selected>--choose type--</option>
                                                         <option value="Prepaid">Prepaid</option>
                                                         <option value="Postpaid">Postpaid</option>
-    
-    
+
+
                                                     </select>
                                                     {formik.touched.additionalDetails?.utility_type && formik.errors.additionalDetails?.utility_type && (
                                                         <div className="text-red-500 text-xs mt-1">
@@ -684,7 +646,7 @@ function Add_subscription() {
                                                         onBlur={formik.handleBlur}
                                                         className="w-full p-2 mt-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     /> */}
-    
+
                                                     {/* <label label htmlFor="location" className="block mt-4 text-sm">
                                                         location</label>
                                                     <input
@@ -696,7 +658,7 @@ function Add_subscription() {
                                                         onBlur={formik.handleBlur}
                                                         className="w-full p-2 mt-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     /> */}
-    
+
                                                     {/* <label label htmlFor="account_number" className="block mt-4 text-sm">
                                                         account_number</label>
                                                     <input
@@ -709,11 +671,11 @@ function Add_subscription() {
                                                         className="w-full p-2 mt-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     /> */}
                                                 </div>
-    
+
                                             )}
-    
-    
-    
+
+
+
                                             {/* for server details */}
                                             {formik.values.subscriptionCategory === "Server" && (
                                                 <div>
@@ -734,9 +696,9 @@ function Add_subscription() {
                                                             {formik.errors.subscriptionId}
                                                         </div>
                                                     )}
-    
-    
-    
+
+
+
                                                     <label htmlFor="server_name" className="block mt-4 text-sm">
                                                         Server Name
                                                     </label>
@@ -754,12 +716,12 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.server_name}
                                                         </div>
                                                     )}
-    
-    
-    
+
+
+
                                                     <label htmlFor="server_type" className="block  mt-4 text-sm">
                                                         Server type
-    
+
                                                     </label>
                                                     <select name="server_type"
                                                         id="server_type"
@@ -770,8 +732,8 @@ function Add_subscription() {
                                                         <option value="" disabled selected>--choose a type--</option>
                                                         <option value="External">External server</option>
                                                         <option value="Cloud">Cloud Hosting Providers </option>
-    
-    
+
+
                                                     </select>
                                                     {formik.touched.additionalDetails?.server_type && formik.errors.additionalDetails?.server_type && (
                                                         <div className="text-red-500 text-xs mt-1">
@@ -787,11 +749,11 @@ function Add_subscription() {
                                                         onBlur={formik.handleBlur}
                                                         className="w-full p-2 mt-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     /> */}
-    
+
                                                     <label htmlFor="server_capacity" className="block  mt-4 text-sm">
                                                         Server capacity
                                                     </label>
-    
+
                                                     <input type="text"
                                                         id="server_capacity"
                                                         name="server_capacity"
@@ -805,11 +767,11 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.server_capacity}
                                                         </div>
                                                     )}
-    
+
                                                 </div>
-    
+
                                             )}
-    
+
                                             {/* for Domain details */}
                                             {formik.values.subscriptionCategory === "Domain" && (
                                                 <div>
@@ -830,8 +792,8 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.domain_id}
                                                         </div>
                                                     )}
-    
-    
+
+
                                                     <label label htmlFor="domain_name" className="block mt-4 text-sm">
                                                         Domain Name</label>
                                                     <input
@@ -848,7 +810,7 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.domain_name}
                                                         </div>
                                                     )}
-    
+
                                                     <label label htmlFor="domain_type" className="block mt-4 text-sm">
                                                         Domain Type</label>
                                                     <input
@@ -866,7 +828,7 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.domain_type}
                                                         </div>
                                                     )}
-    
+
                                                     <label htmlFor="ssl_certification" className="block mt-4 text-sm">
                                                         SSL Certification</label>
                                                     <select name="ssl_certification" id="ssl_certification"
@@ -877,19 +839,19 @@ function Add_subscription() {
                                                         <option value="" disabled selected>yes or no</option>
                                                         <option value="True">Yes</option>
                                                         <option value="False">No</option>
-    
-    
+
+
                                                     </select>
                                                     {formik.touched.additionalDetails?.ssl_certification && formik.errors.additionalDetails?.ssl_certification && (
                                                         <div className="text-red-500 text-xs mt-1">
                                                             {formik.errors.additionalDetails?.ssl_certification}
                                                         </div>
                                                     )}
-    
-    
-    
-    
-    
+
+
+
+
+
                                                     <label htmlFor="whois_protection" className="block mt-4 text-sm">
                                                         WHOIS Protection</label>
                                                     <select name="whois_protection" id="whois_protection"
@@ -906,10 +868,10 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.whois_protection}
                                                         </div>
                                                     )}
-    
-    
-    
-    
+
+
+
+
                                                     <label label htmlFor="ssl_expiry_date" className="block mt-4 text-sm">
                                                         SSL Expiry Date</label>
                                                     <input
@@ -926,13 +888,13 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.ssl_expiry_date}
                                                         </div>
                                                     )}
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
                                                     <label label htmlFor="name_servers" className="block mt-4 text-sm">
                                                         Name Servers</label>
                                                     <input
@@ -949,8 +911,8 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.name_servers}
                                                         </div>
                                                     )}
-    
-    
+
+
                                                     <label label htmlFor="hosting_provider" className="block mt-4 text-sm">
                                                         Hosting Provider</label>
                                                     <input
@@ -967,17 +929,17 @@ function Add_subscription() {
                                                             {formik.errors.additionalDetails?.hosting_provider}
                                                         </div>
                                                     )}
-    
+
                                                 </div>
-    
+
                                             )}
-    
-    
-    
-    
-    
+
+
+
+
+
                                         </div>
-                                        <div className="mt-6">
+                                        <div className="mt-4">
                                             <label htmlFor="cost" className="block mb-1 text-sm">
                                                 Cost :
                                             </label>
@@ -1001,7 +963,7 @@ function Add_subscription() {
                                                 </div>
                                             )}
                                         </div>
-    
+
                                         <div className="mt-4">
                                             {/* <label htmlFor="paymentStatus" className="block mb-1 text-sm">
                                                 Payment status
@@ -1016,14 +978,14 @@ function Add_subscription() {
                                                 <option value="Pending">Pending</option>
                                                 <option value="Unpaid">Unpaid</option>
                                             </select> */}
-    
+
                                             {formik.touched.paymentStatus && formik.errors.paymentStatus && (
                                                 <div className="text-red-500 text-xs mt-1">
                                                     {formik.errors.paymentStatus}
                                                 </div>
                                             )}
                                         </div>
-    
+
                                         <div className="mt-4">
                                             <label htmlFor="paymentMethod" className="block mb-1 text-sm">
                                                 Payment method
@@ -1039,21 +1001,21 @@ function Add_subscription() {
                                                 <option value="Prepaid_Cards">Gift Cards & Prepaid Cards</option>
                                                 <option value="Cash_Payments">Cash Payments (For offline or manual renewals)</option>
                                             </select>
-    
+
                                             {formik.touched.paymentMethod && formik.errors.paymentMethod && (
                                                 <div className="text-red-500 text-xs mt-1">
                                                     {formik.errors.paymentMethod}
                                                 </div>
                                             )}
                                         </div>
-    
+
                                     </div>
-    
+
                                     {/* Right Column */}
                                     <div className="w-full md:w-1/2 pl-4">
                                         <div>
                                             {/* Dates Section */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-1 gap-x-8 gap-y-4">
                                                 <div className="md:col-span-1">
                                                     <h3 className="font-semibold mb-2">Dates</h3>
                                                     <div className="space-y-4">
@@ -1068,7 +1030,7 @@ function Add_subscription() {
                                                                 value={formik.values.startDate}
                                                                 onChange={formik.handleChange}
                                                                 onBlur={formik.handleBlur}
-    
+
                                                                 className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                             />
                                                             {formik.touched.startDate && formik.errors.startDate && (
@@ -1077,7 +1039,7 @@ function Add_subscription() {
                                                                 </div>
                                                             )}
                                                         </div>
-    
+
                                                         <div>
                                                             <label htmlFor="billingCycle" className="block mb-1 text-sm">
                                                                 Billing cycle :
@@ -1088,7 +1050,7 @@ function Add_subscription() {
                                                                 onBlur={formik.handleBlur}
                                                                 className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500">
                                                                 <option value="" selected disabled>-- Select Billing Cycle --</option>
-    
+
                                                                 <option value="weekly">Weekly</option>
                                                                 <option value="monthly">Monthly</option>
                                                                 <option value="quarterly">Quarterly</option>
@@ -1102,78 +1064,105 @@ function Add_subscription() {
                                                                     {formik.errors.billingCycle}
                                                                 </div>
                                                             )}
-    
+
                                                         </div>
-    
-    
+
+
                                                         <div>
-                                                            <label htmlFor="endDate" className="block mb-1 text-sm">
-                                                                End date :
+
+
+                                                            <label htmlFor="dateType" className="block mb-1 text-sm">
+                                                                End Date Type:
                                                             </label>
-                                                            <input
-                                                                type="date"
-                                                                id="endDate"
-                                                                name="endDate"
-                                                                value={formik.values.endDate}
-                                                                onChange={formik.handleChange}
-                                                                onBlur={formik.handleBlur}
-                                                                min={new Date().toISOString().split("T")[0]}
+                                                            <select
+                                                                id="dateType"
+                                                                name="dateType"
+                                                                value={dateType}
+                                                                onChange={handleDateTypeChange}
                                                                 className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                            />
-                                                            {formik.touched.endDate && formik.errors.endDate && (
-                                                                <div className="text-red-500 text-xs mt-1">
-                                                                    {formik.errors.endDate}
-                                                                </div>
-                                                            )}
-                                                        </div>
-    
-                                                        <div className="flex items-center gap-4 pt-2">
-                                                            <div className="flex items-center gap-1">
-                                                                <span className="text-sm">Auto Renewal :</span>
-                                                            </div>
-    
-                                                            <div className="flex gap-6">
-                                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                            >
+                                                                 <option value=""selected disabled>choose type</option>
+                                                                <option value="specific">Specific Date</option>
+                                                                <option value="lifelong">Life Long</option>
+                                                            </select>
+                                                            {dateType === 'specific' && (
+                                                                <div>
+
+                                                                    <label htmlFor="endDate" className="block mb-1 text-sm">
+                                                                        End date :
+                                                                    </label>
                                                                     <input
-                                                                        type="radio"
-                                                                        name="autoRenewal"
-                                                                        value="true"
-                                                                        checked={formik.values.autoRenewal === true}
-                                                                        onChange={() => formik.setFieldValue("autoRenewal", true)}
-                                                                        className="w-4 h-4"
+                                                                        type="date"
+                                                                        id="endDate"
+                                                                        name="endDate"
+                                                                        value={formik.values.endDate}
+                                                                        onChange={formik.handleChange}
+                                                                        onBlur={formik.handleBlur}
+                                                                        min={new Date().toISOString().split("T")[0]}
+                                                                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                                     />
-                                                                    <span className="text-sm">Yes</span>
-                                                                </label>
-    
-                                                                <label className="flex items-center gap-2 cursor-pointer">
-                                                                    <input
-                                                                        type="radio"
-                                                                        name="autoRenewal"
-                                                                        value="false"
-                                                                        checked={formik.values.autoRenewal === false}
-                                                                        onChange={() => formik.setFieldValue("autoRenewal", false)}
-                                                                        className="w-4 h-4"
-                                                                    />
-                                                                    <span className="text-sm">No</span>
-                                                                </label>
-                                                            </div>
-    
-                                                            {/* Error message */}
-                                                            {formik.touched.autoRenewal && formik.errors.autoRenewal && (
-                                                                <div className="text-red-500 text-xs mt-1">
-                                                                    {formik.errors.autoRenewal}
+                                                                    {formik.touched.endDate && formik.errors.endDate && (
+                                                                        <div className="text-red-500 text-xs mt-1">
+                                                                            {formik.errors.endDate}
+                                                                        </div>
+                                                                    )}
                                                                 </div>
-                                                            )}
-    
-    
-                                                        </div>
-                                                    </div>
+                                                                 )}
+
+                                                                    {dateType === 'lifelong' && (
+                                                                        <div className="text-gray-600 text-sm mt-1">
+                                                                            Billing Period: Life Long
+                                                                        </div>
+                                                                    )}
+                                                            </div>
+
+                                                                    <div className="flex items-center gap-4 pt-2">
+                                                                        <div className="flex items-center gap-1">
+                                                                            <span className="text-sm">Auto Renewal :</span>
+                                                                        </div>
+
+                                                                        <div className="flex gap-6">
+                                                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                                                <input
+                                                                                    type="radio"
+                                                                                    name="autoRenewal"
+                                                                                    value="true"
+                                                                                    checked={formik.values.autoRenewal === true}
+                                                                                    onChange={() => formik.setFieldValue("autoRenewal", true)}
+                                                                                    className="w-4 h-4"
+                                                                                />
+                                                                                <span className="text-sm">Yes</span>
+                                                                            </label>
+
+                                                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                                                <input
+                                                                                    type="radio"
+                                                                                    name="autoRenewal"
+                                                                                    value="false"
+                                                                                    checked={formik.values.autoRenewal === false}
+                                                                                    onChange={() => formik.setFieldValue("autoRenewal", false)}
+                                                                                    className="w-4 h-4"
+                                                                                />
+                                                                                <span className="text-sm">No</span>
+                                                                            </label>
+                                                                        </div>
+
+                                                                        {/* Error message */}
+                                                                        {formik.touched.autoRenewal && formik.errors.autoRenewal && (
+                                                                            <div className="text-red-500 text-xs mt-1">
+                                                                                {formik.errors.autoRenewal}
+                                                                            </div>
+                                                                        )}
+
+
+                                                                    </div>
+                                                                </div>
                                                 </div>
-    
-                                                <div className="md:col-span-1 space-y-4">
-    
-    
-                                                    {/* <div>
+
+                                                        <div className="md:col-span-1 space-y-4">
+
+
+                                                            {/* <div>
                                                         <label htmlFor="lastPaymentDate" className="block mb-1 mt-8 text-sm">
                                                             Last payment date :
                                                         </label>
@@ -1192,8 +1181,8 @@ function Add_subscription() {
                                                             </div>
                                                         )}
                                                     </div> */}
-    
-                                                    {/* <div>
+
+                                                            {/* <div>
                                                         <label htmlFor="nextPaymentDate" className="block mb-1 text-sm">
                                                             Next payment date :
                                                         </label>
@@ -1212,273 +1201,283 @@ function Add_subscription() {
                                                             </div>
                                                         )}
                                                     </div> */}
-    
+
+                                                        </div>
+
+
+                                                    </div>
+
+
                                                 </div>
-    
-    
                                             </div>
-    
-    
                                         </div>
+
                                     </div>
                                 </div>
-    
-                            </div>
-                        </div>
-    
-    
-                        {/* Set Reminder Section */}
-                        <div className=" lg:col-span-1">
-                            <div>
-                                <div className="bg-red-200 p-12 rounded-lg h-full">
-                                    <h2 className="text-xl font-bold mb-4 ">Set Reminder</h2>
-                                    <div className="space-y-4">
+
+
+                                {/* Set Reminder Section */}
+                                
+                                <div className=" lg:col-span-1 mt-18">
+                                <div className="flex">
+                                    <input id="needreminder" name="needreminder" type="checkbox"
+                                    value={needrem}
+                                    onChange={() => setneedrem(!needrem)} />
+                                    <label htmlFor="needreminder">Need customized reminder settings</label>
+                                </div>
+                                    <div>
+                                        {needrem&&(
                                         <div>
-                                            <label htmlFor="billingCycle" className="block mb-1 text-sm">
-                                                Billing Cycle
-                                            </label>
-                                            <div className="relative mt-2">
-                                                <input
-                                                    id="billingCycle"
-                                                    name="billingCycle"
-                                                    value={formik.values.billingCycle}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    readOnly
-                                                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                />
-                                                    {/* <option value="" selected>-- Select Billing Cycle --</option>
-                                                    <option value="weekly">Weekly</option>
-                                                    <option value="monthly">Monthly</option>
-                                                    <option value="quarterly">Quarterly</option>
-                                                    <option value="semi-annual">Semi-Annual (6 months)</option>
-                                                    <option value="annual">Annual (1 year)</option>
-                                                    <option value="biennial">Biennial (2 years)</option>
-                                                    <option value="triennial">Triennial (3 years)</option> 
-                                                    {/* <option value="one-time">One-Time Payment</option>*/}
-                                                {/* </select> */} 
+                                            <div className="bg-red-200 p-6 rounded-lg h-full">
+                                                <h2 className="text-xl font-bold mb-4 ">Set Reminder</h2>
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label htmlFor="billingCycle" className="block mb-1 text-sm">
+                                                            Billing Cycle
+                                                        </label>
+                                                        <div className="relative mt-2">
+                                                            <input
+                                                                id="billingCycle"
+                                                                name="billingCycle"
+                                                                value={formik.values.billingCycle}
+                                                                onChange={formik.handleChange}
+                                                                onBlur={formik.handleBlur}
+                                                                readOnly
+                                                                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                            />
+                                                            {/* <option value="" selected>-- Select Billing Cycle --</option>
+                                                        <option value="weekly">Weekly</option>
+                                                        <option value="monthly">Monthly</option>
+                                                        <option value="quarterly">Quarterly</option>
+                                                        <option value="semi-annual">Semi-Annual (6 months)</option>
+                                                        <option value="annual">Annual (1 year)</option>
+                                                        <option value="biennial">Biennial (2 years)</option>
+                                                        <option value="triennial">Triennial (3 years)</option> 
+                                                        {/* <option value="one-time">One-Time Payment</option>*/}
+                                                            {/* </select> */}
     
     
     
-                                                {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                                    <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
-                                                </div> */}
-                                            </div>
-                                        </div>
+                                                            {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                        <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
+                                                    </div> */}
+                                                        </div>
+                                                    </div>
     
-                                        <div>
+                                                    <div>
     
-                                            {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
-                                                <div>
+                                                        {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
+                                                            <div>
     
-                                                    <label htmlFor="firstReminderMonth" className="block mb-1 text-sm">
-                                                        How many months in advance would you like to receive a reminder?
-                                                    </label>
-                                                    <div className="relative">
-                                                        <input type="text"
-                                                            id="firstReminderMonth"
-                                                            name="firstReminderMonth"
-                                                            value={formik.values.firstReminderMonth}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 " />
-                                                        {/* <select
-                                                            id="firstReminderMonth"
-                                                            name="firstReminderMonth"
-                                                            value={formik.values.firstReminderMonth}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
-                                                        >
-                                                            <option value="" selected>Select month</option>
-                                                            <option value="January">January</option>
-                                                           
-                                                        </select> */}
+                                                                <label htmlFor="firstReminderMonth" className="block mb-1 text-sm">
+                                                                    How many months in advance would you like to receive a reminder?
+                                                                </label>
+                                                                <div className="relative">
+                                                                    <select type="text"
+                                                                        id="firstReminderMonth"
+                                                                        name="firstReminderMonth"
+                                                                        value={formik.values.firstReminderMonth}
+                                                                        onChange={formik.handleChange}
+                                                                        onBlur={formik.handleBlur}
+                                                                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 " >
+                                                                        
+                                                                        <option value=""></option>
+                                                                            {[...Array(6)].map((_, i) => (
+                                                                                <option key={i + 1} value={i + 1}>
+                                                                                    {i + 1}
+                                                                                </option>
+                                                                            ))}
+                                                                            
+                                                                    </select>
+
+    
+                                                                </div>
+                                                                <div>
+                                                                    <label htmlFor="reminderDay" className="block mb-1 text-sm">
+                                                                        reminder day of month
+                                                                    </label>
+                                                                    <div className="relative">
+                                                                        <select
+                                                                            id="reminderDay"
+                                                                            name="reminderDay"
+                                                                            value={formik.values.reminderDay}
+                                                                            onChange={formik.handleChange}
+                                                                            onBlur={formik.handleBlur}
+                                                                            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
+                                                                        >
+                                                                            <option value="">Select day</option>
+                                                                            {[...Array(31)].map((_, i) => (
+                                                                                <option key={i + 1} value={i + 1}>
+                                                                                    {i + 1}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+    
+                                                            // </div>
+                                                        )}
+    
+                                                        {["monthly", "weekly"].includes(formik.values.billingCycle) && (
+    
+                                                            <div>
+                                                                <label htmlFor="reminderDay" className="block mb-1 text-sm">
+                                                                    How many days in advance would you like to receive a reminder?
+                                                                </label>
+                                                                <div className="relative">
+                                                                    <select
+                                                                        id="reminderDay"
+                                                                        name="reminderDay"
+                                                                        value={formik.values.reminderDay}
+                                                                        onChange={formik.handleChange}
+                                                                        onBlur={formik.handleBlur}
+                                                                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
+                                                                    >
+                                                                        <option value="" selected>Select day</option>
+                                                                        {[...Array(7)].map((_, i) => (
+                                                                            <option key={i + 1} value={i + 1}>
+                                                                                {i + 1}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+    
+                                                                </div>
+                                                            </div>
+    
+                                                        )}
+    
+    
     
                                                     </div>
+    
+    
+    
+    
                                                     <div>
-                                                        <label htmlFor="reminderDay" className="block mb-1 text-sm">
-                                                            reminder day of month
+                                                        <label htmlFor="notificationMethod" className="block mb-1 text-sm">
+                                                            notification method
                                                         </label>
                                                         <div className="relative">
                                                             <select
-                                                                id="reminderDay"
-                                                                name="reminderDay"
-                                                                value={formik.values.reminderDay}
+                                                                id="notificationMethod"
+                                                                name="notificationMethod"
+                                                                value={formik.values.notificationMethod}
                                                                 onChange={formik.handleChange}
                                                                 onBlur={formik.handleBlur}
-                                                                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
+                                                                className="w-full p-2 border rounded appearance-none bg-red-200 pr-10 focus:outline-none focus:ring-1 focus:ring-red-300"
                                                             >
-                                                                <option value="">Select day</option>
-                                                                {[...Array(31)].map((_, i) => (
-                                                                    <option key={i + 1} value={i + 1}>
-                                                                        {i + 1}
-                                                                    </option>
-                                                                ))}
+                                                                <option value="">Select method</option>
+                                                                <option value="email">Email</option>
+                                                                <option value="sms">SMS</option>
+                                                                <option value="both">Both</option>
                                                             </select>
-    
+                                                            {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                                <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
+                                                            </div> */}
                                                         </div>
                                                     </div>
-                                                </div>
-    
-                                                // </div>
-                                            )}
-    
-                                            {["monthly", "weekly"].includes(formik.values.billingCycle) && (
-    
-                                                <div>
-                                                    <label htmlFor="reminderDay" className="block mb-1 text-sm">
-                                                        How many days in advance would you like to receive a reminder?
-                                                    </label>
-                                                    <div className="relative">
-                                                        <select
-                                                            id="reminderDay"
-                                                            name="reminderDay"
-                                                            value={formik.values.reminderDay}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
-                                                        >
-                                                            <option value="" selected>Select day</option>
-                                                            {[...Array(31)].map((_, i) => (
-                                                                <option key={i + 1} value={i + 1}>
-                                                                    {i + 1}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-    
-                                                    </div>
-                                                </div>
-    
-                                            )}
-    
-    
-    
-                                        </div>
-    
-    
-    
-    
-                                        <div>
-                                            <label htmlFor="notificationMethod" className="block mb-1 text-sm">
-                                                notification method
-                                            </label>
-                                            <div className="relative">
-                                                <select
-                                                    id="notificationMethod"
-                                                    name="notificationMethod"
-                                                    value={formik.values.notificationMethod}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    className="w-full p-2 border rounded appearance-none bg-red-200 pr-10 focus:outline-none focus:ring-1 focus:ring-red-300"
-                                                >
-                                                    <option value="">Select method</option>
-                                                    <option value="email">Email</option>
-                                                    <option value="sms">SMS</option>
-                                                    <option value="both">Both</option>
-                                                </select>
-                                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                                    <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
-                                                </div>
-                                            </div>
-                                        </div>
-    
-                                        <div>
-                                            <label htmlFor="recipients" className="block mb-1 text-sm">
-                                                Recipients
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="recipients"
-                                                name="recipients"
-                                                placeholder="Enter email addresses separated by commas"
-                                                value={formik.values.recipients}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
-                                            />
-                                            {formik.touched.recipients && formik.errors.recipients && (
-                                                <div className="text-red-500 text-xs w-full p-2">
-                                                    {formik.errors.recipients}
-                                                </div>
-                                            )}
-                                        </div>
-    
-                                        <div>
-                                            <label htmlFor="customMessage" className="block mb-1 text-sm">
-                                                Custom Message
-                                            </label>
-                                            <textarea
-                                                id="customMessage"
-                                                name="customMessage"
-                                                placeholder="Enter custom message for reminders"
-                                                value={formik.values.customMessage}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                rows={3}
-                                                className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
-                                            />
-                                        </div>
-                                        {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
-                                            <div>
-                                                <div className="flex items-center gap-2 py-2">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="extraReminder"
-                                                        checked={extraReminder}
-                                                        onChange={() => setExtraReminder(!extraReminder)}
-                                                        className="w-4 h-4"
-                                                    />
-                                                    <label htmlFor="extraReminder" className="text-sm">
-                                                        Enable Extra Reminder for Last Month
-                                                    </label>
-                                                </div>
-                                                {extraReminder && (
     
                                                     <div>
-                                                        <label htmlFor="daysBeforeEnd" className="block mb-1 text-sm">
-                                                            How many days in advance would you like to receive a reminder?
+                                                        <label htmlFor="recipients" className="block mb-1 text-sm">
+                                                            Recipients
                                                         </label>
                                                         <input
-                                                            type="number"
-                                                            id="daysBeforeEnd"
-                                                            name="daysBeforeEnd"
-                                                            value={formik.values.daysBeforeEnd}
+                                                            type="text"
+                                                            id="recipients"
+                                                            name="recipients"
+                                                            placeholder="Enter email addresses separated by commas"
+                                                            value={formik.values.recipients}
                                                             onChange={formik.handleChange}
                                                             onBlur={formik.handleBlur}
                                                             className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
                                                         />
-                                                        {formik.touched.daysBeforeEnd && formik.errors.daysBeforeEnd && (
+                                                        {formik.touched.recipients && formik.errors.recipients && (
                                                             <div className="text-red-500 text-xs w-full p-2">
-                                                                {formik.errors.daysBeforeEnd}
+                                                                {formik.errors.recipients}
                                                             </div>
                                                         )}
                                                     </div>
-                                                )}
+    
+                                                    <div>
+                                                        <label htmlFor="customMessage" className="block mb-1 text-sm">
+                                                            Custom Message
+                                                        </label>
+                                                        <textarea
+                                                            id="customMessage"
+                                                            name="customMessage"
+                                                            placeholder="Enter custom message for reminders"
+                                                            value={formik.values.customMessage}
+                                                            onChange={formik.handleChange}
+                                                            onBlur={formik.handleBlur}
+                                                            rows={3}
+                                                            className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
+                                                        />
+                                                    </div>
+                                                    {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
+                                                        <div>
+                                                            <div className="flex items-center gap-2 py-2">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    id="extraReminder"
+                                                                    checked={extraReminder}
+                                                                    onChange={() => setExtraReminder(!extraReminder)}
+                                                                    className="w-4 h-4"
+                                                                />
+                                                                <label htmlFor="extraReminder" className="text-sm">
+                                                                    Enable Extra Reminder for Last Month
+                                                                </label>
+                                                            </div>
+                                                            {extraReminder && (
+    
+                                                                <div>
+                                                                    <label htmlFor="daysBeforeEnd" className="block mb-1 text-sm">
+                                                                        How many days in advance would you like to receive a reminder?
+                                                                    </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        id="daysBeforeEnd"
+                                                                        name="daysBeforeEnd"
+                                                                        value={formik.values.daysBeforeEnd}
+                                                                        onChange={formik.handleChange}
+                                                                        onBlur={formik.handleBlur}
+                                                                        className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
+                                                                    />
+                                                                    {formik.touched.daysBeforeEnd && formik.errors.daysBeforeEnd && (
+                                                                        <div className="text-red-500 text-xs w-full p-2">
+                                                                            {formik.errors.daysBeforeEnd}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        )}
+                                        </div>
+)}
                                     </div>
-                                </div>
+                                    </div>
                             </div>
-                        </div>
-                    </div>
-    
-                    {/* Submit Button */}
-                    <div className="flex justify-end">
-                        <button
-                            type="submit"
-                            className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                        >
-                            Add Subscription
-                        </button>
-                    </div>
-                </form >
-                {isAddingNewProvider && (
-                                            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red p-6 rounded-lg  z-[9999] w-[90%] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
-                                               
-    
-                                                    {/* Open Popup Button */}
-                                                    {/* <button
+
+                            {/* Submit Button */}
+                            <div className="flex justify-end">
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                                >
+                                    Add Subscription
+                                </button>
+                            </div>
+                        </form >
+                        
+                        {isAddingNewProvider && (
+                            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red p-6 rounded-lg  z-[9999] w-[90%] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+
+
+                                {/* Open Popup Button */}
+                                {/* <button
                                                         className="px-4 py-2 bg-blue-600 text-white rounded-lg"
                                                         onClick={() => setIsPopupOpen(true)}
                                                     >
@@ -1486,14 +1485,14 @@ function Add_subscription() {
                                                     </button>
     
                                                     Add Provider Popup */}
-                                                    <Add_providers isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}
-                                                    />
-                                               
-                                            </div>
-                )}
-          </div>
-        </div >
-    );
+                                <Add_providers isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}
+                                />
+
+                            </div>
+                        )}
+                    </div>
+            </div >
+            );
 }
 
-export default Add_subscription;
+            export default Add_subscription;

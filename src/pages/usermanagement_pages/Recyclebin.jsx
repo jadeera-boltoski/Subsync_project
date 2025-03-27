@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   ChevronLeft, 
-  ChevronRight, 
-  Search, 
+  ChevronRight,  
   Trash2, 
   RefreshCw,
   AlertCircle
 } from 'lucide-react';
+import { getrecyclebin } from '../../services/allapi';
 
 const RecycleBin = () => {
   // State for deleted items
@@ -16,7 +16,7 @@ const RecycleBin = () => {
   const [error, setError] = useState(null);
   
   // Filters state
-  const [searchTerm, setSearchTerm] = useState('');
+ 
   const [typeFilter, setTypeFilter] = useState('all');
   
   // Pagination
@@ -42,13 +42,13 @@ const RecycleBin = () => {
   };
   
   // Calculate days remaining until permanent deletion
-  const getDaysRemaining = (expiresAt) => {
-    const expireDate = new Date(expiresAt);
-    const today = new Date();
-    const diffTime = expireDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  // const getDaysRemaining = (deletedAt) => {
+  //   const expireDate = new Date(deletedAt);
+  //   const today = new Date();
+  //   const diffTime = expireDate - today;
+  //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  //   return diffDays;
+  // };
   
   // Fetch data from API (using mockData for now)
   const fetchDeletedItems = async () => {
@@ -57,27 +57,43 @@ const RecycleBin = () => {
     
     try {
       // Simulating API call with setTimeout
-      const response = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            data: [
-              { id: 'hw-1001', name: 'Laptop XPS-15', type: 'hardware', deletedAt: '2025-03-15T10:30:00', deletedBy: 'John Smith', expiresAt: '2025-04-14T10:30:00' },
-              { id: 'sub-2001', name: 'Premium Plan - Monthly', type: 'subscription', deletedAt: '2025-03-18T14:20:00', deletedBy: 'Sarah Johnson', expiresAt: '2025-04-17T14:20:00' },
-              { id: 'cust-3001', name: 'Acme Corp.', type: 'customer', deletedAt: '2025-03-10T09:45:00', deletedBy: 'Admin', expiresAt: '2025-04-09T09:45:00' },
-              { id: 'hw-1002', name: 'Mobile Phone S21', type: 'hardware', deletedAt: '2025-03-16T11:20:00', deletedBy: 'Mike Lee', expiresAt: '2025-04-15T11:20:00' },
-              { id: 'sub-2002', name: 'Basic Plan - Annual', type: 'subscription', deletedAt: '2025-03-14T16:30:00', deletedBy: 'David Kim', expiresAt: '2025-04-13T16:30:00' },
-              { id: 'cust-3002', name: 'TechSolutions Inc.', type: 'customer', deletedAt: '2025-03-05T13:15:00', deletedBy: 'Emma Wilson', expiresAt: '2025-04-04T13:15:00' },
-              { id: 'hw-1003', name: 'Monitor 27" 4K', type: 'hardware', deletedAt: '2025-03-19T09:10:00', deletedBy: 'John Smith', expiresAt: '2025-04-18T09:10:00' },
-              { id: 'sub-2003', name: 'Enterprise Plan - Quarterly', type: 'subscription', deletedAt: '2025-03-12T15:45:00', deletedBy: 'Lisa Chen', expiresAt: '2025-04-11T15:45:00' },
-            ]
-          });
-        }, 1000);
+      // const response = await new Promise((resolve) => {
+      //   setTimeout(() => {
+      //     resolve({
+      //       status: 200,
+      //       data: [
+      //         { id: 'hw-1001', name: 'Laptop XPS-15', type: 'hardware', deletedAt: '2025-03-15T10:30:00', deletedBy: 'John Smith', expiresAt: '2025-04-14T10:30:00' },
+      //         { id: 'sub-2001', name: 'Premium Plan - Monthly', type: 'subscription', deletedAt: '2025-03-18T14:20:00', deletedBy: 'Sarah Johnson', expiresAt: '2025-04-17T14:20:00' },
+      //         { id: 'cust-3001', name: 'Acme Corp.', type: 'customer', deletedAt: '2025-03-10T09:45:00', deletedBy: 'Admin', expiresAt: '2025-04-09T09:45:00' },
+      //         { id: 'hw-1002', name: 'Mobile Phone S21', type: 'hardware', deletedAt: '2025-03-16T11:20:00', deletedBy: 'Mike Lee', expiresAt: '2025-04-15T11:20:00' },
+      //         { id: 'sub-2002', name: 'Basic Plan - Annual', type: 'subscription', deletedAt: '2025-03-14T16:30:00', deletedBy: 'David Kim', expiresAt: '2025-04-13T16:30:00' },
+      //         { id: 'cust-3002', name: 'TechSolutions Inc.', type: 'customer', deletedAt: '2025-03-05T13:15:00', deletedBy: 'Emma Wilson', expiresAt: '2025-04-04T13:15:00' },
+      //         { id: 'hw-1003', name: 'Monitor 27" 4K', type: 'hardware', deletedAt: '2025-03-19T09:10:00', deletedBy: 'John Smith', expiresAt: '2025-04-18T09:10:00' },
+      //         { id: 'sub-2003', name: 'Enterprise Plan - Quarterly', type: 'subscription', deletedAt: '2025-03-12T15:45:00', deletedBy: 'Lisa Chen', expiresAt: '2025-04-11T15:45:00' },
+      //       ]
+      //     });
+      //   }, 1000);
+      // });
+
+
+
+
+    
+
+
+
+
+
+
+      const response=await getrecyclebin()
+      console.log("recycle bin",response);
+      const result = [...response].sort((a, b) => {
+        return new Date(b.deletedAt) - new Date(a.deletedAt);
       });
       
-      if (response.status === 200) {
-        setDeletedItems(response.data);
-        setFilteredItems(response.data);
+      if (response && Array.isArray(result)) {
+        setDeletedItems(result);
+        setFilteredItems(result);
       } else {
         throw new Error('Failed to fetch data');
       }
@@ -98,16 +114,7 @@ const RecycleBin = () => {
   useEffect(() => {
     let result = [...deletedItems];
     
-    // Search filter - improved to work with partial terms
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      result = result.filter(item => 
-        item.name.toLowerCase().includes(searchLower) || 
-        item.id.toLowerCase().includes(searchLower) ||
-        item.type.toLowerCase().includes(searchLower) ||
-        item.deletedBy.toLowerCase().includes(searchLower)
-      );
-    }
+   
     
     // Type filter
     if (typeFilter !== 'all') {
@@ -116,7 +123,7 @@ const RecycleBin = () => {
     
     setFilteredItems(result);
     setCurrentPage(1);
-  }, [searchTerm, typeFilter, deletedItems]);
+  }, [ typeFilter, deletedItems]);
   
   // Calculate pagination - use useMemo to prevent recalculations
   const paginationData = useMemo(() => {
@@ -212,10 +219,10 @@ const RecycleBin = () => {
   };
   
   // Handle search submit
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // The search is already handled by the useEffect
-  };
+  // const handleSearch = (e) => {
+  //   e.preventDefault();
+  //   // The search is already handled by the useEffect
+  // };
   
   // Destructure pagination data for cleaner code
   const { indexOfLastItem, indexOfFirstItem, currentItems, totalPages } = paginationData;
@@ -240,7 +247,7 @@ const RecycleBin = () => {
       {/* Search and filters */}
       <div className="mb-6 space-y-4 bg-white p-4 rounded-md shadow-sm border border-gray-200">
         {/* Search bar */}
-        <form onSubmit={handleSearch} className="flex w-full">
+        {/* <form onSubmit={handleSearch} className="flex w-full">
           <input
             type="text"
             value={searchTerm}
@@ -254,7 +261,7 @@ const RecycleBin = () => {
           >
             <Search size={20} />
           </button>
-        </form>
+        </form> */}
         
         {/* Type filter only */}
         <div className="flex flex-wrap">
@@ -310,7 +317,7 @@ const RecycleBin = () => {
         <div className="flex justify-center items-center h-64 bg-white border border-gray-200 rounded-md shadow-sm">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
         </div>
-      ) : error ? (
+      ) : error  ? (
         <div className="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-md p-8 shadow-sm">
           <AlertCircle size={48} className="text-red-500 mb-4" />
           <h3 className="text-lg font-medium mb-2 text-red-600">Error Loading Data</h3>
@@ -322,17 +329,7 @@ const RecycleBin = () => {
             Try Again
           </button>
         </div>
-      ) : filteredItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center bg-white border border-gray-200 rounded-md p-8 shadow-sm">
-          <Trash2 size={48} className="text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium mb-2">No Items Found</h3>
-          <p className="text-center text-gray-500">
-            {searchTerm || typeFilter !== 'all' 
-              ? "No items match your current search or filter criteria." 
-              : "The Recycle Bin is empty. Items that are deleted will appear here for 30 days before being permanently removed."}
-          </p>
-        </div>
-      ) : (
+      )  : (
         <>
           <div className="overflow-x-auto border border-gray-200 rounded-md shadow-sm bg-white">
             <table className="min-w-full divide-y divide-gray-200">
@@ -356,7 +353,7 @@ const RecycleBin = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {currentItems.map((item) => {
-                  const daysRemaining = getDaysRemaining(item.expiresAt);
+                  const daysRemaining = item.expiresAt
                   const expiryClass = 
                     daysRemaining <= 7 ? 'text-red-600 font-medium' : 
                     daysRemaining <= 14 ? 'text-yellow-600' : 

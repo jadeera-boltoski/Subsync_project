@@ -29,9 +29,21 @@ export const createpassword=async(body)=>{
     
     return commonRequest("POST",`${BASE_URL}/reset-password/`,body)
 }
+
 // add new user
 export const adduser=(body)=>{
     return commonRequest("POST",`${BASE_URL}/create-user/`,body)
+}
+// view user
+export const getuser=()=>{
+     return commonRequest("GET",`${BASE_URL}/users/`,"")
+}
+
+
+
+// set user by activate or deactivate
+export const setuser=(userId,userData)=>{
+    return commonRequest("PUT", `${BASE_URL}/users/${userId}/status/`, userData)
 }
 
 // post details for change password
@@ -101,7 +113,7 @@ export const deleteSubscription=(body)=>{
 export const updateSubscription=(body)=>{
     console.log(body);
     
-    return commonRequest("PUT",`${BASE_URL}/subscriptions/${encodeURIComponent(body.id)}/`,body)
+    return commonRequest("PATCH",`${BASE_URL}/subscriptions/${encodeURIComponent(body.id)}/`,body)
 }
 
 
@@ -231,10 +243,16 @@ export const getcustomers=()=>{
 
 // get user role
 export const getuser_role=()=>{
-    // return commonRequest("GET",`${BASE_URL}/customers/`,"")
+    return commonRequest("GET",`${BASE_URL}/check-superuser/`,"")
 }
 
 
+
+
+// recycle bin api
+export const getrecyclebin=()=>{
+        return commonRequest("GET",`${BASE_URL}/recycle-bin/`,"")
+}
 
 
 

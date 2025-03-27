@@ -171,9 +171,9 @@ export const validationsubscription = Yup.object({
         .required("Billing Cycle is required"),
 
 
-    endDate: Yup.date()
-        .required("End Date is required")
-        .min(Yup.ref("startDate"), "End Date must be after Start Date"),
+    // endDate: Yup.date()
+    //     // .required("End Date is required")
+    //     .min(Yup.ref("startDate"), "End Date must be after Start Date"),
 
     // lastPaymentDate: Yup.date()
     //     .max(new Date(), "Last Payment Date cannot be in the future"),
@@ -194,10 +194,12 @@ export const validationsubscription = Yup.object({
 
 
 
-    recipients: Yup.string().required("Enter valid information").matches(
+    recipients: Yup.string().matches(
         /^([\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,})(,\s*[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,})*$/,
         "Enter valid email addresses separated by commas"
     ),
+
+    // required("Enter valid information")
 
 
 })
@@ -209,7 +211,7 @@ export const subscriptionValidationSchema = Yup.object().shape({
   version: Yup.string().required('Version is required'),
   autoRenewal: Yup.boolean(),
   id:Yup.string().required("need id"),
-  numberOfUsers: Yup.number()
+  no_of_users: Yup.number()
     .positive('Number of users must be positive')
     .integer('Number of users must be an integer')
     .required('Number of users is required'),
@@ -513,4 +515,5 @@ export const validationresource = Yup.object({
 
 
 })
+
 

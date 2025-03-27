@@ -13,23 +13,30 @@ const Viewdetails = () => {
 
   // Extract subscription data from location state
   const subscription = location.state?.subscription;
+  console.log("subscriptionnnn",subscription);
+  
   const [edit, SetEdit] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      id:subscription.id,
+      id: subscription.id,
+      category: subscription.subscription_category,
       version: subscription.software_version || '',
-      autoRenewal: subscription.auto_renewal|| false,
-      numberOfUsers: subscription.software_no_of_users || 1,
+      auto_renewal: subscription.auto_renewal,
+      no_of_users: subscription.software_no_of_users || 1,
       // paymentStatus: subscription.payment_status || 'unpaid',
       // nextPaymentDate: subscription.next_payment_date || '',
-      cost: subscription.cost || 0
+      cost: subscription.cost || 0,
+
+
+      name_servers: subscription.name_servers,
+      server_capacity:subscription.server_capacity
     },
     validationSchema: subscriptionValidationSchema,
     onSubmit: async (values) => {
       try {
-        console.log("edit response",values);
-        
+        console.log("edit response", values);
+
         // Call API to update subscription
         const response = await updateSubscription(values);
         console.log(response);
@@ -37,8 +44,8 @@ const Viewdetails = () => {
           alert(response.message);
           SetEdit(false)
           // Optionally refresh the subscription data or navigate
-          navigate('/dashboard/subscriptions/Viewdetails', { 
-            state: { message: 'Subscription updated successfully' } 
+          navigate('/dashboard/subscriptions/Viewdetails', {
+            state: { message: 'Subscription updated successfully' }
           });
         } else {
           alert(response.message || 'Failed to update subscription');
@@ -49,8 +56,8 @@ const Viewdetails = () => {
       }
     }
   });
-  console.log(formik.autoRenewal);
-  
+  // console.log(formik.autoRenewal);
+
 
 
   // If no subscription data is found, handle gracefully
@@ -111,16 +118,22 @@ const Viewdetails = () => {
   };
 
   const handledelete = async () => {
-    const response = await deleteSubscription(subscription.id)
-    console.log(response);
-    if (response.status == 200) {
-      alert(response.message)
-      navigate("/dashboard/subscriptions/Viewsubscription")
-    } else {
-      alert("something went wrong")
-    }
+    
+      const confirmChange = window.confirm( "you need to delete this subscription?")
+      if (confirmChange) {
+        const response = await deleteSubscription(subscription.id)
+        console.log(response);
+        if (response.status == 200) {
+          alert(response.message)
+          navigate("/dashboard/subscriptions/Viewsubscription")
+        } else {
+          alert("something went wrong")
+        } // Stop the category change if the user cancels
+      }
+}
+   
 
-  };
+
 
 
   // Render subscription-specific details based on category
@@ -226,9 +239,11 @@ const Viewdetails = () => {
     SetEdit("true")
   }
 
+  
+
   return (
-    <div className='grid grid-cols-2 gap-2'>
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto ">
+    <div className=' flex '>
+      <div className="bg-white rounded-lg shadow-xl w-full  mr-4  max-h-[90vh] overflow-y-auto ">
         <div className="flex justify-between items-center border-b px-6 py-4">
           <h3 className="text-lg font-semibold">Subscription Details</h3>
           <button
@@ -342,116 +357,263 @@ const Viewdetails = () => {
 
       {edit && (
         <div>
-          <div className="bg-white rounded-lg shadow-xl p-6 space-y-4">
+          <div className="bg-white rounded-lg shadow-xl p-2 space-y-4 w-100">
             <h3 className="text-xl font-semibold mb-4">Edit Subscription Details</h3>
             <form onSubmit={formik.handleSubmit} className="space-y-4">
-              {/* Version */}
-              <div>
-                <label htmlFor="version" className="block text-gray-700 font-medium mb-2">
-                  Version
-                </label>
-                <input
-                  id="version"
-                  name="version"
-                  type="text"
-                  value={formik.values.version}
-                  onChange={formik.handleChange}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-                {formik.touched.version && formik.errors.version && (
-                  <p className="text-red-500 text-sm mt-1">{formik.errors.version}</p>
-                )}
-              </div>
+              {formik.values.category === "Software" && (
+                <div>
+                  {/* Version */}
+                  <div>
+                    <label htmlFor="version" className="block text-gray-700 font-medium mb-2">
+                      Version
+                    </label>
+                    <input
+                      id="version"
+                      name="version"
+                      type="text"
+                      value={formik.values.version}
+                      onChange={formik.handleChange}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.version && formik.errors.version && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.version}</p>
+                    )}
+                  </div>
 
-              {/* Auto Renewal */}
-              <div className="flex items-center">
-                <label htmlFor="autoRenewal" className="mr-2 text-gray-700 font-medium">
-                  Auto Renewal
-                </label>
-                <input
-                  id="autoRenewal"
-                  name="autoRenewal"
-                  type="checkbox"
-                  checked={formik.values.autoRenewal}
-                  onChange={formik.handleChange}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
+                  {/* Auto Renewal */}
+                  <div className="flex items-center">
+                    <label htmlFor="auto_renewal" className="mr-2 text-gray-700 font-medium">
+                      Auto Renewal
+                    </label>
+                    <input
+                      id="auto_renewal"
+                      name="auto_renewal"
+                      type="checkbox"
+                      checked={formik.values.autoRenewal}
+                      onChange={formik.handleChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </div>
 
-              {/* Number of Users */}
-              <div>
-                <label htmlFor="numberOfUsers" className="block text-gray-700 font-medium mb-2">
-                  Number of Users
-                </label>
-                <input
-                  id="numberOfUsers"
-                  name="numberOfUsers"
-                  type="number"
-                  value={formik.values.numberOfUsers}
-                  onChange={formik.handleChange}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-                {formik.touched.numberOfUsers && formik.errors.numberOfUsers && (
-                  <p className="text-red-500 text-sm mt-1">{formik.errors.numberOfUsers}</p>
-                )}
-              </div>
+                  {/* Number of Users */}
+                  <div>
+                    <label htmlFor="numberOfUsers" className="block text-gray-700 font-medium mb-2">
+                      Number of Users
+                    </label>
+                    <input
+                      id="no_of_users"
+                      name="no_of_users"
+                      type="number"
+                      value={formik.values.no_of_users}
+                      onChange={formik.handleChange}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.no_of_users && formik.errors.no_of_users && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.no_of_users}</p>
+                    )}
+                  </div>
 
-              {/* Payment Status */}
-              {/* <div>
-                <label htmlFor="paymentStatus" className="block text-gray-700 font-medium mb-2">
-                  Payment Status
-                </label>
-                <select
-                  id="paymentStatus"
-                  name="paymentStatus"
-                  value={formik.values.paymentStatus}
-                  onChange={formik.handleChange}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                >
-                  <option value="paid">Paid</option>
-                  <option value="unpaid">Unpaid</option>
-                </select>
-                {formik.touched.paymentStatus && formik.errors.paymentStatus && (
-                  <p className="text-red-500 text-sm mt-1">{formik.errors.paymentStatus}</p>
-                )}
-              </div> */}
+                  {/* Payment Status */}
+                  {/* <div>
+                  <label htmlFor="paymentStatus" className="block text-gray-700 font-medium mb-2">
+                    Payment Status
+                  </label>
+                  <select
+                    id="paymentStatus"
+                    name="paymentStatus"
+                    value={formik.values.paymentStatus}
+                    onChange={formik.handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  >
+                    <option value="paid">Paid</option>
+                    <option value="unpaid">Unpaid</option>
+                  </select>
+                  {formik.touched.paymentStatus && formik.errors.paymentStatus && (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.paymentStatus}</p>
+                  )}
+                </div> */}
 
-              {/* Next Payment Date */}
-              {/* <div>
-                <label htmlFor="nextPaymentDate" className="block text-gray-700 font-medium mb-2">
-                  Next Payment Date
-                </label>
-                <input
-                  id="nextPaymentDate"
-                  name="nextPaymentDate"
-                  type="date"
-                  value={formik.values.nextPaymentDate}
-                  onChange={formik.handleChange}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-                {formik.touched.nextPaymentDate && formik.errors.nextPaymentDate && (
-                  <p className="text-red-500 text-sm mt-1">{formik.errors.nextPaymentDate}</p>
-                )}
-              </div> */}
+                  {/* Next Payment Date */}
+                  {/* <div>
+                  <label htmlFor="nextPaymentDate" className="block text-gray-700 font-medium mb-2">
+                    Next Payment Date
+                  </label>
+                  <input
+                    id="nextPaymentDate"
+                    name="nextPaymentDate"
+                    type="date"
+                    value={formik.values.nextPaymentDate}
+                    onChange={formik.handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  {formik.touched.nextPaymentDate && formik.errors.nextPaymentDate && (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.nextPaymentDate}</p>
+                  )}
+                </div> */}
 
-              {/* Cost */}
-              <div>
-                <label htmlFor="cost" className="block text-gray-700 font-medium mb-2">
-                  Cost (£)
-                </label>
-                <input
-                  id="cost"
-                  name="cost"
-                  type="number"
-                  step="0.01"
-                  value={formik.values.cost}
-                  onChange={formik.handleChange}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-                {formik.touched.cost && formik.errors.cost && (
-                  <p className="text-red-500 text-sm mt-1">{formik.errors.cost}</p>
-                )}
-              </div>
+                  {/* Cost */}
+                  <div>
+                    <label htmlFor="cost" className="block text-gray-700 font-medium mb-2">
+                      Cost (₹)
+                    </label>
+                    <input
+                      id="cost"
+                      name="cost"
+                      type="number"
+                      step="0.01"
+                      value={formik.values.cost}
+                      onChange={formik.handleChange}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.cost && formik.errors.cost && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.cost}</p>
+                    )}
+                  </div>
+
+
+                </div>
+              )}
+
+
+
+              {formik.values.category === "Domain" && (
+                <div className="space-y-4">
+                  {/* Auto Renewal */}
+                  <div className="flex items-center">
+                    <label htmlFor="auto_renewal" className="mr-2 text-gray-700 font-medium">
+                      Auto Renewal
+                    </label>
+                    <input
+                      id="auto_renewal"
+                      name="auto_renewal"
+                      type="checkbox"
+                      checked={formik.values.auto_renewal}
+                      onChange={formik.handleChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </div>
+
+                  {/* Name Servers */}
+                  <div>
+                    <label htmlFor="name_servers" className="block text-gray-700 font-medium mb-2">
+                      Name Servers
+                    </label>
+                    <div className="space-y-2">
+                      <input
+                        id="name_servers"
+                        name="name_servers"
+                        type="text"
+                        placeholder="name_servers"
+                        value={formik.values.name_servers}
+                        onChange={formik.handleChange}
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+
+                    </div>
+                    {formik.touched.name_servers && formik.errors.name_servers && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.name_servers}</p>
+                    )}
+
+                  </div>
+                  {/* Cost */}
+                  <div>
+                    <label htmlFor="cost" className="block text-gray-700 font-medium mb-2">
+                      Cost (₹)
+                    </label>
+                    <input
+                      id="cost"
+                      name="cost"
+                      type="number"
+                      step="0.01"
+                      value={formik.values.cost}
+                      onChange={formik.handleChange}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.cost && formik.errors.cost && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.cost}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+
+              {formik.values.category === "Server" && (
+                <div className="space-y-4">
+                  {/* Auto Renewal */}
+                  <div className="flex items-center">
+                    <label htmlFor="auto_renewal" className="mr-2 text-gray-700 font-medium">
+                      Auto Renewal
+                    </label>
+                    <input
+                      id="auto_renewal"
+                      name="auto_renewal"
+                      type="checkbox"
+                      checked={formik.values.autoRenewal}
+                      onChange={formik.handleChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </div>
+
+                  
+                  {/* Server Capacity */}
+                  <div>
+                    <label htmlFor="server_capacity" className="block text-gray-700 font-medium mb-2">
+                      Server Capacity
+                    </label>
+                    <div className="flex items-center space-x-4">
+                      <input
+                        id="server_capacity"
+                        name="server_capacity"
+                        value={formik.values.server_capacity}
+                        onChange={formik.handleChange}
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                        
+                      <div className="text-sm text-gray-600">
+                        Current: {formik.values.server_capacity}
+                      </div>
+                    </div>
+                    {formik.touched.server_capacity && formik.errors.server_capacity && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.server_capacity}</p>
+                    )}
+                  </div>
+
+                  {/* Cost */}
+                  <div>
+                    <label htmlFor="cost" className="block text-gray-700 font-medium mb-2">
+                      Cost (£)
+                    </label>
+                    <input
+                      id="cost"
+                      name="cost"
+                      type="number"
+                      step="0.01"
+                      value={formik.values.cost}
+                      onChange={formik.handleChange}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.cost && formik.errors.cost && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.cost}</p>
+                    )}
+                  </div>
+
+                  {/* Upgrade/Downgrade Warning */}
+                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                    <p className="text-yellow-700 text-sm">
+                      Note: Changing server capacity may affect your subscription cost and require a prorated adjustment.
+                    </p>
+                  </div>
+                </div>
+              )}
+               {formik.values.category === "Server" && (
+                <div></div>
+               )}
+
+
+
+
+
+
 
               {/* Action Buttons */}
               <div className="flex justify-end space-x-2 mt-4">
@@ -471,6 +633,7 @@ const Viewdetails = () => {
                 </button>
               </div>
             </form>
+
           </div>
         </div>
       )}

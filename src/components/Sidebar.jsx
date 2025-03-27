@@ -33,10 +33,12 @@ function Sidebar() {
 
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: faHouse },
-    { name: "Subscription Management", path: "/dashboard/subscriptions", icon: faNewspaper },
-    { name: "Hardware Management", path: "/dashboard/hardware", icon: faMicrochip },
+    { name: "Subscriptions", path: "/dashboard/subscriptions", icon: faNewspaper },
+    { name: "Hardware", path: "/dashboard/hardware", icon: faMicrochip },
     { name: "Customer Services", path: "/dashboard/services", icon: faTools },
     { name: "User Management", path: "/dashboard/users", icon: faUsers },
+    { name: "Masters", path: "/dashboard/masters", icon: faUsers }
+    
   ];
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);

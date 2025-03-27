@@ -1,25 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const View_customerdetails = () => {
   const navigate = useNavigate();
   
-  // Sample data - replace with props or data from API
-  const subscription = {
-    "billingCycle": "monthly",
-    "cost": "55555.00",
-    "customer_email": "nknishida@gamil.com",
-    "customer_name": "nishidaa",
-    "customer_phone": "6688557799",
-    "customer_type": "inhouse",
-    "endDate": "2025-03-22",
-    "id": 3,
-    "lastPaymentDate": "2025-03-22",
-    "paymentMethod": "Bank_Transfer",
-    "resources": [],
-    "startDate": "2025-03-29",
-    "status": "Active",
-    "user": 1
-  };
+
+  const location=useLocation()
+
+  const customer = location.state?.customer;
+  console.log("dfdf",customer);
 
   // Calculate days remaining until subscription ends
   const calculateDaysRemaining = (endDate) => {
@@ -62,20 +50,20 @@ const View_customerdetails = () => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
       <div className="flex justify-between items-center border-b px-6 py-4">
-        <h3 className="text-lg font-semibold">Subscription Details</h3>
+        <h3 className="text-lg font-semibold">customer Details</h3>
       </div>
       
       <div className="p-6">
-        {/* Subscription Header */}
+     
         <div className="mb-6 border-b pb-4">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-xl font-bold">Subscription #{subscription.id}</h2>
-              <p className="text-gray-600">{subscription.customer_name} - {formatBillingCycle(subscription.billingCycle)} Plan</p>
+              <h2 className="text-xl font-bold">customer #{customer.id}</h2>
+              <p className="text-gray-600">{customer.customer_name} - {formatBillingCycle(customer.billingCycle)} Plan</p>
             </div>
             <div>
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(subscription.status)}`}>
-                {subscription.status}
+              <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(customer.status)}`}>
+                {customer.status}
               </span>
             </div>
           </div>
@@ -86,10 +74,10 @@ const View_customerdetails = () => {
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Customer Information</h4>
             <div className="space-y-2">
-              <p><span className="font-medium">Name:</span> {subscription.customer_name}</p>
-              <p><span className="font-medium">Email:</span> <a href={`mailto:${subscription.customer_email}`} className="text-blue-500 hover:underline">{subscription.customer_email}</a></p>
-              <p><span className="font-medium">Phone:</span> {subscription.customer_phone}</p>
-              <p><span className="font-medium">Type:</span> {subscription.customer_type}</p>
+              <p><span className="font-medium">Name:</span> {customer.customer_name}</p>
+              <p><span className="font-medium">Email:</span> <a href={`mailto:${customer.customer_email}`} className="text-blue-500 hover:underline">{customer.customer_email}</a></p>
+              <p><span className="font-medium">Phone:</span> {customer.customer_phone}</p>
+              <p><span className="font-medium">Type:</span> {customer.customer_type}</p>
             </div>
           </div>
           
@@ -97,10 +85,10 @@ const View_customerdetails = () => {
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Subscription Details</h4>
             <div className="space-y-2">
-              <p><span className="font-medium">Subscription ID:</span> {subscription.id}</p>
-              <p><span className="font-medium">Billing Cycle:</span> {formatBillingCycle(subscription.billingCycle)}</p>
-              <p><span className="font-medium">Cost:</span> ${formatPrice(subscription.cost)}</p>
-              <p><span className="font-medium">Payment Method:</span> {subscription.paymentMethod.replace('_', ' ')}</p>
+              {/* <p><span className="font-medium">Subscription ID:</span> {subscription.id}</p> */}
+              <p><span className="font-medium">Billing Cycle:</span> {formatBillingCycle(customer.billingCycle)}</p>
+              <p><span className="font-medium">Cost:</span> ${formatPrice(customer.cost)}</p>
+              <p><span className="font-medium">Payment Method:</span> {customer.paymentMethod.replace('_', ' ')}</p>
             </div>
           </div>
           
@@ -108,19 +96,19 @@ const View_customerdetails = () => {
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Date Information</h4>
             <div className="space-y-2">
-              <p><span className="font-medium">Start Date:</span> {subscription.startDate}</p>
-              <p><span className="font-medium">End Date:</span> {subscription.endDate}</p>
-              <p><span className="font-medium">Last Payment Date:</span> {subscription.lastPaymentDate}</p>
-              {calculateDaysRemaining(subscription.endDate) > 0 ? (
+              <p><span className="font-medium">Start Date:</span> {customer.startDate}</p>
+              <p><span className="font-medium">End Date:</span> {customer.endDate}</p>
+              <p><span className="font-medium">Last Payment Date:</span> {customer.lastPaymentDate}</p>
+              {calculateDaysRemaining(customer.endDate) > 0 ? (
                 <p className="mt-2">
                   <span className="font-medium">Days Remaining:</span> 
                   <span className="ml-2 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
-                    {calculateDaysRemaining(subscription.endDate)} days
+                    {calculateDaysRemaining(customer.endDate)} days
                   </span>
                 </p>
               ) : (
                 <p className="mt-2">
-                  <span className="font-medium">Subscription Status:</span> 
+                  <span className="font-medium">customer Status:</span> 
                   <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-medium">
                     Expired
                   </span>
@@ -135,11 +123,11 @@ const View_customerdetails = () => {
             <div className="space-y-2">
               <p>
                 <span className="font-medium">Status:</span> 
-                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(subscription.status)}`}>
-                  {subscription.status}
+                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(customer.status)}`}>
+                  {customer.status}
                 </span>
               </p>
-              <p><span className="font-medium">User ID:</span> {subscription.user}</p>
+              <p><span className="font-medium">User ID:</span> {customer.user}</p>
             </div>
           </div>
         </div>
@@ -147,14 +135,14 @@ const View_customerdetails = () => {
         {/* Resources Section */}
         <div className="mt-6 bg-gray-50 p-4 rounded">
           <h4 className="font-medium text-gray-700 mb-3">Resources</h4>
-          {subscription.resources && subscription.resources.length > 0 ? (
+          {customer.resources ? (
             <ul className="list-disc pl-5">
-              {subscription.resources.map((resource, index) => (
+              {customer.resources.map((resource, index) => (
                 <li key={index}>{resource}</li>
               ))}
             </ul>
           ) : (
-            <p className="text-gray-600">No resources assigned to this subscription.</p>
+            <p className="text-gray-600">No resources assigned to this customer.</p>
           )}
         </div>
       </div>

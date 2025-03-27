@@ -26,10 +26,10 @@ function Add_providers({ isOpen, onClose }) {
     console.log(response);
     if(response.status==201){
       onClose(); 
-      alert("successfully dded")
+      alert("successfully added")
     }
     else{
-      alert("something went wrong")
+      alert(response.message)
     }
     // Close modal after submission
   };

@@ -51,6 +51,9 @@ const View_customers = ({ data, limit }) => {
       setCurrentPage(currentPage - 1);
     }
   };
+  const handleViewDetails=(customer)=>{
+    navigate('/dashboard/services/View_customerdetails', { state: { customer } });
+  }
 
   return (
     <div className="w-full">
@@ -86,7 +89,7 @@ const View_customers = ({ data, limit }) => {
                     <td className="py-3 px-4 text-sm">{customer.endDate}</td>
                     <td className="py-3 px-4 text-sm">
                       <button
-                      onClick={()=>{navigate("/dashboard/services/View_customerdetails")}}
+                      onClick={() => handleViewDetails(customer)}
                         className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs font-medium"
                       >
                         View Details

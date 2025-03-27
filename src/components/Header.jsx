@@ -20,10 +20,17 @@ function Header() {
             "/dashboard/hardware": "Hardware",
             "/dashboard/services": "Services",
             "/dashboard/users": "User Management",
+            // // Add nested routes
+            // "/dashboard/subscriptions/addsubscription": "Add Subscription",
+            // "/dashboard/hardware/add_hardware": "Add Hardware",
+            // "/dashboard/services/add_resources": "Add Resources",
+            // "/dashboard/users/adduser": "Add User"
         };
-        const matchedRoute = Object.keys(pageTitles).find(route =>
-            location.pathname.startsWith(route) // Match parent paths
-        );
+        
+        const matchedRoute = Object.keys(pageTitles)
+            .reverse() // Start with most specific routes
+            .find(route => location.pathname.includes(route));
+        
         setPageTitle(pageTitles[matchedRoute] || "Dashboard");
     }, [location]);
 
@@ -42,7 +49,7 @@ function Header() {
         <div className="bg-white p-4 md:p-6 flex items-center justify-between shadow-md w-full h-15">
             <div className="flex items-center gap-4">
                 {/* Dynamic Page Title */}
-                <h1 className="text-xl md:text-3xl font-bold whitespace-nowrap ml-12 md:ml-0">{pageTitle}</h1>
+                <h1 className="text-xl md:text-3xl font-bold whitespace-nowrap ml-12 md:ml-0 text-gray-500">{pageTitle}</h1>
             </div>
 
             {/* Search and Profile */}

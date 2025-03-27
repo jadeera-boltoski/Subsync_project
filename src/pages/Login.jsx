@@ -16,7 +16,7 @@ function Login() {
     const [loginError, setLoginError] = useState('');
     const [loginSuccess, setLoginSuccess] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(true); // New state for password visibility
+    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
     
     useEffect(() => {
         localStorage.removeItem("token"); // Clear token when accessing the login page
@@ -99,7 +99,7 @@ function Login() {
 
                                 <div className="relative">
                                     <input
-                                        type={showPassword ? "password" : "text"}
+                                        type={showPassword ? "text" : "password"}
                                         name="password"
                                         placeholder="PASSWORD"
                                         value={formData.password}

@@ -30,6 +30,7 @@ import View_resources from "./pages/service_pages/View_resources";
 import Add_user from "./pages/usermanagement_pages/Add_user";
 import View_all_customers from "./pages/service_pages/View_all_customers";
 import View_customerdetails from "./pages/service_pages/View_customerdetails";
+import Master from "./pages/Master";
 
 
 
@@ -84,19 +85,23 @@ const AppRouter = () => (
             <Route path="add_resources" element={<Add_resources />} />
             <Route path="add_customers" element={<Add_customers />} />
             <Route path="view_customers" element={<View_customers />} />
-            <Route path="view_allcustomers" element={<View_all_customers/>} />
-            
-            <Route path="View_customerdetails" element={<View_customerdetails/>} />
+            <Route path="view_allcustomers" element={<View_all_customers />} />
+
+            <Route path="View_customerdetails" element={<View_customerdetails />} />
             <Route path="view_resources" element={<View_resources />} />
 
           </Route>
 
           <Route path="users" element={<Usermanagement />} >
-            <Route index element={<View_user />} />  {/* Add this index route */}
-            <Route path="viewuser" element={<View_user />} />
-            <Route path="adduser" element={<Add_user />} />
+            <Route index element={<View_user />} />
+
             <Route path="recyclebin" element={<Recyclebin />} />
             <Route path="changepassword" element={<Changepassword />} />
+          </Route>
+          <Route path="viewuser" element={<View_user />} />
+          <Route path="adduser" element={<Add_user />} />
+          {/* masters */}
+          <Route path="masters" element={<Master />} >
           </Route>
 
         </Route>
