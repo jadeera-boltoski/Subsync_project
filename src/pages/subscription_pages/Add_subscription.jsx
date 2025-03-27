@@ -424,7 +424,7 @@ function Add_subscription() {
 
 
                             {/* Subscription Details Section */}
-                            <div className="bg-white p-4 rounded-lg mt-4 ">
+                            <div className="bg-white p-4 rounded-lg mt-4  ">
                                 <h2 className="text-xl font-bold mb-4">Subscription Details</h2>
                                 <div className="flex flex-col md:flex-row w-full gap-4">
                                     {/* Left Column */}

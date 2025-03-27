@@ -208,7 +208,7 @@ export const validationsubscription = Yup.object({
 
 // validation for edit subscription
 export const subscriptionValidationSchema = Yup.object().shape({
-  version: Yup.string().required('Version is required'),
+  // version: Yup.string().required('Version is required'),
   autoRenewal: Yup.boolean(),
   id:Yup.string().required("need id"),
   no_of_users: Yup.number()
