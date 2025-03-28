@@ -104,7 +104,7 @@ function Services() {
                 <h2 className="font-bold text-sm sm:text-base mb-4 sm:mb-6 ml-1 text-gray-500">Additional Metrics</h2>
                 <div className="grid grid-cols-1 gap-3 sm:gap-4">
                   {/* Box 1: Active Customers */}
-                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-200">
+                  <div className="bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-200" onClick={()=>{navigate('/dashboard/services/view_allcustomers')}}>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs sm:text-sm text-gray-500">Total Active Customers</p>
@@ -119,7 +119,7 @@ function Services() {
                   </div>
 
                   {/* Box 2: Total Resources */}
-                  <div className="bg-purple-50 p-3 sm:p-4 rounded-lg border border-purple-200">
+                  <div className="bg-purple-50 p-3 sm:p-4 rounded-lg border border-purple-200" onClick={()=>{navigate('/dashboard/services/view_resources')}}>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs sm:text-sm text-gray-500">Total Resources</p>
@@ -134,7 +134,7 @@ function Services() {
                   </div>
 
                   {/* Box 3: Warning */}
-                  <div className="bg-red-50 p-3 sm:p-4 rounded-lg border border-red-200">
+                  <div className="bg-red-50 p-3 sm:p-4 rounded-lg border border-red-200"   onClick={()=>{navigate('/dashboard/notifications')}}>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs sm:text-sm text-gray-500">Critical Warnings</p>

@@ -213,15 +213,19 @@ export const subscriptionValidationSchema = Yup.object().shape({
   id:Yup.string().required("need id"),
   no_of_users: Yup.number()
     .positive('Number of users must be positive')
-    .integer('Number of users must be an integer')
-    .required('Number of users is required'),
+    .integer('Number of users must be an integer'),
+    // .required('Number of users is required'),
   // paymentStatus: Yup.string()
   //   .oneOf(['paid', 'unpaid'], 'Invalid payment status')
   //   .required('Payment status is required'),
   // nextPaymentDate: Yup.date().required('Next payment date is required'),
   cost: Yup.number()
     .positive('Cost must be a positive number')
-    .required('Cost is required')
+    .required('Cost is required'),
+
+    last_payment_date: Yup.date()
+  .nullable()
+  .max(new Date(), 'Payment date cannot be in the future')
 });
 
 
@@ -250,6 +254,22 @@ export const validationHardware = Yup.object().shape({
       .typeError("Please enter a valid date"),
     purchasecost: Yup.date()
     .required("Purchase date is required"),
+
+
+    vendor_name: Yup.string()
+    .required('Vendor name is required')
+    .min(2, 'Vendor name must be at least 2 characters')
+    .max(100, 'Vendor name cannot exceed 100 characters'),
+  
+  vendor_contact: Yup.string()
+    .required('Contact name is required')
+    .min(2, 'Contact name must be at least 2 characters')
+    .max(50, 'Contact name cannot exceed 50 characters'),
+  
+  vendor_email: Yup.string()
+    .required('Email is required')
+    .email('Invalid email format')
+    .max(100, 'Email cannot exceed 100 characters'),
   
     // Warranty information
     warrantyExpiryDate: Yup.date()

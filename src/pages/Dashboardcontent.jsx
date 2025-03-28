@@ -68,7 +68,7 @@ function Dashboardcontent() {
       value: total_resources,
       color: "bg-orange-400",
       textColor: "text-orange-700",
-      route: "/dashboard/services"
+      route: "/dashboard/services/view_resources"
        
     }
   ];

@@ -48,7 +48,7 @@ const View_customerdetails = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+    <div className="bg-white rounded-lg shadow-xl w-full max-w-full max-h-[90vh] overflow-y-auto m-4">
       <div className="flex justify-between items-center border-b px-6 py-4">
         <h3 className="text-lg font-semibold">customer Details</h3>
       </div>
@@ -58,8 +58,8 @@ const View_customerdetails = () => {
         <div className="mb-6 border-b pb-4">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-xl font-bold">customer #{customer.id}</h2>
-              <p className="text-gray-600">{customer.customer_name} - {formatBillingCycle(customer.billingCycle)} Plan</p>
+              <h2 className="text-xl font-bold">{customer.customer_name}</h2>
+              <p className="text-gray-600">{formatBillingCycle(customer.billingCycle)} Plan</p>
             </div>
             <div>
               <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(customer.status)}`}>
@@ -87,7 +87,7 @@ const View_customerdetails = () => {
             <div className="space-y-2">
               {/* <p><span className="font-medium">Subscription ID:</span> {subscription.id}</p> */}
               <p><span className="font-medium">Billing Cycle:</span> {formatBillingCycle(customer.billingCycle)}</p>
-              <p><span className="font-medium">Cost:</span> ${formatPrice(customer.cost)}</p>
+              <p><span className="font-medium">Cost:</span> ₹{formatPrice(customer.cost)}</p>
               <p><span className="font-medium">Payment Method:</span> {customer.paymentMethod.replace('_', ' ')}</p>
             </div>
           </div>
@@ -127,7 +127,7 @@ const View_customerdetails = () => {
                   {customer.status}
                 </span>
               </p>
-              <p><span className="font-medium">User ID:</span> {customer.user}</p>
+              {/* <p><span className="font-medium">Customer ID:</span> {customer.id}</p> */}
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@ const View_customerdetails = () => {
       
       <div className="border-t px-6 py-4 flex justify-end">
         <button 
-          onClick={() => navigate('/dashboard/subscriptions')}
+          onClick={() => navigate('/dashboard/services/view_allcustomers')}
           className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded mr-2"
         >
           Back
@@ -160,9 +160,9 @@ const View_customerdetails = () => {
           Edit
         </button>
         <button 
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
         >
-          Renew Subscription
+         Delete
         </button>
       </div>
     </div>

@@ -35,6 +35,9 @@ const Add_hardware = () => {
       assignedTo: "",
       purchaseDate: "",
       purchasecost:"",
+      vendor_name:"",
+      vendor_contact:"",
+      vendor_email:"",
       warrantyExpiryDate: "",
       isExtendedWarranty: false,  // Boolean to indicate if warranty is extended
       extendedWarrantyPeriod: "", // Duration of extended warranty if applicable
@@ -198,10 +201,62 @@ const Add_hardware = () => {
             ) : null}
           </div>
 
+          
+          <div>
+            <label htmlFor="vendor_name" className="block text-sm font-medium text-gray-700 mb-1">Vendor Name</label>
+            <input
+              id="vendor_name"
+              name="vendor_name"
+              type="text"
+              className="border p-2 rounded w-full focus:ring-blue-500 focus:border-blue-500"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.vendor_name}
+              max={new Date().toISOString().split('T')[0]}
+            />
+            {formik.touched.vendor_name && formik.errors.vendor_name ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.vendor_name}</div>
+            ) : null}
+          </div>
+
+          <div>
+            <label htmlFor="vendor_contact" className="block text-sm font-medium text-gray-700 mb-1">Vendor Contact</label>
+            <input
+              id="vendor_contact"
+              name="vendor_contact"
+              type="number"
+              className="border p-2 rounded w-full focus:ring-blue-500 focus:border-blue-500"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.vendor_contact}
+              max={new Date().toISOString().split('T')[0]}
+            />
+            {formik.touched.vendor_contact && formik.errors.vendor_contact ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.vendor_contact}</div>
+            ) : null}
+          </div>
+
+          <div>
+            <label htmlFor="vendor_email" className="block text-sm font-medium text-gray-700 mb-1">Vendor Email</label>
+            <input
+              id="vendor_email"
+              name="vendor_email"
+              type="text"
+              className="border p-2 rounded w-full focus:ring-blue-500 focus:border-blue-500"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.vendor_email}
+              max={new Date().toISOString().split('T')[0]}
+            />
+            {formik.touched.vendor_email && formik.errors.vendor_email ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.vendor_email}</div>
+            ) : null}
+          </div>
 
 
 
-          <div className="col-span-2">
+
+          <div className="col-span-1">
             <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
             <select
               id="assignedTo"

@@ -93,13 +93,13 @@ const AppRouter = () => (
           </Route>
 
           <Route path="users" element={<Usermanagement />} >
-            <Route index element={<View_user />} />
-
-            <Route path="recyclebin" element={<Recyclebin />} />
+            {/* <Route index  element={<Recyclebin />} /> */}
+            <Route path="viewuser" element={<View_user />} />
+            <Route path="adduser" element={<Add_user />} />
+            <Route  path="recyclebin" element={<Recyclebin />} />
             <Route path="changepassword" element={<Changepassword />} />
           </Route>
-          <Route path="viewuser" element={<View_user />} />
-          <Route path="adduser" element={<Add_user />} />
+         
           {/* masters */}
           <Route path="masters" element={<Master />} >
           </Route>

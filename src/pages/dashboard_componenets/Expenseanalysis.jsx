@@ -9,139 +9,6 @@ import { getexpenditure_data } from '../../services/allapi';
 const Expenseanalysis = () => {
   const navigate=useNavigate()
   
-  // Sample data - replace with your actual data
-  // const monthlyData = [
-  //   {
-  //     month: 'Jan',
-  //     Software: 2000,
-  //     Server: 1000,
-  //     Domain: 800,
-  //     Utility: 1500,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Feb',
-  //     Software: 2200,
-  //     Server: 1000,
-  //     Domain: 800,
-  //     Utility: 1600,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Mar',
-  //     Software: 2100,
-  //     Server: 1100,
-  //     Domain: 900,
-  //     Utility: 1700,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Apr',
-  //     Software: 2300,
-  //     Server: 1050,
-  //     Domain: 850,
-  //     Utility: 1800,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'May',
-  //     Software: 2500,
-  //     Server: 1200,
-  //     Domain: 950,
-  //     Utility: 2000,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Jun',
-  //     Software: 2400,
-  //     Server: 1150,
-  //     Domain: 1000,
-  //     Utility: 2100,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Jul',
-  //     Software: 2600,
-  //     Server: 1300,
-  //     Domain: 1100,
-  //     Utility: 2200,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Aug',
-  //     Software: 2700,
-  //     Server: 1250,
-  //     Domain: 1050,
-  //     Utility: 2300,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Sep',
-  //     Software: 2800,
-  //     Server: 1350,
-  //     Domain: 1150,
-  //     Utility: 2400,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Oct',
-  //     Software: 3000,
-  //     Server: 1400,
-  //     Domain: 1200,
-  //     Utility: 2600,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Nov',
-  //     Software: 3200,
-  //     Server: 1450,
-  //     Domain: 1250,
-  //     Utility: 2800,
-  //     year: 2023
-  //   },
-  //   {
-  //     month: 'Dec',
-  //     Software: 3300,
-  //     Server: 1500,
-  //     Domain: 1300,
-  //     Utility: 3000,
-  //     year: 2023
-  //   },
-  //   // Data for 2024
-  //   {
-  //     month: 'Jan',
-  //     Software: 3000,
-  //     Server: 1200,
-  //     Domain: 900,
-  //     Utility: 1800,
-  //     year: 2024
-  //   },
-  //   {
-  //     month: 'Feb',
-  //     Software: 3100,
-  //     Server: 1250,
-  //     Domain: 950,
-  //     Utility: 1900,
-  //     year: 2024
-  //   },
-  //   {
-  //     month: 'Feb',
-  //     Software: 3100,
-  //     Server: 1250,
-  //     Domain: 950,
-  //     Utility: 1900,
-  //     year: 2025
-  //   },
-  //   {
-  //     month: 'Mar',
-  //     Software: 3200,
-  //     Server: 1300,
-  //     Domain: 1000,
-  //     Utility: 2000,
-  //     year: 2024
-  //   },
-  //   // Add more months for 2024 as needed
-  // ];
 
   const[monthlyData,setmonthlyData]=useState([])
 
@@ -244,7 +111,7 @@ const Expenseanalysis = () => {
   };
 
   return (
-    <div className="w-full bg-gray-900 text-white p-3 rounded-lg">
+    <div className="w-full bg-gray-200 text-white p-3 rounded-lg">
       <div className="mb-3 flex justify-between items-center">
         <h2 className="text-xl font-bold text-center w-full bg-blue-500 py-2 rounded">
           {viewType === 'monthly' ? 'Monthly Expenditures by Category' : 'Yearly Expenditures by Category'}

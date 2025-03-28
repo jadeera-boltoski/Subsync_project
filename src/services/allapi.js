@@ -39,6 +39,11 @@ export const getuser=()=>{
      return commonRequest("GET",`${BASE_URL}/users/`,"")
 }
 
+// get user role
+export const getuser_role=()=>{
+    return commonRequest("GET",`${BASE_URL}/check-superuser/`,"")
+}
+
 
 
 // set user by activate or deactivate
@@ -241,10 +246,7 @@ export const getcustomers=()=>{
 
 
 
-// get user role
-export const getuser_role=()=>{
-    return commonRequest("GET",`${BASE_URL}/check-superuser/`,"")
-}
+
 
 
 
@@ -254,6 +256,15 @@ export const getrecyclebin=()=>{
         return commonRequest("GET",`${BASE_URL}/recycle-bin/`,"")
 }
 
+// recycle bin restore
+export const restoredata=(body)=>{
+    return commonRequest("POST",`${BASE_URL}/recycle-bin/`,body)
+}
+
+// permenantly delete data 
+export const deletedata=(body)=>{
+    return commonRequest("POST",`${BASE_URL}/recycle-bin/`,body)
+}
 
 
 

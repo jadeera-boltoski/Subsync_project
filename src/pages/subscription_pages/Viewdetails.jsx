@@ -20,28 +20,20 @@ const Viewdetails = () => {
 
   const formik = useFormik({
     initialValues: {
-      id: subscription.id,
-      category: subscription.subscription_category,
-      version: subscription.software_version || '',
-      auto_renewal: subscription.auto_renewal,
-      no_of_users: subscription.software_no_of_users || 1,
-      // paymentStatus: subscription.payment_status || 'unpaid',
-      // nextPaymentDate: subscription.next_payment_date || '',
-      cost: subscription.cost || 0,
+  id: subscription?.id || null,
+  category: subscription?.subscription_category || '',
+  version: subscription?.software_version || '',
+  auto_renewal: Boolean(subscription?.auto_renewal) || false,
+  no_of_users: Number(subscription?.software_no_of_users) || 1,
+  
+  cost: Number(subscription?.cost) || 0,
+  
+  name_servers: subscription?.name_servers || '',
+  server_capacity: subscription?.server_capacity || '',
 
-
-      name_servers: subscription.name_servers,
-      server_capacity: subscription.server_capacity,
-
-
-
-
-
-
-      // billing
-      last_payment_date:subscription.last_payment_date||'',
-      billing_cycle:subscription.billing_cycle||''
-    },
+  last_payment_date: subscription?.last_payment_date || null,
+  billing_cycle: subscription?.billing_cycle || ''
+},
     validationSchema: subscriptionValidationSchema,
     onSubmit: async (values) => {
       try {
@@ -58,7 +50,7 @@ const Viewdetails = () => {
             state: { message: 'Subscription updated successfully' }
           });
         } else {
-          alert(response.message || 'Failed to update subscription');
+          alert(response.message);
         }
       } catch (error) {
         console.error('Update failed:', error);
@@ -264,12 +256,7 @@ const Viewdetails = () => {
       <div className="bg-white rounded-lg shadow-xl w-full  mr-4  max-h-[90vh] overflow-y-auto ">
         <div className="flex justify-between items-center border-b px-6 py-4">
           <h3 className="text-lg font-semibold">Subscription Details</h3>
-          <button
-            onClick={handleClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            ✕
-          </button>
+         
         </div>
 
         <div className="p-6">
@@ -325,11 +312,12 @@ const Viewdetails = () => {
               <div className="space-y-2">
                 <p><span className="font-medium">Start Date:</span> {subscription.start_date}</p>
                 <p><span className="font-medium">End Date:</span> {subscription.end_date}</p>
-                {calculateDaysRemaining(subscription.end_date) > 0 ? (
+                
+                {calculateDaysRemaining(subscription.next_payment_date) > 0 ? (
                   <p className="mt-2">
-                    <span className="font-medium">Time Remaining:</span>
+                    <span className="font-medium">Days Left Until Expiration:</span>
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
-                      {calculateDaysRemaining(subscription.end_date)} days
+                      {calculateDaysRemaining(subscription.next_payment_date)} days
                     </span>
                   </p>
                 ) : (

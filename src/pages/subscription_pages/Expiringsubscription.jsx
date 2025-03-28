@@ -99,7 +99,11 @@ const Expiringsubscription = () => {
                             {/* Button - Smaller */}
                             <button 
                                 className="bg-white text-[#C25E5E] py-1 px-3 rounded text-sm sm:text-base font-bold hover:bg-gray-100 transition"
-                                onClick={() => { navigate('/dashboard/subscriptions/Viewdetails') }}
+                                onClick={() => { 
+                                    navigate('/dashboard/subscriptions/Viewdetails', { 
+                                      state: { subscription: subscription } 
+                                    }) 
+                                  }}
                             >
                                 VIEW
                             </button>
