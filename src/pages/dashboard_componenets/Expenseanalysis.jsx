@@ -113,7 +113,7 @@ const Expenseanalysis = () => {
   return (
     <div className="w-full bg-gray-200 text-white p-3 rounded-lg">
       <div className="mb-3 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-center w-full bg-blue-500 py-2 rounded">
+        <h2 className="text-xl font-bold text-center w-full bg-blue-950 py-2 rounded">
           {viewType === 'monthly' ? 'Monthly Expenditures by Category' : 'Yearly Expenditures by Category'}
         </h2>
       </div>
@@ -122,7 +122,7 @@ const Expenseanalysis = () => {
       <h6 className='font-bold text-blue-400 cursor-default mr-auto ml-2' onClick={() => navigate("/dashboard/expense_report")}>View Report</h6>
         <div>
           
-          <label className="mr-2 text-xs">View:</label>
+          <label className="mr-2 text-xs text-gray-600">View:</label>
           <select
             className="bg-gray-700 text-white px-2 py-0.5 text-xs rounded border border-gray-600"
             value={viewType}
@@ -135,7 +135,7 @@ const Expenseanalysis = () => {
 
         {viewType === 'monthly' && (
           <div>
-            <label className="mr-2 text-xs">Year:</label>
+            <label className="mr-2 text-xs text-gray-600">Year:</label>
             <select
               className="bg-gray-700 text-white px-2 py-0.5 text-xs rounded border border-gray-600"
               value={selectedYear}
@@ -165,11 +165,11 @@ const Expenseanalysis = () => {
             <CartesianGrid strokeDasharray="3 3" stroke="#444" />
             <XAxis
               dataKey={viewType === 'monthly' ? 'month' : 'year'}
-              tick={{ fill: '#fff' }}
+              tick={{ fill: 'gray' }}
             />
             <YAxis
               tickFormatter={tick => `₹${tick / 1000}K`}
-              tick={{ fill: '#fff' }}
+              tick={{ fill: 'gray' }}
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ color: '#fff' }} />
@@ -192,7 +192,7 @@ const Expenseanalysis = () => {
           };
 
           return (
-            <div key={category} className="bg-gray-800 p-2 rounded">
+            <div key={category} className="bg-blue-950 p-2 rounded">
               <div className="flex items-center">
                 <div
                   className="w-3 h-3 rounded-full mr-2"

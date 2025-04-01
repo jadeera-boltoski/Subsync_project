@@ -44,7 +44,7 @@ function Add_user() {
           resetForm();
           navigate('/dashboard/users/viewuser'); // Redirect after success
         }else{
-          alert("something went wrong")
+          alert(response.message)
         }
          
       } catch (error) {

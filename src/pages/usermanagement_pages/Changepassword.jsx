@@ -43,7 +43,7 @@ const SimplePasswordForm = () => {
       console.log('Changing password...', values);
       const response=await changepassword(values)
       console.log(response);
-      if(response.status==201){
+      if(response.status==200){
         alert(response.message)
         navigate("/")
       }else{

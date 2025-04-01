@@ -218,6 +218,7 @@ const RecycleBin = () => {
 
         // Show success message
         alert(`Successfully permenatly deleted the  ${ids.length} item(s)`);
+        window.location.reload()
       }
 
     } catch (err) {

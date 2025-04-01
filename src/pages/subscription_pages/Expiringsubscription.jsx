@@ -6,14 +6,14 @@ const Expiringsubscription = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [subscriptions, setSubscriptions] = useState([]);
     const navigate = useNavigate();
-    
+
     // Fetch data without loading state
     useEffect(() => {
         const fetchSubscriptions = async () => {
             try {
                 const response = await getexpiredsub();
-                console.log("expires",response);
-                
+                console.log("expires", response);
+
                 setSubscriptions(response || []);
             } catch (error) {
                 console.error("Error fetching subscription data:", error);
@@ -23,7 +23,7 @@ const Expiringsubscription = () => {
 
         fetchSubscriptions();
     }, []);
-    
+
     const nextSlide = useCallback(() => {
         setActiveIndex((current) =>
             current === subscriptions.length - 1 ? 0 : current + 1
@@ -40,12 +40,12 @@ const Expiringsubscription = () => {
     useEffect(() => {
         // Only set up auto-slide if we have multiple subscriptions
         if (subscriptions.length <= 1) return;
-        
+
         // Change slide every 5 seconds
         const slideInterval = setInterval(() => {
             nextSlide();
-        },5000); // 5000ms = 5 seconds
-        
+        }, 5000); // 5000ms = 5 seconds
+
         // Clean up interval on component unmount or when dependencies change
         return () => clearInterval(slideInterval);
     }, [nextSlide, subscriptions.length]);
@@ -62,51 +62,46 @@ const Expiringsubscription = () => {
     return (
         <div className="relative w-full max-w-full overflow-hidden mb-2">
             {/* More compact carousel container */}
-            <div className="relative w-full h-48 sm:h-52 md:h-56">
+            <div className="relative w-full h-48 sm:h-52 md:h-28">
                 {subscriptions.map((subscription, index) => (
                     <div
                         key={index}
-                        className={`absolute w-full h-full transition-all duration-300 ease-in-out ${
-                            index === activeIndex
-                                ? "opacity-100 translate-x-0"
-                                : index < activeIndex
-                                    ? "opacity-0 -translate-x-full"
-                                    : "opacity-0 translate-x-full"
-                        }`}
+                        className={`absolute w-full h-full transition-all duration-300 ease-in-out ${index === activeIndex
+                            ? "opacity-100 translate-x-0"
+                            : index < activeIndex
+                                ? "opacity-0 -translate-x-full"
+                                : "opacity-0 translate-x-full"
+                            }`}
                     >
-                        <div className="w-full h-full rounded-lg shadow-md flex flex-col items-center justify-center p-3 bg-[#EEC8C5]">
-                            {/* Counter - Smaller and more subtle */}
-                            <div className="mr-0 ml-auto text-xs text-white mb-1 rounded-full px-2 py-0.5 bg-[#C25E5E]/30">
-                                {activeIndex + 1}/{subscriptions.length}
-                            </div>
-                            
-                            {/* Heading - Smaller */}
-                            <h2 className="text-[#C25E5E] text-xl sm:text-2xl font-bold mb-2 text-center">
-                                EXPIRING SOON!
-                            </h2>
+                        <div className="w-full h-full rounded-lg shadow-md flex flex-col items-center justify-center p-3 bg-[#f6b44af8]">
 
-                            {/* Content - More compact */}
-                            <h3 className="text-base sm:text-lg font-bold mb-1 text-center">
+
+                            {/* Heading - Smaller */}
+                            
+                                <h2 className="text-[#060606] text-l sm:text-xl font-bold text-center">
+                                    EXPIRING SOON!
+                                </h2>
+
+                                <p className="text-sm sm:text-base text-black  text-center">
                                 {subscription.name}
-                            </h3>
-                            <p className="text-sm sm:text-base mb-1 text-center">
-                                Next Payment: {subscription.next_payment_date}
-                            </p>
-                            <p className="text-sm sm:text-base mb-2 text-center">
-                                Amount: ₹{subscription.cost}
-                            </p>
+                                </p>
+                         
+
 
                             {/* Button - Smaller */}
-                            <button 
-                                className="bg-white text-[#C25E5E] py-1 px-3 rounded text-sm sm:text-base font-bold hover:bg-gray-100 transition"
-                                onClick={() => { 
-                                    navigate('/dashboard/subscriptions/Viewdetails', { 
-                                      state: { subscription: subscription } 
-                                    }) 
-                                  }}
-                            >
-                                VIEW
-                            </button>
+                            
+                                <button
+                                    className="bg-white flex text-end justify-end  text-[#C25E5E]  px-1 rounded text-xs sm:text-[15px] font-bold hover:bg-gray-100 transition"
+                                    onClick={() => {
+                                        navigate('/dashboard/subscriptions/Viewdetails', {
+                                            state: { subscription: subscription }
+                                        })
+                                    }}
+                                >
+                                    VIEW
+                                </button>
+                          
+
                         </div>
                     </div>
                 ))}
@@ -144,9 +139,8 @@ const Expiringsubscription = () => {
                         <button
                             key={index}
                             onClick={() => setActiveIndex(index)}
-                            className={`w-1.5 h-1.5 rounded-full transition-all ${
-                                index === activeIndex ? "bg-[#C25E5E]" : "bg-white/60"
-                            }`}
+                            className={`w-1.5 h-1.5 rounded-full transition-all ${index === activeIndex ? "bg-[#C25E5E]" : "bg-white/60"
+                                }`}
                             aria-label={`Go to slide ${index + 1}`}
                         />
                     ))}

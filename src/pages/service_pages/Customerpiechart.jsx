@@ -4,18 +4,14 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { getcustomerpiechart } from '../../services/allapi';
 
 const Customerpiechart = () => {
-  // Sample data
-  // const data = [
-  //   { name: 'Inhouse', value: 35 },
-  //   { name: 'External', value: 65 },
-  // ];
+ 
 
 
   const[data,setdata]=useState([])
   useEffect(()=>{
     const getdata=async()=>{
       const response=await getcustomerpiechart()
-      console.log(response);
+      console.log("heloooo nishida nokku",response);
       setdata(response)
       
     }

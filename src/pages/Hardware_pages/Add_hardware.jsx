@@ -10,11 +10,12 @@ const deviceSpecificFields = {
   Desktop: ["CPU", "RAM", "Storage"],
   "Mobile Phone": ["OS_Version", "Storage", "IMEI_Number"],
   Tablet: ["OS_Version", "Storage"],
-  "Network Device": ["Throughput", "IP_Address"],
+  "Network Device": ["Name_Specification","Throughput", "IP_Address"],
   "Air Conditioner": ["BTU_Rating", "EnergyP_Rating"],
-  "On-Premise Server": ["CPU", "RAM", "Storage_Configuration", "Operating_System"],
+  "On-Premise Server": ["Server_Name","CPU", "RAM", "Storage", "Operating_System"],
   Printer: ["Print_Technology", "Print_Speed", "Connectivity"],
   Scanner: ["Scan_Resolution", "Scan_Type", "Connectivity"],
+  other:["specify_Device"],
   
 };
 
@@ -58,7 +59,7 @@ const Add_hardware = () => {
         navigate("/dashboard/hardware/view_hardware")
       }
       else{
-        alert("something went wrong")
+        alert(response.message)
       }
 
       // Handle form submission here
@@ -108,7 +109,7 @@ const Add_hardware = () => {
               {Object.keys(deviceSpecificFields).map((type) => (
                 <option key={type} value={type}>{type}</option>
               ))}
-              <option value="Other">Other</option>
+              {/* <option value="Other">Other</option> */}
             </select>
             {formik.touched.deviceType && formik.errors.deviceType ? (
               <div className="text-red-500 text-sm mt-1">{formik.errors.deviceType}</div>
@@ -185,7 +186,7 @@ const Add_hardware = () => {
           </div>
           
           <div>
-            <label htmlFor="purchasecost" className="block text-sm font-medium text-gray-700 mb-1">Purchase Cost</label>
+            <label htmlFor="purchasecost" className="block text-sm font-medium text-gray-700 mb-1">Purchase Cost(₹)</label>
             <input
               id="purchasecost"
               name="purchasecost"
@@ -336,7 +337,7 @@ const Add_hardware = () => {
               ) : null}
             </div>
             <div>
-              <label htmlFor="serviceCost" className="block text-sm font-medium text-gray-700 mb-1">Service Cost <span className="text-gray-500">(Optional)</span></label>
+              <label htmlFor="serviceCost" className="block text-sm font-medium text-gray-700 mb-1">Service Cost(₹)<span className="text-gray-500">(Optional)</span></label>
               <input
                 id="serviceCost"
                 name="serviceCost"

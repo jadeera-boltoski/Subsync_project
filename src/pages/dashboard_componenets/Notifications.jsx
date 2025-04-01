@@ -1,4 +1,7 @@
-import React from 'react';
+// import React from 'react';
+
+import { useEffect } from "react";
+import { getnotifications } from "../../services/allapi";
 
 function Notifications() {
   const notifications = [
@@ -38,6 +41,17 @@ function Notifications() {
       icon: '👤'
     }
   ];
+
+
+  useEffect(()=>{
+    const getdata=async()=>{
+      const response = await getnotifications() 
+      console.log(response);
+      
+    }
+    getdata()
+  },[])
+
 
   const getTypeStyles = (type) => {
     switch (type) {

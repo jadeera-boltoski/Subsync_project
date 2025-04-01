@@ -262,9 +262,9 @@ export const validationHardware = Yup.object().shape({
     .max(100, 'Vendor name cannot exceed 100 characters'),
   
   vendor_contact: Yup.string()
-    .required('Contact name is required')
+    .required('Contact number is required')
     .min(2, 'Contact name must be at least 2 characters')
-    .max(50, 'Contact name cannot exceed 50 characters'),
+    .max(15, 'Contact name cannot exceed 50 characters'),
   
   vendor_email: Yup.string()
     .required('Email is required')

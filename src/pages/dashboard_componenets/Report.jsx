@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { getreport } from '../../services/allapi';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const Report = () => {
-  const [selectedYear, setSelectedYear] = useState('2024');
+  const [selectedYear, setSelectedYear] = useState();
   const [monthlyData, setMonthlyData] = useState([]);
   const [totals, setTotals] = useState({});
   const [isMobile, setIsMobile] = useState(false);
-  const [availableYears, setAvailableYears] = useState(['2024', '2025']);
+  const [availableYears, setAvailableYears] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -98,15 +100,84 @@ const Report = () => {
   };
   
   const downloadPDF = () => {
-    // In a real implementation, this would generate and download a PDF
-    alert('PDF download functionality would be implemented here');
+    // Create a new jsPDF instance
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text('EXPENDITURE YEARLY REPORT', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+    
+    // Add company info
+    doc.setFontSize(14);
+    doc.text('Yearly Subscription Statement', doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text(`Company Name: Rits Software`, doc.internal.pageSize.getWidth() / 2, 38, { align: 'center' });
+    doc.text(`Year: ${selectedYear}`, doc.internal.pageSize.getWidth() / 2, 45, { align: 'center' });
+    
+    // Add the data as a table
+    if (monthlyData.length > 0) {
+      // Prepare the data for the table
+      const tableData = monthlyData.map(item => [
+        item.month,
+        item.software,
+        item.domain,
+        item.server,
+        item.utility,
+        item.total
+      ]);
+      
+      // Define table headers
+      const headers = [['Month', 'Software', 'Domain', 'Server', 'Utility Bills', 'Total']];
+      
+      // Use autoTable directly instead of as a method of doc
+      autoTable(doc, {
+        head: headers,
+        body: tableData,
+        theme: 'grid',
+        headStyles: { fillColor: [0, 32, 96], textColor: 255, fontStyle: 'bold' },
+        bodyStyles: { textColor: 40 },
+        
+        margin: { top: 55 },
+        foot: [['TOTAL', totals.software, totals.domain, totals.server, totals.utility, totals.total]],
+        footStyles: { fillColor: [220, 220, 220], textColor: 40, fontStyle: 'bold' },
+        didDrawPage: function(data) {
+          // Add a footer with page number
+          doc.setFontSize(10);
+          doc.text(
+            `Page ${doc.internal.getNumberOfPages()}`,
+            data.settings.margin.left,
+            doc.internal.pageSize.getHeight() - 10
+          );
+          
+          // Add timestamp
+          const date = new Date().toLocaleString();
+          doc.text(
+            `Generated on: ${date}`,
+            doc.internal.pageSize.getWidth() - data.settings.margin.right,
+            doc.internal.pageSize.getHeight() - 10,
+            { align: 'right' }
+          );
+        }
+      });
+      
+      // // Add note at the bottom
+      // doc.setFontSize(10);
+      // doc.text(
+      //   'This is an automatically generated report. All amounts are in INR.',
+      //   doc.internal.pageSize.getWidth() / 2, 
+      //   doc.internal.pageSize.getHeight() - 20,
+      //   { align: 'center' }
+      // );
+    } else {
+      // No data message
+      doc.setFontSize(12);
+      doc.text('No data available for the selected year.', doc.internal.pageSize.getWidth() / 2, 70, { align: 'center' });
+    }
+    
+    // Save the PDF
+    doc.save(`Expenditure_Report_${selectedYear}.pdf`);
   };
   
-  const downloadCSV = () => {
-    // In a real implementation, this would generate and download a CSV
-    alert('CSV download functionality would be implemented here');
-  };
-
   // Mobile card view for each month's data
    
   const MobileCard = ({ data }) => (
@@ -172,6 +243,7 @@ const Report = () => {
     );
   }
 
+  
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -199,18 +271,12 @@ const Report = () => {
             >
               Download PDF
             </button>
-            <button 
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-              onClick={downloadCSV}
-            >
-              Download CSV
-            </button>
           </div>
         </div>
         
         <div className="text-xl md:text-2xl text-center mb-6">
           <div className="md:mb-0 mb-2">Yearly Subscription Statement</div>
-          <div className="text-base md:text-lg font-medium">Company Name: Your Company Name</div>
+          <div className="text-base md:text-lg font-medium">Company Name: Rits Software</div>
           <div className="text-sm md:text-base">Year: {selectedYear}</div>
         </div>
         
@@ -226,7 +292,7 @@ const Report = () => {
                 <table className="min-w-full bg-white">
                   <thead>
                     <tr className="bg-blue-950 text-white">
-                      <th colSpan={1} className="px-4 py-2 text-left border">Company Name: Your Company Name</th>
+                      <th colSpan={1} className="px-4 py-2 text-left border">Company Name: Rits Software</th>
                       <th colSpan={1} className="px-4 py-2 text-left border">Unit: Currency (INR)</th>
                       <th colSpan={2} className="px-4 py-2 text-right border">Year:</th>
                       <th colSpan={2} className="px-4 py-2 text-center border">{selectedYear}</th>

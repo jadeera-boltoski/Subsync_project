@@ -33,7 +33,7 @@ function Add_resources() {
           navigate("/dashboard/services/view_resources")
         }
         else{
-          alert("hello")
+          alert(response.message.storage_capacity||response.message)
         }
     }
   });

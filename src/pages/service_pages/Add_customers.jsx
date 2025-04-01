@@ -304,7 +304,7 @@ function Add_customers() {
 
                   <div className="mb-4">
                     <label htmlFor="cost" className="block mb-1">
-                      Cost:
+                      Service Cost:
                     </label>
                     <input
                       type="text"

@@ -243,7 +243,9 @@ export const getcustomers=()=>{
 
 
 
-
+export const getnotifications=()=>{
+    return commonRequest("GET",`${BASE_URL}/notifications/`,"")
+}
 
 
 
