@@ -308,10 +308,10 @@ function Add_resources() {
                     className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="" selected disabled>select</option>
-                    <option value="server 1">server1</option>
+                   
                     {serverLocations.map((server, index) => (
-                      <option key={index} value={server.name || server.id || server}>
-                        {server.name || server.id || server}
+                      <option key={index} value={server?.name || server?.id || server}>
+                        {server?.name || server?.id || server}
                       </option>
                     ))}
                   </select>

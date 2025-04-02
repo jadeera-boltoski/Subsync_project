@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Deletehardware, edithardware } from '../../services/allapi';
 
 const View_hardwareDetails = () => {
   const navigate = useNavigate();
@@ -8,23 +9,38 @@ const View_hardwareDetails = () => {
 
   const [check, setcheck] = useState(false)
 
+
   const device = location.state?.device;
   console.log("dfdf", device);
 
 
-  const formik=useFormik({
-    initialValues:{
-      last_service_date: device?.services[0].last_service_date || '',
-      service_cost: device?.services[0].service_cost || '',
+  const formik = useFormik({
+    initialValues: {
+      id:device?.id,
+      last_service_date: device?.services?.[0]?.last_service_date || '',
+      service_cost: device?.services?.[0]?.service_cost || '',
       status: device?.status || '',
       assigned_department: device?.assigned_department || '',
       notes: device?.notes || '',
-     
-   
     },
     onSubmit: async (values) => {
-      console.log("hello jadeera",values);
-      
+      console.log("hello jadeera", values);
+      try {
+        const response = await edithardware(values)
+        console.log(response);
+        if(response.status==200){
+          alert(response.message)
+        }
+        else{
+          alert(response.message)
+        }
+        
+        
+      } catch (error) {
+        console.error("Error deleting hardware:", error);
+        alert("Something went wrong!");
+      }
+
     }
 
   })
@@ -70,7 +86,7 @@ const View_hardwareDetails = () => {
             <div className="space-y-2">
               <p><span className="font-medium">Processor:</span> {device.computer.cpu}</p>
               <p><span className="font-medium">RAM:</span> {device.computer.ram}</p>
-              <p><span className="font-medium">Storage:</span> {device.computer.storage}</p>
+              <p><span className="font-medium">Storage:</span> {device.computer?.storage}</p>
 
               {/* {device.hardware_type.toLowerCase() === "on-premise server" && (
                 <p><span className="font-medium">Operating System:</span> {device.computer.os}</p>
@@ -86,9 +102,9 @@ const View_hardwareDetails = () => {
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Mobile Device Specifications</h4>
             <div className="space-y-2">
-              <p><span className="font-medium">IMEI Number:</span> {device.portable_device.imei_number}</p>
-              <p><span className="font-medium">OS Version:</span> {device.portable_device.os_version}</p>
-              <p><span className="font-medium">Storage:</span> {device.portable_device.storage}</p>
+              <p><span className="font-medium">IMEI Number:</span> {device?.portable_device?.imei_number}</p>
+              <p><span className="font-medium">OS Version:</span> {device?.portable_device?.os_version}</p>
+              <p><span className="font-medium">Storage:</span> {device?.portable_device?.storage}</p>
 
             </div>
           </div>
@@ -101,8 +117,8 @@ const View_hardwareDetails = () => {
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Mobile Device Specifications</h4>
             <div className="space-y-2">
-              <p><span className="font-medium">BTU Rating:</span> {device.air_conditioner.btu_rating}</p>
-              <p><span className="font-medium">Energy Efficiency Rating:</span> {device.air_conditioner.energy_rating}</p>
+              <p><span className="font-medium">BTU Rating:</span> {device?.air_conditioner?.btu_rating}</p>
+              <p><span className="font-medium">Energy Efficiency Rating:</span> {device?.air_conditioner?.energy_rating}</p>
 
 
             </div>
@@ -114,9 +130,9 @@ const View_hardwareDetails = () => {
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Network Device Specifications</h4>
             <div className="space-y-2">
-              <p><span className="font-medium">Throughput:</span> {device.network_device.throughput}</p>
-              <p><span className="font-medium">IP Address:</span> {device.network_device.ip_address}</p>
-              <p><span className="font-medium">Device name:</span> {device.network_device.name_specification}</p>
+              <p><span className="font-medium">Throughput:</span> {device?.network_device?.throughput}</p>
+              <p><span className="font-medium">IP Address:</span> {device?.network_device?.ip_address}</p>
+              <p><span className="font-medium">Device name:</span> {device?.network_device?.name_specification}</p>
 
             </div>
           </div>
@@ -174,17 +190,44 @@ const View_hardwareDetails = () => {
   const handleedit = () => {
     setcheck(!check)
   }
+  const [isDeleting, setIsDeleting] = useState(false);
 
- 
+  const handleDelete = async () => {
+    const confirmChange = window.confirm("Are you sure you want to delete this hardware?");
+    if (!confirmChange) return;
+
+    setIsDeleting(true); // Show loading state
+
+    try {
+      const response = await Deletehardware(device.id);
+      console.log("Response:", response);
+
+      if (response.status === 200) {
+        // alert("Hardware deleted successfully!");
+        alert(response.message)
+        navigate("/dashboard/hardware/view_hardware");
+      } else {
+        alert(response.message)
+        // alert("Failed to delete hardware.");
+      }
+    } catch (error) {
+      console.error("Error deleting hardware:", error);
+      alert("Something went wrong!");
+    } finally {
+      setIsDeleting(false); // Reset loading state
+    }
+  };
+
+
 
   return (
     <div className='flex'>
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full px-12 py-12 max-h-[90vh] overflow-y-auto ">
         <div className="flex justify-between items-center border-b px-6 py-4">
           <h3 className="text-lg font-semibold">Hardware Details</h3>
-  
+
         </div>
-  
+
         <div className="p-6">
           {/* Device Header */}
           <div className="mb-6 border-b pb-4">
@@ -200,43 +243,43 @@ const View_hardwareDetails = () => {
               </div>
             </div>
           </div>
-  
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Basic Information */}
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Basic Information</h4>
               <div className="space-y-2">
-  
+
                 <p><span className="font-medium">Manufacturer:</span> {device.manufacturer}</p>
                 <p><span className="font-medium">Model:</span> {device.model_number}</p>
                 <p><span className="font-medium">Serial Number:</span> {device.serial_number}</p>
               </div>
             </div>
-  
+
             {/* Assignment Information */}
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Assignment Information</h4>
               <div className="space-y-2">
                 <p><span className="font-medium">Assigned To:</span> {device.assigned_department}</p>
-  
+
               </div>
             </div>
-  
+
             {/* Device-specific details */}
             {renderDeviceSpecificDetails()}
-  
+
             {/* Purchase Information */}
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Purchase Information</h4>
               <div className="space-y-2">
-                <p><span className="font-medium">Purchase Date:</span> {device.purchase.purchase_date}</p>
-                <p><span className="font-medium">Purchase Price:</span> ₹{parseFloat(device.purchase.purchase_cost).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <p><span className="font-medium">Purchase Date:</span> {device?.purchase?.purchase_date}</p>
+                <p><span className="font-medium">Purchase Price:</span> ₹{parseFloat(device?.purchase?.purchase_cost).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 <p><span className="font-medium">Vendor:</span> {device.vendor_name}</p>
                 <p><span className="font-medium">Vendor Contact:</span> {device.vendor_contact}</p>
                 <p><span className="font-medium">Vendor Email:</span> <a href={`mailto:${device.vendor_email}`} className="text-blue-500 hover:underline">{device.vendor_email}</a></p>
               </div>
             </div>
-  
+
             {/* Warranty & Maintenance */}
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Warranty & Maintenance</h4>
@@ -262,14 +305,14 @@ const View_hardwareDetails = () => {
               </div>
             </div>
           </div>
-  
+
           {/* Notes Section */}
           <div className="mt-6 bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Notes</h4>
             <p className="text-gray-600">{device.notes ? device.notes : "no additional details"}</p>
           </div>
         </div>
-  
+
         <div className="border-t px-6 py-4 flex justify-end">
           <button
             onClick={() => navigate('/dashboard/hardware')}
@@ -284,27 +327,30 @@ const View_hardwareDetails = () => {
             Edit
           </button>
           <button
-          className='bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mr-2'>
-            Delete
+            onClick={handleDelete}
+            disabled={isDeleting} // Prevent multiple clicks
+            className={`px-4 py-2 rounded mr-2 text-white ${isDeleting ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"}`}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
           </button>
-  
+
         </div>
-  
-  
+
+
       </div>
       {check && (
         <div className="w-2/5 bg-white rounded-lg shadow-xl p-6 ml-4 max-h-[90vh] overflow-y-auto transition-all duration-300">
           <h3 className="text-xl font-semibold mb-6 border-b pb-3">Edit Hardware Details</h3>
-          
+
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
             {/* Basic Information Section */}
             <div>
-              
+
               <div className="space-y-4">
                 <div>
                   <label htmlFor="last_service_date" className="block text-sm font-medium text-gray-700 mb-1">The last maintenance was done on </label>
-                  <input 
-                    type="Date" 
+                  <input
+                    type="Date"
                     name="last_service_date"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -314,8 +360,8 @@ const View_hardwareDetails = () => {
                 </div>
                 <div>
                   <label htmlFor='service_cost' className="block text-sm font-medium text-gray-700 mb-1">Last maintenance cost</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     name='service_cost'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -323,11 +369,11 @@ const View_hardwareDetails = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-               
+
                 <div>
                   <label htmlFor='status' className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                  <select 
-                  name='status'
+                  <select
+                    name='status'
                     value={formik.values.status}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -341,16 +387,16 @@ const View_hardwareDetails = () => {
                 </div>
               </div>
             </div>
-            
-            
+
+
             {/* Assignment Information */}
             <div>
               <h4 className="font-medium text-gray-700 mb-3">Assignment Information</h4>
               <div className="space-y-4">
                 <div>
                   <label htmlFor='assigned_department' className="block text-sm font-medium text-gray-700 mb-1">Assigned Department</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     name='assigned_department'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -360,35 +406,35 @@ const View_hardwareDetails = () => {
                 </div>
               </div>
             </div>
-            
-            {/* Notes */}
+
+            {/* Notes
             <div>
               <h4 className="font-medium text-gray-700 mb-3">Notes</h4>
               <div>
-                <textarea 
+                <textarea
                   name='notes'
                   value={formik.values.notes}
                   onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                  onBlur={formik.handleBlur}
                   rows="4"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 ></textarea>
               </div>
-            </div>
-            
+            </div> */}
+
             {/* Form Buttons */}
             <div className="flex justify-end space-x-3 pt-4 border-t">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleedit}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
               >
                 Cancel
               </button>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                
+
               >
                 Save Changes
               </button>
@@ -396,7 +442,7 @@ const View_hardwareDetails = () => {
           </form>
         </div>
       )}
-  
+
     </div>
   );
 };

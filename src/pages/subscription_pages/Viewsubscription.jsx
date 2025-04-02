@@ -11,6 +11,10 @@ function Viewsubscription() {
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage] = useState(10)
   
+
+  // filter subscription
+  const [categoryFilter, setcategoryFilter] = useState('all');
+  const [filteredSubscriptions, setFilteredSubscriptions] = useState([]);
  
 
   useEffect(() => {
@@ -20,6 +24,7 @@ function Viewsubscription() {
         console.log(result);
         const sortedResources = [...result].sort((a, b) => b.id - a.id);
         setSubscriptions(sortedResources)
+        setFilteredSubscriptions(sortedResources);
       } catch (error) {
         console.error("Error fetching provider name:", error);
         setError(error)
@@ -32,16 +37,37 @@ function Viewsubscription() {
   console.log(subscriptions);
   console.log(error);
 
+  // apply filter
+  useEffect(() => {
+    if (subscriptions.length === 0) return;
+
+    let result = [...subscriptions];
+    // Type filter
+    if (categoryFilter !== 'all') {
+      result = result.filter(item => item.subscription_category === categoryFilter);
+    }
+
+    setFilteredSubscriptions(result);
+    setCurrentPage(1);
+  }, [categoryFilter, subscriptions]);
+
+  const uniqueCategories = subscriptions.length > 0 
+    ? ['all', ...new Set(subscriptions.map(item => item.subscription_category))]
+    : ['all'];
+
+
+
+
   // Get current rows
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = subscriptions.slice(indexOfFirstRow, indexOfLastRow);
+  const currentRows = filteredSubscriptions.slice(indexOfFirstRow, indexOfLastRow);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Calculate total pages
-  const totalPages = Math.ceil(subscriptions.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredSubscriptions.length / rowsPerPage);
 
   const handleViewDetails = (subscription) => {
    
@@ -50,7 +76,24 @@ function Viewsubscription() {
   };
 
   return (
+    
     <div className="w-full">
+         <div className="mb-4">
+        <select
+          id="typeFilter"
+          value={categoryFilter}
+          onChange={(e) => setcategoryFilter(e.target.value)}
+          className="mt-1 block w-45 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-blue-200"
+        >
+          {uniqueCategories.map((category) => (
+            <option key={category} value={category}>
+              {category === 'all' ? 'All Categories' : category}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {error && <div className="text-red-500 mb-4">Error loading subscriptions: {error.message}</div>}
       <h1 className="font-bold text-l mb-2 ml-1 text-gray-500">All Subscriptions Details</h1>
 
       <div className="overflow-x-auto shadow-md rounded-lg">

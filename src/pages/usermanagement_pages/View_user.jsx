@@ -93,7 +93,7 @@ function View_user() {
         );
     }
 
-    // Desktop view rendering
+    // Desktop view rendering - updated to match View_hardware table style
     return (
         <div className="w-full max-w-full mx-auto p-4">
             <button
@@ -103,43 +103,43 @@ function View_user() {
                 + Add User
             </button>
 
-            <h1 className="text-xl font-semibold mb-2 mt-4 text-gray-900">User Details</h1>
+            <h1 className="font-bold text-l mb-2 ml-1 text-gray-500">User Details</h1>
 
-            <div className="w-full">
-                {/* Table Header */}
-                <div className="grid grid-cols-4 mb-2 px-4 text-start mt-5 bg-gray-500 text-white">
-                    <div className="py-2">Name</div>
-                    <div className="py-2">Email</div>
-                    <div className="py-2">Role</div>
-                    <div className="py-2">Status</div>
-                </div>
-
-                {/* Table Body */}
-                {users.map((user, index) => (
-                    <div
-                        key={index}
-                        className="grid grid-cols-4 text-start mb-1 px-4 py-4 bg-white hover:bg-gray-50 transition-colors"
-                    >
-                        <div className="flex items-start justify-start">
-                            <span className="text-blue-500">{user.username}</span>
-                        </div>
-
-                        <div>{user.email}</div>
-                        <div>{user.is_superuser ? "Super user" : "Regular"}</div>
-
-                        <div className="flex items-start justify-start">
-                            <div className="w-10 mr-2 relative">
-                                <div 
-                                    className={`w-10 h-5 rounded-full ${user.is_active ? 'bg-green-400' : 'bg-gray-300'} flex items-center p-1 cursor-pointer`} 
-                                    onClick={() => toggleActiveStatus(user.id)}
-                                >
-                                    <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${user.is_active ? 'translate-x-4' : ''}`}></div>
-                                </div>
-                            </div>
-                            <span>{user.is_active ? 'Active' : 'Inactive'}</span>
-                        </div>
-                    </div>
-                ))}
+            <div className="overflow-x-auto shadow-md rounded-lg">
+                <table className="min-w-full bg-white">
+                    <thead>
+                        <tr className="bg-gray-100 text-gray-700">
+                            <th className="py-3 px-4 text-left font-semibold">Name</th>
+                            <th className="py-3 px-4 text-left font-semibold">Email</th>
+                            <th className="py-3 px-4 text-left font-semibold">Role</th>
+                            <th className="py-3 px-4 text-left font-semibold">Status</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                        {users.map((user, index) => (
+                            <tr key={index} className="hover:bg-gray-50">
+                                <td className="py-3 px-4 text-sm text-blue-500">{user.username}</td>
+                                <td className="py-3 px-4 text-sm">{user.email}</td>
+                                <td className="py-3 px-4 text-sm">{user.is_superuser ? "Super user" : "Regular"}</td>
+                                <td className="py-3 px-4 text-sm">
+                                    <div className="flex items-center">
+                                        <div 
+                                            className={`w-10 h-5 rounded-full mr-2 ${user.is_active ? 'bg-green-400' : 'bg-gray-300'} flex items-center p-1 cursor-pointer`} 
+                                            onClick={() => toggleActiveStatus(user.id)}
+                                        >
+                                            <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${user.is_active ? 'translate-x-4' : ''}`}></div>
+                                        </div>
+                                        <span className={user.is_active ? "text-green-600" : "text-red-600"}>
+                                            {user.is_active ? 'Active' : 'Inactive'}
+                                        </span>
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

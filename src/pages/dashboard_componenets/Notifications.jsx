@@ -10,35 +10,35 @@ function Notifications() {
       title: 'Scheduled Maintenance',
       message: 'Server maintenance scheduled for March 25, 2025 from 2:00 AM to 4:00 AM UTC.',
       type: 'maintenance',
-      icon: '🔧'
+      
     },
     {
       id: 2,
       title: 'Warranty Expiring',
       message: 'Warranty for Router XR-2000 expires in 15 days.',
       type: 'warranty',
-      icon: '🛡️'
+     
     },
     {
       id: 3,
       title: 'Subscription Renewal',
       message: 'Your Premium Support Plan will auto-renew on April 10, 2025.',
       type: 'subscription',
-      icon: '💳'
+     
     },
     {
       id: 4,
       title: 'Server Down Alert',
       message: 'Database server DB-PROD-03 is currently experiencing downtime.',
       type: 'server',
-      icon: '🖥️'
+      
     },
     {
       id: 5,
       title: 'Customer Support Ticket',
       message: 'New support request from ABC Corp regarding network connectivity.',
       type: 'customer',
-      icon: '👤'
+      
     }
   ];
 

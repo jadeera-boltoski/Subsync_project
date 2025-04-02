@@ -125,7 +125,7 @@ function Dashboardcontent() {
         </div>
         <div className="w-full mt-6" >
           {/* <Customerpiechart/> */}
-          <h6 className='font-bold text-s text-blue-400 ml-auto mb-4 cursor-default ' onClick={() => navigate("/dashboard/server_usage")}>View Report os Server Usage</h6> 
+          <h6 className='font-bold text-s text-blue-400 ml-auto mb-4 cursor-default ' onClick={() => navigate("/dashboard/server_usage")}>View Report of Server Usage</h6> 
           <Serverusage />
           
         </div>

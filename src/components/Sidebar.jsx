@@ -9,6 +9,7 @@ import {
   faTools,
   faBars,
   faXmark,
+  faTable,
 } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../assets/logo.png";
 
@@ -37,7 +38,7 @@ function Sidebar() {
     { name: "Hardware", path: "/dashboard/hardware", icon: faMicrochip },
     { name: "Customer Services", path: "/dashboard/services", icon: faTools },
     { name: "User Management", path: "/dashboard/users", icon: faUsers },
-    { name: "Masters", path: "/dashboard/masters", icon: faUsers }
+    { name: "Masters", path: "/dashboard/masters", icon: faTable }
     
   ];
 

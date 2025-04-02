@@ -10,6 +10,17 @@ const View_hardware = ({ data, limit }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [devicesPerPage] = useState(9);
 
+  // filter
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [manufacturerFilter, setManufacturerFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [filteredItems, setFilteredItems] = useState([]);
+
+ 
+
+
+
+
   useEffect(() => {
     const getdata = async () => {
       try {
@@ -23,18 +34,49 @@ const View_hardware = ({ data, limit }) => {
       }
     };
     getdata();
-  }, []); // Empty dependency array to run only once
+  }, []); 
 
   // If limit is provided, use it directly; otherwise, use pagination
   const allData = data || devices;
-  
-  // Calculate displayed data based on limit or pagination
-  const displayedData = limit 
-    ? allData.slice(0, limit) 
-    : allData.slice((currentPage - 1) * devicesPerPage, currentPage * devicesPerPage);
 
-  // Only calculate pagination if no limit is provided
-  const totalPages = limit ? 1 : Math.ceil(allData.length / devicesPerPage);
+  // Apply filters only when no limit is set
+  useEffect(() => {
+    // If limit is provided, just set filteredItems to all data
+    if (limit) {
+      setFilteredItems(allData);
+      return;
+    }
+    
+    let result = [...allData];
+
+    if (typeFilter !== 'all') {
+      result = result.filter(item => item.hardware_type === typeFilter);
+    }
+
+    // Manufacturer filter
+    if (manufacturerFilter !== 'all') {
+      result = result.filter(item => item.manufacturer === manufacturerFilter);
+    }
+
+    // Status filter
+    if (statusFilter !== 'all') {
+      result = result.filter(item => item.status === statusFilter);
+    }
+    
+
+    setFilteredItems(result);
+    // first pagil filterd data sett chaythu
+    setCurrentPage(1); 
+  },[allData, typeFilter, manufacturerFilter, statusFilter, limit]);
+
+
+
+  const displayedData = limit 
+  ? allData.slice(0, limit) // When limit is provided, show from allData without filtering
+  : filteredItems.slice((currentPage - 1) * devicesPerPage, currentPage * devicesPerPage);
+
+ // Only calculate pagination if no limit is provided
+  const totalPages = limit ? 1 : Math.ceil(filteredItems.length / devicesPerPage);
 
   // Pagination functions
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -55,9 +97,66 @@ const View_hardware = ({ data, limit }) => {
     navigate('/dashboard/hardware/view_hardwaredetails', { state: { device } });
   }
 
+  const hardwareTypes = ['all', ...new Set(allData.map(device => device.hardware_type))];
+  const manufacturers = ['all', ...new Set(allData.map(device => device.manufacturer))];
+  const statuses = ['all', ...new Set(allData.map(device => device.status))];
+
   return (
     <div className="w-full">
       <h1 className="font-bold text-l mb-2 ml-1 text-gray-500">All Hardware Details</h1>
+      {!limit&&(
+      <div>
+        <div className="mb-4 flex space-x-4">
+          <div>
+            <select
+              id="typeFilter"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-blue-200"
+            >
+              {hardwareTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type === 'all' ? 'All Types' : type}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="">
+            
+            <select
+              id="manufacturerFilter"
+              value={manufacturerFilter}
+              onChange={(e) => setManufacturerFilter(e.target.value)}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-blue-200"
+            >
+              {manufacturers.map((manufacturer) => (
+                <option key={manufacturer} value={manufacturer}>
+                  {manufacturer === 'all' ? 'All Manufacturers' : manufacturer}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="">
+           
+            <select
+              id="statusFilter"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-blue-200"
+            >
+              {statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status === 'all' ? 'All Statuses' : status}
+                </option>
+              ))}
+            </select>
+          </div>
+
+        </div>
+      </div>
+      )}
 
       {/* Loading state */}
       {loading ? (

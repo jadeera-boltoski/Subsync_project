@@ -31,6 +31,8 @@ import Add_user from "./pages/usermanagement_pages/Add_user";
 import View_all_customers from "./pages/service_pages/View_all_customers";
 import View_customerdetails from "./pages/service_pages/View_customerdetails";
 import Master from "./pages/Master";
+import View_resourcedetails from "./pages/service_pages/View_resourcedetails";
+import View_provider from "./pages/masterpages/View_provider";
 
 
 
@@ -89,6 +91,8 @@ const AppRouter = () => (
 
             <Route path="View_customerdetails" element={<View_customerdetails />} />
             <Route path="view_resources" element={<View_resources />} />
+            <Route path="view_resources_details" element={<View_resourcedetails/>} />
+            
 
           </Route>
 
@@ -102,6 +106,8 @@ const AppRouter = () => (
          
           {/* masters */}
           <Route path="masters" element={<Master />} >
+          <Route path="View_provider" element={<View_provider />} />
+          View_provider
           </Route>
 
         </Route>

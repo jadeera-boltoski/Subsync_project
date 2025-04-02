@@ -428,7 +428,7 @@ export const validationHardware = Yup.object().shape({
     Storage_Configuration: Yup.string()
       .when("deviceType", {
         is: "On-Premise Server",
-        then: () => Yup.string().required("Storage Configuration is required"),
+        // then: () => Yup.string().required("Storage Configuration is required"),
         otherwise: () => Yup.string(),
       }),
     

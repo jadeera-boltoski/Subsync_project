@@ -1,6 +1,8 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { addproviderdetails } from "../../services/allapi";
+import { validateprovider } from "../../validation/validatelogin";
+
 
 function Add_providers({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -22,23 +24,28 @@ function Add_providers({ isOpen, onClose }) {
   // Handle submission manually
   const handleSubmit = async () => {
     console.log(formData);
-    const response = await addproviderdetails(formData);
-    console.log(response);
-    if(response.status==201){
-      onClose(); 
-      alert("successfully added")
+    const validationResult=validateprovider(formData)
+    if(validationResult.success){
+      const response = await addproviderdetails(formData);
+      console.log(response);
+      if(response.status==201){
+        onClose(); 
+        alert("successfully added")
+      }
+      else{
+        alert(response.message)
+      }
     }
-    else{
-      alert(response.message)
-    }
+    alert(validationResult.message)
+   
     // Close modal after submission
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-opacity-50">
-      <div className="bg-amber-100 p-12 rounded-lg shadow-lg w-200 relative">
+    <div className=" flex items-center justify-end fixed inset-0 bg-opacity-50">
+      <div className="bg-amber-100 p-12 rounded-lg shadow-lg md:w-150 sm:w-100 bg-blend-saturation  relative">
         {/* Close Button */}
         <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={onClose}>
           ✖

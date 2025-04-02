@@ -95,7 +95,7 @@ const Subscription = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {subscriptions.slice(0, 6).map(subscription => (
+                  {subscriptions.slice(0, 4).map(subscription => (
                     <tr key={subscription.id} className="border-b border-b-gray-300 hover:bg-gray-50">
                       <td className="py-3 px-4 text-sm">{subscription.subscription_category}</td>
                       <td className="py-3 px-4 text-sm">{subscription.name}</td>

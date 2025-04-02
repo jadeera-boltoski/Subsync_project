@@ -29,7 +29,7 @@ const Serverusage = () => {
   return (
     <div className="w-full p-4">
       <div className="max-w-7xl mx-auto">
-        <h2 className="font-bold text-l mb-12 ml-1 text-gray-500 ">Server Usage Overview</h2>
+        {/* <h2 className="font-bold text-l mb-12 ml-1 text-gray-500 ">Server Usage Overview</h2> */}
         
         {loading ? (
           <div className="flex justify-center items-center h-40">

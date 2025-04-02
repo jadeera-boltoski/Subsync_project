@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getallresources } from '../../services/allapi';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 
 const View_resources = ({ limit }) => {
@@ -8,6 +9,7 @@ const View_resources = ({ limit }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [resourcesPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
+  const navigate=useNavigate()
 
   useEffect(() => {
     const getdata = async () => {
@@ -81,6 +83,7 @@ const View_resources = ({ limit }) => {
                   <td className="py-3 px-4 text-sm">{resource.storage_capacity}</td>
                   <td className="py-3 px-4 text-sm">
                     <button
+                    onClick={()=>{navigate('/dashboard/services/view_resources_details', { state: { resource } })}}
                       className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs font-medium"
                     >
                       View Details
@@ -97,7 +100,7 @@ const View_resources = ({ limit }) => {
         </table>
       </div>
       
-      {/* Pagination controls - only show if there's no limit and more than one page */}
+      {/* Pagination controls*/}
       {!limit && totalPages > 1 && (
         <div className="flex justify-between items-center mt-4 px-2">
           <div className="text-sm text-gray-500">

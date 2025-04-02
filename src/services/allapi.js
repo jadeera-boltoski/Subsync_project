@@ -180,7 +180,15 @@ export const get_hardware=()=>{
 
 }
 
+// DElete hardware
+export const Deletehardware=(body)=>{
+    return commonRequest("DELETE",`${BASE_URL}/hardware/${encodeURIComponent(body)}/`,"")
+}
 
+// update the details of hardware
+export const edithardware=(body)=>{
+    return commonRequest("PATCH",`${BASE_URL}/hardware/${encodeURIComponent(body.id)}/`,body)
+}
 
 
 
