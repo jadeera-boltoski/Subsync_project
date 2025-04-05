@@ -245,6 +245,10 @@ export const getcustomerpiechart=()=>{
 export const getcustomers=()=>{
     return commonRequest("GET",`${BASE_URL}/customers/`,"")
 }
+// deletee customer details
+export const deletecustomer=(body)=>{
+    return commonRequest("DELETE",`${BASE_URL}/customers/${encodeURIComponent(body)}/`,"")
+}
 
 
 

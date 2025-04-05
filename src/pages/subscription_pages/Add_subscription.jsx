@@ -45,7 +45,7 @@ function Add_subscription() {
 
     // const [autoRenewal, setAutoRenewal] = useState(null);
     const [extraReminder, setExtraReminder] = useState(false);
-    const[needrem,setneedrem]=useState(false)
+    const [needrem, setneedrem] = useState(false)
     // Create a reference for the input field
     // const inputRef = useRef(null);
 
@@ -103,6 +103,8 @@ function Add_subscription() {
             if (response.code == 201) {
                 alert("successfully added")
                 navigate('/dashboard/subscriptions/Viewsubscription')
+            } else {
+                alert("Data already exist")
             }
 
 
@@ -250,6 +252,12 @@ function Add_subscription() {
 
     return (
         <div className="w-full ">
+
+            <div>
+                <button onClick={() => navigate(-1)}>Go Back</button>
+            </div>
+
+
 
             <h1 className="text-xl md:text-xl font-bold text-gray-700 mb-6">
                 Add New Subscription
@@ -429,7 +437,7 @@ function Add_subscription() {
                                 <div className="flex flex-col md:flex-row w-full gap-4">
                                     {/* Left Column */}
                                     <div className="w-full md:w-1/2 mt-8  ">
-                                       
+
 
                                         <div className="mb-2">
                                             <label htmlFor="subscriptionCategory" className="block mb-1 text-sm">
@@ -945,14 +953,18 @@ function Add_subscription() {
                                             </label>
                                             <input
                                                 type="text"
-                                                pattern="[0-9]*"
+                                                inputMode="decimal"
+                                                pattern="^\d*\.?\d*$"
                                                 id="cost"
                                                 name="cost"
                                                 placeholder="Enter amount numerically"
                                                 value={formik.values.cost}
                                                 onChange={(e) => {
-                                                    const numericValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
-                                                    formik.setFieldValue("cost", numericValue);
+                                                    const input = e.target.value;
+
+                                                    // Allow only numbers and a single decimal point
+                                                    const validInput = input.replace(/[^0-9.]/g, '').replace(/^([^.]*)\.(.*)\./, '$1.$2');
+                                                    formik.setFieldValue("cost", validInput);
                                                 }}
                                                 onBlur={formik.handleBlur}
                                                 className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -1081,7 +1093,7 @@ function Add_subscription() {
                                                                 onChange={handleDateTypeChange}
                                                                 className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                             >
-                                                                 <option value=""selected disabled>choose type</option>
+                                                                <option value="" selected disabled>choose type</option>
                                                                 <option value="specific">Specific Date</option>
                                                                 <option value="lifelong">Life Long</option>
                                                             </select>
@@ -1107,62 +1119,62 @@ function Add_subscription() {
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                 )}
+                                                            )}
 
-                                                                    {dateType === 'lifelong' && (
-                                                                        <div className="text-gray-600 text-sm mt-1">
-                                                                            Billing Period: Life Long
-                                                                        </div>
-                                                                    )}
+                                                            {dateType === 'lifelong' && (
+                                                                <div className="text-gray-600 text-sm mt-1">
+                                                                    Billing Period: Life Long
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="flex items-center gap-4 pt-2">
+                                                            <div className="flex items-center gap-1">
+                                                                <span className="text-sm">Auto Renewal :</span>
                                                             </div>
 
-                                                                    <div className="flex items-center gap-4 pt-2">
-                                                                        <div className="flex items-center gap-1">
-                                                                            <span className="text-sm">Auto Renewal :</span>
-                                                                        </div>
+                                                            <div className="flex gap-6">
+                                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="autoRenewal"
+                                                                        value="true"
+                                                                        checked={formik.values.autoRenewal === true}
+                                                                        onChange={() => formik.setFieldValue("autoRenewal", true)}
+                                                                        className="w-4 h-4"
+                                                                    />
+                                                                    <span className="text-sm">Yes</span>
+                                                                </label>
 
-                                                                        <div className="flex gap-6">
-                                                                            <label className="flex items-center gap-2 cursor-pointer">
-                                                                                <input
-                                                                                    type="radio"
-                                                                                    name="autoRenewal"
-                                                                                    value="true"
-                                                                                    checked={formik.values.autoRenewal === true}
-                                                                                    onChange={() => formik.setFieldValue("autoRenewal", true)}
-                                                                                    className="w-4 h-4"
-                                                                                />
-                                                                                <span className="text-sm">Yes</span>
-                                                                            </label>
+                                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="autoRenewal"
+                                                                        value="false"
+                                                                        checked={formik.values.autoRenewal === false}
+                                                                        onChange={() => formik.setFieldValue("autoRenewal", false)}
+                                                                        className="w-4 h-4"
+                                                                    />
+                                                                    <span className="text-sm">No</span>
+                                                                </label>
+                                                            </div>
 
-                                                                            <label className="flex items-center gap-2 cursor-pointer">
-                                                                                <input
-                                                                                    type="radio"
-                                                                                    name="autoRenewal"
-                                                                                    value="false"
-                                                                                    checked={formik.values.autoRenewal === false}
-                                                                                    onChange={() => formik.setFieldValue("autoRenewal", false)}
-                                                                                    className="w-4 h-4"
-                                                                                />
-                                                                                <span className="text-sm">No</span>
-                                                                            </label>
-                                                                        </div>
-
-                                                                        {/* Error message */}
-                                                                        {formik.touched.autoRenewal && formik.errors.autoRenewal && (
-                                                                            <div className="text-red-500 text-xs mt-1">
-                                                                                {formik.errors.autoRenewal}
-                                                                            </div>
-                                                                        )}
-
-
-                                                                    </div>
+                                                            {/* Error message */}
+                                                            {formik.touched.autoRenewal && formik.errors.autoRenewal && (
+                                                                <div className="text-red-500 text-xs mt-1">
+                                                                    {formik.errors.autoRenewal}
                                                                 </div>
+                                                            )}
+
+
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                        <div className="md:col-span-1 space-y-4">
+                                                <div className="md:col-span-1 space-y-4">
 
 
-                                                            {/* <div>
+                                                    {/* <div>
                                                         <label htmlFor="lastPaymentDate" className="block mb-1 mt-8 text-sm">
                                                             Last payment date :
                                                         </label>
@@ -1182,7 +1194,7 @@ function Add_subscription() {
                                                         )}
                                                     </div> */}
 
-                                                            {/* <div>
+                                                    {/* <div>
                                                         <label htmlFor="nextPaymentDate" className="block mb-1 text-sm">
                                                             Next payment date :
                                                         </label>
@@ -1202,50 +1214,50 @@ function Add_subscription() {
                                                         )}
                                                     </div> */}
 
-                                                        </div>
-
-
-                                                    </div>
-
-
                                                 </div>
-                                            </div>
-                                        </div>
 
+
+                                            </div>
+
+
+                                        </div>
                                     </div>
                                 </div>
 
+                            </div>
+                        </div>
 
-                                {/* Set Reminder Section */}
-                                
-                                <div className=" lg:col-span-1 mt-18">
-                                <div className="flex">
-                                    <input id="needreminder" name="needreminder" type="checkbox"
+
+                        {/* Set Reminder Section */}
+
+                        <div className=" lg:col-span-1 mt-18">
+                            <div className="flex">
+                                <input id="needreminder" name="needreminder" type="checkbox"
                                     value={needrem}
                                     onChange={() => setneedrem(!needrem)} />
-                                    <label htmlFor="needreminder">Need customized reminder settings</label>
-                                </div>
+                                <label htmlFor="needreminder">Need customized reminder settings</label>
+                            </div>
+                            <div>
+                                {needrem && (
                                     <div>
-                                        {needrem&&(
-                                        <div>
-                                            <div className="bg-red-200 p-6 rounded-lg h-full">
-                                                <h2 className="text-xl font-bold mb-4 ">Set Reminder</h2>
-                                                <div className="space-y-4">
-                                                    <div>
-                                                        <label htmlFor="billingCycle" className="block mb-1 text-sm">
-                                                            Billing Cycle
-                                                        </label>
-                                                        <div className="relative mt-2">
-                                                            <input
-                                                                id="billingCycle"
-                                                                name="billingCycle"
-                                                                value={formik.values.billingCycle}
-                                                                onChange={formik.handleChange}
-                                                                onBlur={formik.handleBlur}
-                                                                readOnly
-                                                                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                            />
-                                                            {/* <option value="" selected>-- Select Billing Cycle --</option>
+                                        <div className="bg-red-200 p-6 rounded-lg h-full">
+                                            <h2 className="text-xl font-bold mb-4 ">Set Reminder</h2>
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label htmlFor="billingCycle" className="block mb-1 text-sm">
+                                                        Billing Cycle
+                                                    </label>
+                                                    <div className="relative mt-2">
+                                                        <input
+                                                            id="billingCycle"
+                                                            name="billingCycle"
+                                                            value={formik.values.billingCycle}
+                                                            onChange={formik.handleChange}
+                                                            onBlur={formik.handleBlur}
+                                                            readOnly
+                                                            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                        />
+                                                        {/* <option value="" selected>-- Select Billing Cycle --</option>
                                                         <option value="weekly">Weekly</option>
                                                         <option value="monthly">Monthly</option>
                                                         <option value="quarterly">Quarterly</option>
@@ -1254,77 +1266,47 @@ function Add_subscription() {
                                                         <option value="biennial">Biennial (2 years)</option>
                                                         <option value="triennial">Triennial (3 years)</option> 
                                                         {/* <option value="one-time">One-Time Payment</option>*/}
-                                                            {/* </select> */}
-    
-    
-    
-                                                            {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                        {/* </select> */}
+
+
+
+                                                        {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                                         <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
                                                     </div> */}
-                                                        </div>
                                                     </div>
-    
-                                                    <div>
-    
-                                                        {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
-                                                            <div>
-    
-                                                                <label htmlFor="firstReminderMonth" className="block mb-1 text-sm">
-                                                                    How many months in advance would you like to receive a reminder?
-                                                                </label>
-                                                                <div className="relative">
-                                                                    <select type="text"
-                                                                        id="firstReminderMonth"
-                                                                        name="firstReminderMonth"
-                                                                        value={formik.values.firstReminderMonth}
-                                                                        onChange={formik.handleChange}
-                                                                        onBlur={formik.handleBlur}
-                                                                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 " >
-                                                                        
-                                                                        <option value=""></option>
-                                                                            {[...Array(6)].map((_, i) => (
-                                                                                <option key={i + 1} value={i + 1}>
-                                                                                    {i + 1}
-                                                                                </option>
-                                                                            ))}
-                                                                            
-                                                                    </select>
+                                                </div>
 
-    
-                                                                </div>
-                                                                <div>
-                                                                    <label htmlFor="reminderDay" className="block mb-1 text-sm">
-                                                                        reminder day of month
-                                                                    </label>
-                                                                    <div className="relative">
-                                                                        <select
-                                                                            id="reminderDay"
-                                                                            name="reminderDay"
-                                                                            value={formik.values.reminderDay}
-                                                                            onChange={formik.handleChange}
-                                                                            onBlur={formik.handleBlur}
-                                                                            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
-                                                                        >
-                                                                            <option value="">Select day</option>
-                                                                            {[...Array(31)].map((_, i) => (
-                                                                                <option key={i + 1} value={i + 1}>
-                                                                                    {i + 1}
-                                                                                </option>
-                                                                            ))}
-                                                                        </select>
-    
-                                                                    </div>
-                                                                </div>
+                                                <div>
+
+                                                    {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
+                                                        <div>
+
+                                                            <label htmlFor="firstReminderMonth" className="block mb-1 text-sm">
+                                                                How many months in advance would you like to receive a reminder?
+                                                            </label>
+                                                            <div className="relative">
+                                                                <select type="text"
+                                                                    id="firstReminderMonth"
+                                                                    name="firstReminderMonth"
+                                                                    value={formik.values.firstReminderMonth}
+                                                                    onChange={formik.handleChange}
+                                                                    onBlur={formik.handleBlur}
+                                                                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 " >
+
+                                                                    <option value=""></option>
+                                                                    {[...Array(6)].map((_, i) => (
+                                                                        <option key={i + 1} value={i + 1}>
+                                                                            {i + 1}
+                                                                        </option>
+                                                                    ))}
+
+                                                                </select>
+
+
                                                             </div>
-    
-                                                            // </div>
-                                                        )}
-    
-                                                        {["monthly", "weekly"].includes(formik.values.billingCycle) && (
-    
                                                             <div>
                                                                 <label htmlFor="reminderDay" className="block mb-1 text-sm">
-                                                                    How many days in advance would you like to receive a reminder?
+                                                                    reminder day of month
                                                                 </label>
                                                                 <div className="relative">
                                                                     <select
@@ -1335,149 +1317,179 @@ function Add_subscription() {
                                                                         onBlur={formik.handleBlur}
                                                                         className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
                                                                     >
-                                                                        <option value="" selected>Select day</option>
-                                                                        {[...Array(7)].map((_, i) => (
+                                                                        <option value="">Select day</option>
+                                                                        {[...Array(31)].map((_, i) => (
                                                                             <option key={i + 1} value={i + 1}>
                                                                                 {i + 1}
                                                                             </option>
                                                                         ))}
                                                                     </select>
-    
+
                                                                 </div>
                                                             </div>
-    
-                                                        )}
-    
-    
-    
-                                                    </div>
-    
-    
-    
-    
-                                                    <div>
-                                                        <label htmlFor="notificationMethod" className="block mb-1 text-sm">
-                                                            notification method
-                                                        </label>
-                                                        <div className="relative">
-                                                            <select
-                                                                id="notificationMethod"
-                                                                name="notificationMethod"
-                                                                value={formik.values.notificationMethod}
-                                                                onChange={formik.handleChange}
-                                                                onBlur={formik.handleBlur}
-                                                                className="w-full p-2 border rounded appearance-none bg-red-200 pr-10 focus:outline-none focus:ring-1 focus:ring-red-300"
-                                                            >
-                                                                <option value="">Select method</option>
-                                                                <option value="email">Email</option>
-                                                                <option value="sms">SMS</option>
-                                                                <option value="both">Both</option>
-                                                            </select>
-                                                            {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                        </div>
+
+                                                        // </div>
+                                                    )}
+
+                                                    {["monthly", "weekly"].includes(formik.values.billingCycle) && (
+
+                                                        <div>
+                                                            <label htmlFor="reminderDay" className="block mb-1 text-sm">
+                                                                How many days in advance would you like to receive a reminder?
+                                                            </label>
+                                                            <div className="relative">
+                                                                <select
+                                                                    id="reminderDay"
+                                                                    name="reminderDay"
+                                                                    value={formik.values.reminderDay}
+                                                                    onChange={formik.handleChange}
+                                                                    onBlur={formik.handleBlur}
+                                                                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 "
+                                                                >
+                                                                    <option value="" selected>Select day</option>
+                                                                    {[...Array(7)].map((_, i) => (
+                                                                        <option key={i + 1} value={i + 1}>
+                                                                            {i + 1}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+
+                                                    )}
+
+
+
+                                                </div>
+
+
+
+
+                                                <div>
+                                                    <label htmlFor="notificationMethod" className="block mb-1 text-sm">
+                                                        notification method
+                                                    </label>
+                                                    <div className="relative">
+                                                        <select
+                                                            id="notificationMethod"
+                                                            name="notificationMethod"
+                                                            value={formik.values.notificationMethod}
+                                                            onChange={formik.handleChange}
+                                                            onBlur={formik.handleBlur}
+                                                            className="w-full p-2 border rounded appearance-none bg-red-200 pr-10 focus:outline-none focus:ring-1 focus:ring-red-300"
+                                                        >
+                                                            <option value="">Select method</option>
+                                                            <option value="email">Email</option>
+                                                            <option value="sms">SMS</option>
+                                                            <option value="both">Both</option>
+                                                        </select>
+                                                        {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                                                 <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
                                                             </div> */}
-                                                        </div>
                                                     </div>
-    
-                                                    <div>
-                                                        <label htmlFor="recipients" className="block mb-1 text-sm">
-                                                            Recipients
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            id="recipients"
-                                                            name="recipients"
-                                                            placeholder="Enter email addresses separated by commas"
-                                                            value={formik.values.recipients}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                            className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
-                                                        />
-                                                        {formik.touched.recipients && formik.errors.recipients && (
-                                                            <div className="text-red-500 text-xs w-full p-2">
-                                                                {formik.errors.recipients}
-                                                            </div>
-                                                        )}
-                                                    </div>
-    
-                                                    <div>
-                                                        <label htmlFor="customMessage" className="block mb-1 text-sm">
-                                                            Custom Message
-                                                        </label>
-                                                        <textarea
-                                                            id="customMessage"
-                                                            name="customMessage"
-                                                            placeholder="Enter custom message for reminders"
-                                                            value={formik.values.customMessage}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                            rows={3}
-                                                            className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
-                                                        />
-                                                    </div>
-                                                    {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
-                                                        <div>
-                                                            <div className="flex items-center gap-2 py-2">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    id="extraReminder"
-                                                                    checked={extraReminder}
-                                                                    onChange={() => setExtraReminder(!extraReminder)}
-                                                                    className="w-4 h-4"
-                                                                />
-                                                                <label htmlFor="extraReminder" className="text-sm">
-                                                                    Enable Extra Reminder for Last Month
-                                                                </label>
-                                                            </div>
-                                                            {extraReminder && (
-    
-                                                                <div>
-                                                                    <label htmlFor="daysBeforeEnd" className="block mb-1 text-sm">
-                                                                        How many days in advance would you like to receive a reminder?
-                                                                    </label>
-                                                                    <input
-                                                                        type="number"
-                                                                        id="daysBeforeEnd"
-                                                                        name="daysBeforeEnd"
-                                                                        value={formik.values.daysBeforeEnd}
-                                                                        onChange={formik.handleChange}
-                                                                        onBlur={formik.handleBlur}
-                                                                        className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
-                                                                    />
-                                                                    {formik.touched.daysBeforeEnd && formik.errors.daysBeforeEnd && (
-                                                                        <div className="text-red-500 text-xs w-full p-2">
-                                                                            {formik.errors.daysBeforeEnd}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )}
+                                                </div>
+
+                                                <div>
+                                                    <label htmlFor="recipients" className="block mb-1 text-sm">
+                                                        Recipients
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        id="recipients"
+                                                        name="recipients"
+                                                        placeholder="Enter email addresses separated by commas"
+                                                        value={formik.values.recipients}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
+                                                    />
+                                                    {formik.touched.recipients && formik.errors.recipients && (
+                                                        <div className="text-red-500 text-xs w-full p-2">
+                                                            {formik.errors.recipients}
                                                         </div>
                                                     )}
                                                 </div>
+
+                                                <div>
+                                                    <label htmlFor="customMessage" className="block mb-1 text-sm">
+                                                        Custom Message
+                                                    </label>
+                                                    <textarea
+                                                        id="customMessage"
+                                                        name="customMessage"
+                                                        placeholder="Enter custom message for reminders"
+                                                        value={formik.values.customMessage}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        rows={3}
+                                                        className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
+                                                    />
+                                                </div>
+                                                {["quarterly", "semi-annual", "annual", "biennial", "triennial"].includes(formik.values.billingCycle) && (
+                                                    <div>
+                                                        <div className="flex items-center gap-2 py-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                id="extraReminder"
+                                                                checked={extraReminder}
+                                                                onChange={() => setExtraReminder(!extraReminder)}
+                                                                className="w-4 h-4"
+                                                            />
+                                                            <label htmlFor="extraReminder" className="text-sm">
+                                                                Enable Extra Reminder for Last Month
+                                                            </label>
+                                                        </div>
+                                                        {extraReminder && (
+
+                                                            <div>
+                                                                <label htmlFor="daysBeforeEnd" className="block mb-1 text-sm">
+                                                                    How many days in advance would you like to receive a reminder?
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    id="daysBeforeEnd"
+                                                                    name="daysBeforeEnd"
+                                                                    value={formik.values.daysBeforeEnd}
+                                                                    onChange={formik.handleChange}
+                                                                    onBlur={formik.handleBlur}
+                                                                    className="w-full p-2 border rounded bg-red-200 focus:outline-none focus:ring-1 focus:ring-red-300"
+                                                                />
+                                                                {formik.touched.daysBeforeEnd && formik.errors.daysBeforeEnd && (
+                                                                    <div className="text-red-500 text-xs w-full p-2">
+                                                                        {formik.errors.daysBeforeEnd}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-)}
                                     </div>
-                                    </div>
+                                )}
                             </div>
+                        </div>
+                    </div>
 
-                            {/* Submit Button */}
-                            <div className="flex justify-end">
-                                <button
-                                    type="submit"
-                                    className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                                >
-                                    Add Subscription
-                                </button>
-                            </div>
-                        </form >
-                        
-                        {isAddingNewProvider && (
-                            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red p-6 rounded-lg  z-[9999] w-[90%] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+                    {/* Submit Button */}
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                        >
+                            Add Subscription
+                        </button>
+                    </div>
+                </form >
+
+                {isAddingNewProvider && (
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red p-6 rounded-lg  z-[9999] w-[90%] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
 
 
-                                {/* Open Popup Button */}
-                                {/* <button
+                        {/* Open Popup Button */}
+                        {/* <button
                                                         className="px-4 py-2 bg-blue-600 text-white rounded-lg"
                                                         onClick={() => setIsPopupOpen(true)}
                                                     >
@@ -1485,14 +1497,14 @@ function Add_subscription() {
                                                     </button>
     
                                                     Add Provider Popup */}
-                                <Add_providers isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}
-                                />
+                        <Add_providers isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)}
+                        />
 
-                            </div>
-                        )}
                     </div>
-            </div >
-            );
+                )}
+            </div>
+        </div >
+    );
 }
 
-            export default Add_subscription;
+export default Add_subscription;

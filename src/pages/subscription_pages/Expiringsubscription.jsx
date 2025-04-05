@@ -58,11 +58,18 @@ const Expiringsubscription = () => {
             </div>
         );
     }
+    const calculateDaysRemaining = (endDate) => {
+        const end = new Date(endDate);
+        const today = new Date();
+        const diffTime = end - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+      };
 
     return (
         <div className="relative w-full max-w-full overflow-hidden mb-2">
             {/* More compact carousel container */}
-            <div className="relative w-full h-48 sm:h-52 md:h-28">
+            <div className="relative w-full h-48 sm:h-52 md:h-30">
                 {subscriptions.map((subscription, index) => (
                     <div
                         key={index}
@@ -85,6 +92,11 @@ const Expiringsubscription = () => {
                                 <p className="text-sm sm:text-base text-black  text-center">
                                 {subscription.name}
                                 </p>
+
+                                <p className="text-sm sm:text-base text-black  text-center">
+                                {calculateDaysRemaining(subscription.next_payment_date)} days left
+                                </p>
+                                
                          
 
 

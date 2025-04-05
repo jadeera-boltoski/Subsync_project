@@ -3,6 +3,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { changepassword } from '../../services/allapi';
+import { validationforchangepassword } from '../../validation/yup';
 
 
 const SimplePasswordForm = () => {
@@ -17,27 +18,7 @@ const SimplePasswordForm = () => {
       newPassword: '',
       confirmPassword: ''
     },
-    validate: values => {
-      const errors = {};
-      
-      if (!values.currentPassword) {
-        errors.currentPassword = 'Required';
-      }
-      
-      if (!values.newPassword) {
-        errors.newPassword = 'Required';
-      } else if (values.newPassword.length < 8) {
-        errors.newPassword = 'Password must be at least 8 characters';
-      }
-      
-      if (!values.confirmPassword) {
-        errors.confirmPassword = 'Required';
-      } else if (values.confirmPassword !== values.newPassword) {
-        errors.confirmPassword = 'Passwords do not match';
-      }
-      
-      return errors;
-    },
+    validationSchema:validationforchangepassword,
     onSubmit:async(values)  => {
       // Handle password change logic here
       console.log('Changing password...', values);

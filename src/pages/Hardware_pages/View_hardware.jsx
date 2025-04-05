@@ -8,7 +8,7 @@ const View_hardware = ({ data, limit }) => {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [devicesPerPage] = useState(9);
+  const [devicesPerPage] = useState(10);
 
   // filter
   const [typeFilter, setTypeFilter] = useState('all');
@@ -170,20 +170,22 @@ const View_hardware = ({ data, limit }) => {
             <table className="min-w-full bg-white">
               <thead>
                 <tr className="bg-gray-100 text-gray-700">
-                  <th className="py-3 px-4 text-left font-semibold">Type</th>
-                  <th className="py-3 px-4 text-left font-semibold">Manufacturer</th>
-                  <th className="py-3 px-4 text-left font-semibold">Model Number</th>
-                  <th className="py-3 px-4 text-left font-semibold">Status</th>
-                  <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                  <th className="py-3 px-7 text-left font-semibold">Type</th>
+                  <th className="py-3 px-7 text-left font-semibold">Manufacturer</th>
+                  <th className="py-3 px-7 text-left font-semibold">Model Number</th>
+                  <th className="py-3 px-7 text-right font-semibold">Cost</th>
+                  <th className="py-3 px-7 text-left font-semibold">Status</th>
+                  <th className="py-3 px-7 text-left font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {displayedData.map((device) => (
                   <tr key={device.id} className="hover:bg-gray-50">
-                    <td className="py-3 px-4 text-sm">{device.hardware_type}</td>
-                    <td className="py-3 px-4 text-sm">{device.manufacturer}</td>
-                    <td className="py-3 px-4 text-sm">{device.model_number}</td>
-                    <td className={`py-3 px-4 text-sm capitalize ${
+                    <td className="py-3 px-7 text-sm">{device.hardware_type}</td>
+                    <td className="py-3 px-7 text-sm">{device.manufacturer}</td>
+                    <td className="py-3 px-7 text-sm">{device.model_number}</td>
+                    <td className="py-3 px-7 text-sm text-right">{device?.purchase?.purchase_cost}</td>
+                    <td className={`py-3 px-7 text-sm capitalize ${
                       device.status === "Active" ? "text-green-600" : "text-red-600"
                     }`}>
                       {device.status}

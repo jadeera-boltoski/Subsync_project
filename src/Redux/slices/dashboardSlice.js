@@ -8,7 +8,7 @@ export const fetchDashboardData = createAsyncThunk(
         try {
             const response = await getdashboard_content();
             
-            console.log("🚀 API Raw Response:", response); // ✅ Check API response
+            console.log(" API Raw Response:", response); // Check API response
             
             if (!response) {
                 throw new Error("No response from API");
@@ -24,7 +24,7 @@ export const fetchDashboardData = createAsyncThunk(
             // Return the data directly from the API without transformation
             return responseData;
         } catch (error) {
-            console.error("❌ Error fetching dashboard data:", error);
+            console.error(" Error fetching dashboard data:", error);
             return rejectWithValue(error.message || "Failed to fetch dashboard data");
         }
     }

@@ -25,7 +25,8 @@ function Forgotpass() {
           setMessage("Please check your email for the password reset link.");
           setMessageType("success");
         } else {
-          throw new Error("Something went wrong. Please try again.");
+          alert(response.message)
+          // throw new Error("Something went wrong. Please try again.");
         }
       } catch (error) {
         setMessage(error.message || "Failed to send email. Try again.");

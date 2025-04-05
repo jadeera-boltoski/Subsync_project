@@ -397,7 +397,7 @@ const Serverusage_report = () => {
                         </span>
                       </td>
                       <td className="border border-gray-200 px-3 py-2">{resource.storage_capacity}</td>
-                      <td className="border border-gray-200 px-3 py-2">{resource.resource_cost}</td>
+                      <td className="border border-gray-200 px-3 py-2 text-right">{resource.resource_cost}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import NotificationsIcon from "../pages/dashboard_componenets/NotificationsIcon";
+// import NotificationsIcon from "../pages/dashboard_componenets/NotificationsIcon";
 import { getuser_role } from "../services/allapi";
 
 function Header() {
@@ -72,13 +72,13 @@ function Header() {
             </div>
 
             <div className="flex items-center gap-4">
-                <div>
+                {/* <div>
                     <NotificationsIcon />
-                </div>
+                </div> */}
 
                 <div className="relative">
                     <div
-                        className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white text-l md:text-2xl cursor-pointer bg-blue-400"
+                        className="w-10 h-10 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-l md:text-2xl cursor-pointer bg-blue-400"
                         onClick={toggleLogoutMenu}
                     >
                             {initial}

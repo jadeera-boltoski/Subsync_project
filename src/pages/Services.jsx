@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Customerpiechart from "./service_pages/Customerpiechart";
+// import Customerpiechart from "./service_pages/Customerpiechart";
 import Serverusage from "./dashboard_componenets/Serverusage";
 import View_customers from "./service_pages/View_customers";
 import View_resources from "./service_pages/View_resources";
@@ -85,14 +85,15 @@ function Services() {
 
           {/* Main dashboard grid - more responsive layout */}
           <div className="mt-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {/* cols 4 aynu 3 aaki */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {/* Customer Distribution */}
-              <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md h-auto">
+              {/* <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md h-auto">
                 <h2 className="font-bold text-sm sm:text-base mb-6 sm:mb-12 ml-1 text-gray-500">Customer Distribution</h2>
                 <div className="w-full h-48 sm:h-60">
                   <Customerpiechart />
                 </div>
-              </div>
+              </div> */}
 
               {/* Server Usage - spans 2 columns on larger screens */}
               <div className="bg-white rounded-lg shadow-md h-auto sm:col-span-2">

@@ -2,6 +2,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { useState } from 'react';
+import { format } from "date-fns";
 
 const View_resourcedetails = () => {
   const navigate = useNavigate();
@@ -59,13 +60,13 @@ const View_resourcedetails = () => {
     return cycle.charAt(0).toUpperCase() + cycle.slice(1);
   };
 
-  // Format price with commas and two decimal places
-  const formatPrice = (price) => {
-    return parseFloat(price).toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  };
+  // // Format price with commas and two decimal places
+  // const formatPrice = (price) => {
+  //   return parseFloat(price).toLocaleString('en-US', {
+  //     minimumFractionDigits: 2,
+  //     maximumFractionDigits: 2
+  //   });
+  // };
 
   return (
     <div className='flex'>
@@ -98,7 +99,8 @@ const View_resourcedetails = () => {
                 <p><span className="font-medium">Type:</span> {resource.resource_type}</p>
                 <p><span className="font-medium">Hosting Type:</span> {resource.hosting_type}</p>
                 <p><span className="font-medium">Storage Capacity:</span> {resource.storage_capacity}</p>
-                <p><span className="font-medium">Resource Cost:</span> ₹{formatPrice(resource.resource_cost)}</p>
+                <p><span className="font-medium">Resource Cost:</span> ₹{resource.resource_cost}</p>
+                {/* {formatPrice(resource.resource_cost)} */}
               </div>
             </div>
 
@@ -106,10 +108,10 @@ const View_resourcedetails = () => {
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Customer Information</h4>
               <div className="space-y-2">
-                <p><span className="font-medium">Customer Name:</span> {resource.customer.customer_name}</p>
-                <p><span className="font-medium">Email:</span> <a href={`mailto:${resource.customer.email}`} className="text-blue-500 hover:underline">{resource.customer.email}</a></p>
-                <p><span className="font-medium">Phone:</span> {resource.customer.contact_phone}</p>
-                <p><span className="font-medium">Type:</span> {resource.customer.customer_type}</p>
+                <p><span className="font-medium">Customer Name:</span> {resource?.customer?.customer_name}</p>
+                <p><span className="font-medium">Email:</span> <a href={`mailto:${resource?.customer?.email}`} className="text-blue-500 hover:underline">{resource?.customer?.email}</a></p>
+                <p><span className="font-medium">Phone:</span> {resource?.customer?.contact_phone}</p>
+                <p><span className="font-medium">Type:</span> {resource?.customer?.customer_type}</p>
               </div>
             </div>
 
@@ -117,10 +119,12 @@ const View_resourcedetails = () => {
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Date Information</h4>
               <div className="space-y-2">
-                <p><span className="font-medium">Provisioned Date:</span> {resource.provisioned_date}</p>
                 
-                <p><span className="font-medium">Next Payment Date:</span> {resource.next_payment_date}</p>
-                {calculateDaysRemaining(resource.next_payment_date) > 0 ? (
+                <p><span className="font-medium">Provisioned Date:</span>{format(new Date(resource.provisioned_date), "dd-MM-yyyy")}</p>
+                <p><span className="font-medium">Last Payment Date:</span>{format(new Date(resource.last_updated_date), "dd-MM-yyyy")}</p>
+                
+                <p><span className="font-medium">Next Payment Date:</span>{format(new Date(resource.next_payment_date), "dd-MM-yyyy")}</p>
+                {calculateDaysRemaining(resource.next_payment_date) > 0 && calculateDaysRemaining(resource.next_payment_date) < 10 ? (
                   <p className="mt-2">
                     <span className="font-medium">Days Until Next Payment:</span>
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
@@ -128,12 +132,12 @@ const View_resourcedetails = () => {
                     </span>
                   </p>
                 ) : (
-                  <p className="mt-2">
-                    <span className="font-medium">Payment Status:</span>
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-medium">
-                      Overdue
-                    </span>
-                  </p>
+                  <p>
+                  <span className="font-medium">Current Resource State:</span>
+                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(resource.status)}`}>
+                    {resource.status}
+                  </span>
+                </p>
                 )}
               </div>
             </div>
@@ -143,25 +147,20 @@ const View_resourcedetails = () => {
               <h4 className="font-medium text-gray-700 mb-3">Billing Information</h4>
               <div className="space-y-2">
                 <p><span className="font-medium">Billing Cycle:</span> {formatBillingCycle(resource.billing_cycle)}</p>
-                <p><span className="font-medium">Last Payment Date:</span> {resource.last_updated_date}</p>
-                <p><span className="font-medium">Payment Method:</span> {resource.customer.payment_method}</p>
+                {/* <p><span className="font-medium">Last Payment Date:</span> {resource.last_updated_date}</p> */}
+                <p><span className="font-medium">Payment Method:</span> {resource?.customer?.payment_method}</p>
                 {/* <p> <span className="font-medium">Last Payment Date:</span>{" "}
                   {resource.customer.last_payment_date ?
                     resource.customer.last_payment_date.split('-').reverse().join('-') :
                     "Not available"}</p> */}
-                <p>
-                  <span className="font-medium">Status:</span>
-                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(resource.status)}`}>
-                    {resource.status}
-                  </span>
-                </p>
+               
               </div>
             </div>
           </div>
 
           {/* Server Information */}
           <div className="mt-6 bg-gray-50 p-4 rounded">
-            <h4 className="font-medium text-gray-700 mb-3">Server Information</h4>
+            {/* <h4 className="font-medium text-gray-700 mb-3">Server Information</h4> */}
             <div className="space-y-2">
               {/* <p><span className="font-medium">Server ID:</span> {resource.server}</p> */}
 
@@ -171,9 +170,8 @@ const View_resourcedetails = () => {
 
         <div className="border-t px-6 py-4 flex justify-end">
           <button
-            onClick={() => navigate('/dashboard/resources')}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded mr-2"
-          >
+            onClick={() => navigate('/dashboard/services/view_resources')}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded mr-2">
             Back
           </button>
           <button

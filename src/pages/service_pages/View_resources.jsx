@@ -62,7 +62,7 @@ const View_resources = ({ limit }) => {
             <tr className="bg-gray-100 text-gray-700">
               <th className="py-3 px-4 text-left font-semibold">Resource Name</th>
               <th className="py-3 px-4 text-left font-semibold">Type</th>
-              <th className="py-3 px-4 text-left font-semibold">Cost</th>
+              <th className="py-3 px-4 text-center font-semibold">Cost</th>
               <th className="py-3 px-4 text-left font-semibold">Billing Cycle</th>
               <th className="py-3 px-4 text-left font-semibold">Storage</th>
               <th className="py-3 px-4 text-left font-semibold">Actions</th>
@@ -78,7 +78,7 @@ const View_resources = ({ limit }) => {
                 <tr key={resource.id} className="hover:bg-gray-50">
                   <td className="py-3 px-4 text-sm">{resource.resource_name}</td>
                   <td className="py-3 px-4 text-sm capitalize">{resource.resource_type}</td>
-                  <td className="py-3 px-4 text-sm">£{resource.resource_cost}</td>
+                  <td className="py-3 px-4 text-sm text-right">₹{resource.resource_cost}</td>
                   <td className="py-3 px-4 text-sm capitalize">{resource.billing_cycle}</td>
                   <td className="py-3 px-4 text-sm">{resource.storage_capacity}</td>
                   <td className="py-3 px-4 text-sm">

@@ -14,6 +14,7 @@
 
     // filter customer
     const [nameFilter, setnameFilter] = useState('all');
+    // const [typeFilter, settypeFilter] = useState('all');   
     const [filteredcustomers, setfilteredcustomers] = useState([]);
     
 
@@ -48,6 +49,7 @@
           const filtered = allData.filter(item => item.customer_name === nameFilter);
           setfilteredcustomers(filtered);
         }
+       
         
         // Reset to first page whenever the data changes
         setCurrentPage(1);
@@ -127,8 +129,8 @@
                     <th className="py-3 px-4 text-left font-semibold">Customer Name</th>
                     <th className="py-3 px-4 text-left font-semibold">Email</th>
                     <th className="py-3 px-4 text-left font-semibold">Status</th>
-                    <th className="py-3 px-4 text-left font-semibold">Cost</th>
-                    <th className="py-3 px-4 text-left font-semibold">End Date</th>
+                    <th className="py-3 px-4 text-center font-semibold">Cost</th>
+                    <th className="py-3 px-4 text-left font-semibold">Customer Type</th>
                     <th className="py-3 px-4 text-left font-semibold">Actions</th>
                   </tr>
                 </thead>
@@ -143,8 +145,8 @@
                           {customer.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm">£{customer.cost}</td>
-                      <td className="py-3 px-4 text-sm">{customer.endDate}</td>
+                      <td className="py-3 px-4 text-sm text-right">₹{customer.cost}</td>
+                      <td className="py-3 px-4 text-sm">{customer.customer_type}</td>
                       <td className="py-3 px-4 text-sm">
                         <button
                         onClick={() => handleViewDetails(customer)}

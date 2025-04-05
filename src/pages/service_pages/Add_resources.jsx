@@ -108,11 +108,11 @@ function Add_resources() {
                     className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="">Select a type</option>
-                    <option value="web and app hosting">Web & Application Hosting</option>
-                    <option value="storage">Database & Storage</option>
-                    <option value="security">Security & Compliance</option>
-                    <option value="ci/cd">CI/CD & DevOps</option>
-                    <option value="other">Other</option>
+                    <option value="Web and app hosting">Web & Application Hosting</option>
+                    <option value="Database and Storage">Database & Storage</option>
+                    <option value="Security and Compliance">Security & Compliance</option>
+                    <option value="CI/CD and DevOps">CI/CD & DevOps</option>
+                    <option value="Other">Other</option>
                   </select>
                   {formik.touched.resource_type && formik.errors.resource_type && (
                     <p className="text-red-500 text-xs mt-1">{formik.errors.resource_type}</p>

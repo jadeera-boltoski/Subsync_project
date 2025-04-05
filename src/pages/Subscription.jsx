@@ -5,16 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchDashboardData } from '../Redux/slices/dashboardSlice';
 import { fetchSubscriptionData } from '../Redux/slices/subscriptionSlice';
 import Expiringsubscription from "./subscription_pages/Expiringsubscription";
+import { format } from "date-fns";
 
 const Subscription = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isAddingSubscription = location.pathname === "/dashboard/subscriptions";
-  
+
   const dispatch = useDispatch();
   const { total_active_subscriptions, expired_count, total_subscription_cost, loading: dashboardLoading, error: dashboardError } = useSelector((state) => state.dashboard);
   const { subscriptions, loading, error } = useSelector((state) => state.subscriptions);
-  
+
 
   useEffect(() => {
     dispatch(fetchDashboardData());
@@ -25,14 +26,20 @@ const Subscription = () => {
   if (dashboardError || error) return <p>Error: {dashboardError || error}</p>;
 
   const statusData = [
-    { label: "Total Active Subscriptions", value: total_active_subscriptions || 0, color: "bg-green-500", textColor: "text-green-700" },
-    { label: "Total Expired Subscriptions", value: expired_count || 0, color: "bg-yellow-500", textColor: "text-yellow-600" },
-    { label: "Total Monthly Cost", value: ` ₹${total_subscription_cost}`, color: "bg-blue-500", textColor: "text-blue-700" }
+    {
+      label: "Total Active Subscriptions", value: total_active_subscriptions || 0, color: "bg-green-500", textColor: "text-green-700",
+      route: "/dashboard/subscriptions/Viewsubscription"
+    },
+    { label: "Total Expired Subscriptions", value: expired_count || 0, color: "bg-yellow-500", textColor: "text-yellow-600",
+      route: "/dashboard/subscriptions/Viewsubscription"
+     },
+    { label: "Total Monthly Cost", value: ` ₹${total_subscription_cost}`, color: "bg-blue-500", textColor: "text-blue-700",
+    route: null }
   ];
   const handleViewDetails = (subscription) => {
-   
+
     navigate('/dashboard/subscriptions/Viewdetails', { state: { subscription } });
-    
+
   };
 
   return (
@@ -51,9 +58,20 @@ const Subscription = () => {
           {/* Dashboard Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
             {statusData.map((item, index) => (
-              <Card key={index} className="w-full  hover:shadow-lg transition-shadow">
+              <Card key={index} className={`w-full hover:shadow-lg transition-shadow ${item.route ? 'cursor-pointer' : 'cursor-default'}`} onClick={() => {
+                if (item.route) {
+                  navigate(item.route, 
+                    item.label === "Total Active Subscriptions" 
+                      ? { state: { initialStatusFilter: 'Active' }} 
+                      : (item.label === "Total Expired Subscriptions" 
+                          ? { state: { initialStatusFilter: 'Expired' }} 
+                          : null)
+                  );
+                }
+              }}
+            >
                 <CardContent className="p-4">
-                  <div className="flex items-center">
+                  <div className="flex items-center " >
                     <div className={`w-2 h-8 mr-4 ${item.color}`}></div>
                     <div className="flex-1">
                       <p className="text-sm md:text-base text-gray-600">{item.label}</p>
@@ -89,31 +107,30 @@ const Subscription = () => {
                     <th className="py-3 px-4 text-left font-semibold">End Date</th>
                     <th className="py-3 px-4 text-left font-semibold">Billing Cycle</th>
                     <th className="py-3 px-4 text-left font-semibold">Provider</th>
-                    <th className="py-3 px-4 text-left font-semibold">Cost</th>
+                    <th className="py-3 px-7 text-left font-semibold">Cost</th>
                     <th className="py-3 px-4 text-left font-semibold">Status</th>
-                    <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                    <th className="py-3 px-6 text-left font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {subscriptions.slice(0, 4).map(subscription => (
+                  {subscriptions.slice(0, 5).map(subscription => (
                     <tr key={subscription.id} className="border-b border-b-gray-300 hover:bg-gray-50">
                       <td className="py-3 px-4 text-sm">{subscription.subscription_category}</td>
                       <td className="py-3 px-4 text-sm">{subscription.name}</td>
-                      <td className="py-3 px-4 text-sm">{subscription.start_date}</td>
-                      <td className="py-3 px-4 text-sm">{subscription.end_date}</td>
+                      <td className="py-3 px-4 text-sm">{format(new Date(subscription.start_date), "dd-MM-yyyy")}</td>
+                      <td className="py-3 px-4 text-sm">{format(new Date(subscription.end_date), "dd-MM-yyyy")}</td>
                       <td className="py-3 px-4 text-sm">{subscription.billing_cycle}</td>
                       <td className="py-3 px-4 text-sm">{subscription.providerName}</td>
-                      <td className="py-3 px-4 text-sm">{subscription.cost}</td>
+                      <td className="py-3 px-4 text-sm text-right">{subscription.cost}</td>
                       <td className="py-3 px-4 text-sm">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          subscription.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${subscription.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
                           {subscription.status}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-sm">
                         <button
-                           onClick={() => handleViewDetails(subscription)}
+                          onClick={() => handleViewDetails(subscription)}
                           className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded"
                         >
                           View Details

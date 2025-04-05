@@ -5,8 +5,8 @@ import { addcustomers, getresources } from "../../services/allapi";
 import { useNavigate } from "react-router-dom";
 
 function Add_customers() {
-  const [Resources, setResources] = useState()
-  const navigate=useNavigate()
+  const [Resources, setResources] = useState([])
+  const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
       customer_name: "",
@@ -23,18 +23,18 @@ function Add_customers() {
       cost: ""
     },
     validationSchema: validationCustomerform,
-    onSubmit: async(values) => {
+    onSubmit: async (values) => {
       console.log(values);
-      const response= await addcustomers(values)
+      const response = await addcustomers(values)
       console.log(response);
-      if(response.status==201){
+      if (response.status == 201) {
         alert(response.message)
         navigate("/dashboard/services/view_customers")
       }
-      else{
+      else {
         alert("something went wrong")
       }
-      
+
 
     }
   })
@@ -45,10 +45,10 @@ function Add_customers() {
         try {
           const response = await getresources(formik.values.resource_type);
           console.log(response);
-          const resourceNames = response.map(item => item.resource_name);
-          setResources(resourceNames);
+          // const resourceNames = response.map(item => item.resource_name);
+          setResources(response);
         } catch (error) {
-          
+
           console.error("Error fetching resources:", error);
           setResources([]); // Reset on error
         }
@@ -62,7 +62,7 @@ function Add_customers() {
 
   console.log(Resources);
   console.log(formik.errors);
-  
+
 
   return (
     <div className="px-4 md:px-6">
@@ -152,32 +152,41 @@ function Add_customers() {
                     className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="">--Choose resource type--</option>
-                    <option value="web_and_app_hosting">Web & Application Hosting</option>
-                    <option value="storage">Database & Storage</option>
-                    <option value="security">Security & Compliance</option>
-                    <option value="ci/cd">CI/CD & DevOps</option>
-                    <option value="other">Other</option>
+                    <option value="Web and Application Hosting">Web & Application Hosting</option>
+                    <option value="Database and Storage">Database & Storage</option>
+                    <option value="Security and Compliance">Security & Compliance</option>
+                    <option value="CI/CD and DevOps">CI/CD & DevOps</option>
+                    <option value="Other">Other</option>
                   </select>
                   {formik.touched.resource_type && formik.errors.resource_type && (
                     <div className="text-red-500 text-xs w-full p-2">
                       {formik.errors.resource_type}
-                    </div>  
+                    </div>
                   )}
                 </div>
 
                 <div className="mb-4">
                   <label htmlFor="resource_name" className="block mb-1">Resource Name</label>
                   <select name="resource_name" id="resource_name"
+
                     value={formik.values.resource_name}
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      formik.handleChange(e);
+                      if (e.target.value === "add_new") {
+                        navigate("/dashboard/services/add_resources");
+                      }
+                    }}
                     onBlur={formik.handleBlur}
                     className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="">--select resource--</option>
-                    {Resources && Resources.map((resource, index) => (
-                      <option key={index} value={resource}>{resource}</option>
+                    {Resources.map((resource) => (
+                      <option key={resource.id} value={resource.id}>
+                        {resource.resource_name}
+                      </option>
                     ))}
-                    <option value="add_new">Add New</option>
+
+                    <option value="add_new" className="bg-blue-400">Add New</option>
                   </select>
                   {formik.touched.resource_name && formik.errors.resource_name && (
                     <div className="text-red-500 text-xs w-full p-2">
@@ -208,7 +217,7 @@ function Add_customers() {
                   )}
                 </div>
 
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <label htmlFor="lastPaymentDate" className="block mb-1">
                     Last payment date:
                   </label>
@@ -226,13 +235,13 @@ function Add_customers() {
                       {formik.errors.lastPaymentDate}
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
 
               {/* Right Column - Billing Details */}
               <div className="w-full">
                 <h3 className="text-lg md:text-xl font-bold mb-3">Billing Details</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="mb-4">
                     <label htmlFor="startDate" className="block mb-1">

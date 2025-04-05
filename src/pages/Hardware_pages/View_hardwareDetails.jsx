@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Deletehardware, edithardware } from '../../services/allapi';
+import { format } from "date-fns";
 
 const View_hardwareDetails = () => {
   const navigate = useNavigate();
@@ -87,9 +88,9 @@ const View_hardwareDetails = () => {
               <p><span className="font-medium">Processor:</span> {device.computer.cpu}</p>
               <p><span className="font-medium">RAM:</span> {device.computer.ram}</p>
               <p><span className="font-medium">Storage:</span> {device.computer?.storage}</p>
-
-              {/* {device.hardware_type.toLowerCase() === "on-premise server" && (
-                <p><span className="font-medium">Operating System:</span> {device.computer.os}</p>
+{/* 
+              {device.hardware_type.toLowerCase() === "on-premise server" && (
+                <p><span className="font-medium">Operating System:</span> {device?.computer.os}</p>
                 <p><span className="font-medium">Server Name:</span> {device.computer.os}</p>
               )} */}
 
@@ -272,7 +273,8 @@ const View_hardwareDetails = () => {
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Purchase Information</h4>
               <div className="space-y-2">
-                <p><span className="font-medium">Purchase Date:</span> {device?.purchase?.purchase_date}</p>
+                
+                <p><span className="font-medium">Purchase Date:</span>{format(new Date(device?.purchase?.purchase_date), "dd-MM-yyyy")}</p>
                 <p><span className="font-medium">Purchase Price:</span> ₹{parseFloat(device?.purchase?.purchase_cost).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 <p><span className="font-medium">Vendor:</span> {device.vendor_name}</p>
                 <p><span className="font-medium">Vendor Contact:</span> {device.vendor_contact}</p>
@@ -284,8 +286,9 @@ const View_hardwareDetails = () => {
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Warranty & Maintenance</h4>
               <div className="space-y-2">
-                <p><span className="font-medium">Warranty End:</span> {device.warranty.warranty_expiry_date}</p>
-                {calculateWarrantyDaysRemaining(device.warranty.warranty_expiry_date) > 0 ? (
+             
+                <p><span className="font-medium">Warranty End:</span>{format(new Date(device.warranty.warranty_expiry_date), "dd-MM-yyyy")}</p>
+                {calculateWarrantyDaysRemaining(device.warranty.warranty_expiry_date) > 0 && calculateWarrantyDaysRemaining(device.warranty.warranty_expiry_date) < 10? (
                   <p className="mt-2">
                     <span className="font-medium">Warranty Remaining:</span>
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
@@ -300,8 +303,9 @@ const View_hardwareDetails = () => {
                     </span> */}
                   </p>
                 )}
-                <p><span className="font-medium">Last Maintenance:</span> {device.services[0].last_service_date}</p>
-                <p><span className="font-medium">Next Maintenance:</span> {device.services[0].next_service_date}</p>
+                
+                <p><span className="font-medium">Last Maintenance:</span>{format(new Date(device.services[0].last_service_date), "dd-MM-yyyy")}</p>
+                <p><span className="font-medium">Next Maintenance:</span>{format(new Date(device.services[0].next_service_date), "dd-MM-yyyy")}</p>
               </div>
             </div>
           </div>
@@ -315,7 +319,7 @@ const View_hardwareDetails = () => {
 
         <div className="border-t px-6 py-4 flex justify-end">
           <button
-            onClick={() => navigate('/dashboard/hardware')}
+            onClick={() => navigate('/dashboard/hardware/view_hardware')}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded mr-2"
           >
             Back

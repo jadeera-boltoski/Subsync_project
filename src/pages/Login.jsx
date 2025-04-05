@@ -56,7 +56,7 @@ function Login() {
                     navigate("/dashboard",{ state: { message: response.message } })
                 } else {
                     console.log("inside else");
-                    setLoginError(response.message);
+                    setLoginError(response.message)
                     setLoading(false);
                 }
             } catch (error) {

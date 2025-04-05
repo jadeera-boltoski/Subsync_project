@@ -1,6 +1,8 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { deletecustomer } from '../../services/allapi';
+import { format } from "date-fns";
 
 const View_customerdetails = () => {
   const navigate = useNavigate();
@@ -13,19 +15,23 @@ const View_customerdetails = () => {
 
   const formik = useFormik({
     initialValues: {
+      customer_name: customer?.customer_name || '',
       customer_email: customer?.customer_email || '',
       customer_phone: customer?.customer_phone || '',
+      customer_type: customer?.customer_type || '',
+      billingCycle: customer?.billingCycle || '',
+      startDate: customer?.startDate || '',
+      endDate: customer?.endDate || '',
       lastPaymentDate: customer?.lastPaymentDate || '',
       cost: customer?.cost || '',
-      paymentMethod: customer?.paymentMethod.replace('_', ' ') || ''
-
-
+      paymentMethod: customer?.paymentMethod || '',
+      resources: customer?.resources || []
     },
     onSubmit: async (values) => {
-      console.log("hello jadeera",values);
-      
+      console.log("hello jadeera", values);
+
     }
-    
+
   })
 
   // Calculate days remaining until subscription ends
@@ -37,21 +43,21 @@ const View_customerdetails = () => {
     return diffDays;
   };
 
-  // Format status with appropriate color
-  const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return 'bg-green-100 text-green-800';
-      case 'inactive':
-        return 'bg-red-100 text-red-800';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'expired':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+
+  // const getStatusColor = (status) => {
+  //   switch (status.toLowerCase()) {
+  //     case 'active':
+  //       return 'bg-green-100 text-green-800';
+  //     case 'inactive':
+  //       return 'bg-red-100 text-red-800';
+  //     case 'pending':
+  //       return 'bg-yellow-100 text-yellow-800';
+  //     case 'expired':
+  //       return 'bg-gray-100 text-gray-800';
+  //     default:
+  //       return 'bg-gray-100 text-gray-800';
+  //   }
+  // };
 
   // Format billing cycle with proper capitalization
   const formatBillingCycle = (cycle) => {
@@ -70,6 +76,20 @@ const View_customerdetails = () => {
     setedit(!edit)
   }
 
+  const handledelete = async () => {
+    const confirmChange = window.confirm("you need to delete this customer details?")
+    if (confirmChange) {
+      const response = await deletecustomer(customer.id)
+      console.log(response);
+      if (response.status == 200) {
+        alert(response.message)
+        navigate("/dashboard/services/view_allcustomers")
+      } else {
+        alert("something went wrong")
+      } // Stop the category change if the user cancels
+    }
+  }
+
   return (
     <div className='flex'>
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full max-h-[90vh] overflow-y-auto m-4">
@@ -85,11 +105,11 @@ const View_customerdetails = () => {
                 <h2 className="text-xl font-bold">{customer.customer_name}</h2>
                 <p className="text-gray-600">{formatBillingCycle(customer.billingCycle)} Plan</p>
               </div>
-              <div>
+              {/* <div>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(customer.status)}`}>
                   {customer.status}
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -120,10 +140,14 @@ const View_customerdetails = () => {
             <div className="bg-gray-50 p-4 rounded">
               <h4 className="font-medium text-gray-700 mb-3">Date Information</h4>
               <div className="space-y-2">
-                <p><span className="font-medium">Start Date:</span> {customer.startDate}</p>
-                <p><span className="font-medium">End Date:</span> {customer.endDate}</p>
-                <p><span className="font-medium">Last Payment Date:</span> {customer.lastPaymentDate}</p>
-                {calculateDaysRemaining(customer.endDate) > 0 ? (
+
+                <p><span className="font-medium">Start Date:</span>{format(new Date(customer.startDate), "dd-MM-yyyy")}</p>
+                <p><span className="font-medium">End Date:</span>{format(new Date(customer.endDate), "dd-MM-yyyy")}
+                </p>
+                {customer.lastPaymentDate && (
+                  <p><span className="font-medium">Last Payment Date:</span> {format(new Date(customer?.lastPaymentDate), "dd-MM-yyyy")}</p>)}
+
+                {calculateDaysRemaining(customer.endDate) > 0 && calculateDaysRemaining(customer.endDate) < 10 ? (
                   <p className="mt-2">
                     <span className="font-medium">Days Remaining:</span>
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
@@ -132,44 +156,50 @@ const View_customerdetails = () => {
                   </p>
                 ) : (
                   <p className="mt-2">
-                    <span className="font-medium">customer Status:</span>
+                    {/* <span className="font-medium">customer Status:</span>
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-medium">
                       Expired
-                    </span>
+                    </span> */}
                   </p>
                 )}
               </div>
             </div>
 
             {/* Status Information */}
-            <div className="bg-gray-50 p-4 rounded">
-              <h4 className="font-medium text-gray-700 mb-3">Status Information</h4>
-              <div className="space-y-2">
-                <p>
+            {/* <div className="bg-gray-50 p-4 rounded"> */}
+            {/* <h4 className="font-medium text-gray-700 mb-3">Status Information</h4> */}
+            {/* <div className="space-y-2"> */}
+            {/* <p>
                   <span className="font-medium">Status:</span>
                   <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(customer.status)}`}>
                     {customer.status}
                   </span>
-                </p>
-                {/* <p><span className="font-medium">Customer ID:</span> {customer.id}</p> */}
-              </div>
+                </p> */}
+            {/* <p><span className="font-medium">Customer ID:</span> {customer.id}</p> */}
+            {/* </div> */}
+            {/* </div>   */}
+            {/* Resources Section */}
+            <div className="mt-6 bg-gray-50 p-4 rounded">
+              <h4 className="font-medium text-gray-700 mb-3">Resources</h4>
+              {customer.resources ? (
+                <ul className="list-disc pl-5">
+                  {customer.resources.map((resource, index) => (
+                    <li key={index}>
+                      {/* The error is likely here - resource might be an object instead of a string */}
+                      {typeof resource === 'object'
+                        ? resource.resource_name || JSON.stringify(resource)
+                        : resource}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-600">No resources assigned to this customer.</p>
+              )}
             </div>
           </div>
-
-          {/* Resources Section */}
-          <div className="mt-6 bg-gray-50 p-4 rounded">
-            <h4 className="font-medium text-gray-700 mb-3">Resources</h4>
-            {customer.resources ? (
-              <ul className="list-disc pl-5">
-                {customer.resources.map((resource, index) => (
-                  <li key={index}>{resource}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-600">No resources assigned to this customer.</p>
-            )}
-          </div>
         </div>
+
+
 
         <div className="border-t px-6 py-4 flex justify-end">
           <button
@@ -185,6 +215,7 @@ const View_customerdetails = () => {
             Edit
           </button>
           <button
+            onClick={handledelete}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
           >
             Delete
@@ -192,11 +223,23 @@ const View_customerdetails = () => {
         </div>
       </div>
       {edit && (
-        <div className='w-2/5 bg-white rounded-lg shadow-xl p-6 ml-4 max-h-[90vh] overflow-y-auto transition-all duration-300'>
+        <div className='w-3/5 bg-white rounded-lg shadow-xl p-6 ml-4 max-h-[90vh] overflow-y-auto transition-all duration-300 mt-4'>
           <h3 className="text-xl font-semibold mb-6 border-b pb-3">Edit Customer Details</h3>
           <form onSubmit={formik.handleSubmit}>
             <div>
-              <div>
+              <div className="mb-4">
+                <label htmlFor="customer_name" className="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
+                <input
+                  type="text"
+                  name="customer_name"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.customer_name}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="mb-4">
                 <label htmlFor="customer_email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input
                   type="email"
@@ -207,7 +250,8 @@ const View_customerdetails = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <div>
+
+              <div className="mb-4">
                 <label htmlFor="customer_phone" className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                 <input
                   type="text"
@@ -218,10 +262,63 @@ const View_customerdetails = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <div>
-                <label htmlFor="lastPaymentDate" className="block text-sm font-medium text-gray-700 mb-1">The Last Payment Date</label>
+
+              <div className="mb-4">
+                <label htmlFor="customer_type" className="block text-sm font-medium text-gray-700 mb-1">Customer Type</label>
                 <input
-                  type="Date"
+                  type="text"
+                  name="customer_type"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.customer_type}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="billingCycle" className="block text-sm font-medium text-gray-700 mb-1">Billing Cycle</label>
+                <select
+                  name="billingCycle"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.billingCycle}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select a billing cycle</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.startDate}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                <input
+                  type="date"
+                  name="endDate"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.endDate}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="lastPaymentDate" className="block text-sm font-medium text-gray-700 mb-1">Last Payment Date</label>
+                <input
+                  type="date"
                   name="lastPaymentDate"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -229,7 +326,8 @@ const View_customerdetails = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <div>
+
+              <div className="mb-4">
                 <label htmlFor="cost" className="block text-sm font-medium text-gray-700 mb-1">Cost</label>
                 <input
                   type="number"
@@ -241,37 +339,54 @@ const View_customerdetails = () => {
                 />
               </div>
 
-              <div>
+              <div className="mb-4">
                 <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
-                <input
-                  type="text"
+                <select
                   name="paymentMethod"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.paymentMethod}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                >
+                  <option value="">Select a payment method</option>
+                  <option value="Credit/Debit Card">Credit/Debit Card</option>
+                  <option value="Bank_Transfer">Bank Transfer</option>
+                  <option value="Prepaid_Cards">Gift Cards & Prepaid Cards</option>
+                  <option value="Cash_Payments">Cash Payments (For offline or manual renewals)</option>
+                </select>
               </div>
+
+              {/* <div className="mb-4">
+                <label htmlFor="resources" className="block text-sm font-medium text-gray-700 mb-1">Resources</label>
+                <textarea
+                  name="resources"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.resources||''}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder=""
+                />
+                {/* <p className="text-xs text-gray-500 mt-1">Enter resources in JSON format: [{"resource_name":"Resource 1"},{"resource_name":"Resource 2"}]</p> */}
+              {/* </div> */} 
+
               <div className="flex justify-end space-x-3 pt-4 border-t">
-              <button 
-                type="button" 
-                onClick={handleedit}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
+                <button
+                  type="button"
+                  onClick={handleedit}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
 
-              <button 
-                type="submit" 
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                Update
-              </button>
-            </div>
-
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Update
+                </button>
+              </div>
             </div>
           </form>
-
         </div>
       )}
 

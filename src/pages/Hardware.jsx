@@ -39,6 +39,7 @@ function Hardware() {
       value: total_active_hardware,
       color: 'bg-blue-500',
       textColor: 'text-blue-500'
+      // route:'/dashboard/hardware/view_hardware'
     },
     {
       label: 'Warranty Expiring Soon',
@@ -53,7 +54,7 @@ function Hardware() {
       textColor: 'text-red-500'
     },
     {
-      label: 'Total monthly cost',
+      label: 'Yearly spending',
       value: `₹${hardware_cost}`,
       color: 'bg-orange-500',
       textColor: 'text-orange-500'
@@ -65,7 +66,7 @@ function Hardware() {
       {isAddinghardware && (
         <div>
 
-            {/* Centered button on small screens, aligned left on larger screens */}
+           
             <div className="flex justify-center md:justify-start mb-2">
             <button
               onClick={() => { navigate('/dashboard/hardware/add_hardware') }}
@@ -79,7 +80,7 @@ function Hardware() {
 
 
 
-          {/* Responsive grid - 1 column on small screens, 2 on medium, 4 on large */}
+         
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4">
             {statusData.map((item, index) => (
               <Card key={index} className="w-full">
@@ -98,7 +99,7 @@ function Hardware() {
           
         
           
-          {/* Hardware view component */}
+          {/* Hardware view  */}
 
          <div>
           <h1 className="text-end mr-6 font-bold text-blue-500" onClick={()=>{navigate('view_hardware')}}>View All Hardware</h1>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getsubscription } from "../../services/allapi";
+import { format } from "date-fns";
 
 function Viewsubscription() {
   const [subscriptions, setSubscriptions] = useState([])
@@ -10,12 +11,20 @@ function Viewsubscription() {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage] = useState(10)
-  
+
+
+  const location = useLocation(); // Add this import at the top
+
+  // Get initial filter from navigation state if available
+  const initialStatusFilter = location.state?.initialStatusFilter || 'all';
+
 
   // filter subscription
   const [categoryFilter, setcategoryFilter] = useState('all');
+  const [statusFilter, setstatusFilter] = useState(initialStatusFilter);
+
   const [filteredSubscriptions, setFilteredSubscriptions] = useState([]);
- 
+
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -46,13 +55,20 @@ function Viewsubscription() {
     if (categoryFilter !== 'all') {
       result = result.filter(item => item.subscription_category === categoryFilter);
     }
+    if (statusFilter !== 'all') {
+      result = result.filter(item => item.status === statusFilter);
+    }
 
     setFilteredSubscriptions(result);
     setCurrentPage(1);
-  }, [categoryFilter, subscriptions]);
+  }, [categoryFilter, subscriptions, statusFilter]);
 
-  const uniqueCategories = subscriptions.length > 0 
+  const uniqueCategories = subscriptions.length > 0
     ? ['all', ...new Set(subscriptions.map(item => item.subscription_category))]
+    : ['all'];
+
+  const uniqueStatus = subscriptions.length > 0
+    ? ['all', ...new Set(subscriptions.map(item => item.status))]
     : ['all'];
 
 
@@ -70,27 +86,44 @@ function Viewsubscription() {
   const totalPages = Math.ceil(filteredSubscriptions.length / rowsPerPage);
 
   const handleViewDetails = (subscription) => {
-   
+
     navigate('/dashboard/subscriptions/Viewdetails', { state: { subscription } });
-    
+
   };
 
   return (
-    
+
     <div className="w-full">
-         <div className="mb-4">
-        <select
-          id="typeFilter"
-          value={categoryFilter}
-          onChange={(e) => setcategoryFilter(e.target.value)}
-          className="mt-1 block w-45 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-blue-200"
-        >
-          {uniqueCategories.map((category) => (
-            <option key={category} value={category}>
-              {category === 'all' ? 'All Categories' : category}
-            </option>
-          ))}
-        </select>
+      <div className="flex gap-4">
+        <div className="mb-4">
+          <select
+            id="typeFilter"
+            value={categoryFilter}
+            onChange={(e) => setcategoryFilter(e.target.value)}
+            className="mt-1 block w-45 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-blue-200"
+          >
+            {uniqueCategories.map((category) => (
+              <option key={category} value={category}>
+                {category === 'all' ? 'All Categories' : category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <select
+            id="statusFilter"
+            value={statusFilter}
+            onChange={(e) => setstatusFilter(e.target.value)}
+            className="mt-1 block w-45 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-blue-200"
+          >
+            {uniqueStatus.map((status) => (
+              <option key={status} value={status}>
+                {status === 'all' ? 'All status' : status}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {error && <div className="text-red-500 mb-4">Error loading subscriptions: {error.message}</div>}
@@ -106,40 +139,42 @@ function Viewsubscription() {
               <th className="py-3 px-4 text-left font-semibold">End Date</th>
               <th className="py-3 px-4 text-left font-semibold">Billing Cycle</th>
               <th className="py-3 px-4 text-left font-semibold">Provider</th>
-              <th className="py-3 px-4 text-left font-semibold">Cost</th>
+              <th className="py-3 px-6 text-left font-semibold">Cost</th>
               <th className="py-3 px-4 text-left font-semibold">Status</th>
-              <th className="py-3 px-4 text-left font-semibold">Actions</th>
+              <th className="py-3 px-6 text-left font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {currentRows.map(subscription => (
               // {tableData.slice(0, limit ? parseInt(limit) : tableData.length).map((item, index) => (
-                  <tr key={subscription.id} className="hover:bg-gray-50">
-                    <td className="py-3 px-4 text-sm">{subscription.subscription_category}</td>
-                    <td className="py-3 px-4 text-sm">{subscription.name}</td>
-                    <td className="py-3 px-4 text-sm">{subscription.start_date}</td>
-                    <td className="py-3 px-4 text-sm">{subscription.end_date}</td>
-                    <td className="py-3 px-4 text-sm">{subscription.billing_cycle}</td>
-                    <td className="py-3 px-4 text-sm">{subscription.providerName}</td>
-                    <td className="py-3 px-4 text-sm">{subscription.cost}</td>
-                    <td className="py-3 px-4 text-sm">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${subscription.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
-                        {subscription.status}
-                      </span>
-                    </td>
-                    <td className="p-3 text-center">
-                      <button
-                        onClick={() => handleViewDetails(subscription)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs font-medium"
-                      >
-                        View Details
-                      </button>
-                    </td>
-                  </tr>
-                  //  ))}
-                ))
-              }
+              <tr key={subscription.id} className="hover:bg-gray-50">
+                <td className="py-3 px-4 text-sm">{subscription.subscription_category}</td>
+                <td className="py-3 px-4 text-sm">{subscription.name}</td>
+                <td className="py-3 px-4 text-sm">{format(new Date(subscription.start_date), "dd-MM-yyyy")}</td>
+                <td className="py-3 px-4 text-sm">{subscription.end_date
+                  ? format(new Date(subscription.end_date), "dd-MM-yyyy")
+                  : "life long"}</td>
+                <td className="py-3 px-4 text-sm">{subscription.billing_cycle}</td>
+                <td className="py-3 px-4 text-sm">{subscription.providerName}</td>
+                <td className="py-3 px-4 text-sm text-right">{subscription.cost}</td>
+                <td className="py-3 px-4 text-sm">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${subscription.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                    {subscription.status}
+                  </span>
+                </td>
+                <td className="p-3 text-center">
+                  <button
+                    onClick={() => handleViewDetails(subscription)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs font-medium"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              //  ))}
+            ))
+            }
           </tbody>
         </table>
       </div>
@@ -147,7 +182,7 @@ function Viewsubscription() {
       {/* Pagination controls */}
       <div className="flex justify-between items-center mt-4 px-4">
         <div className="text-sm text-gray-600">
-          Showing {indexOfFirstRow + 1} to {Math.min(indexOfLastRow, subscriptions.length)} of {subscriptions.length} entries
+          Showing {indexOfFirstRow + 1} to {Math.min(indexOfLastRow, filteredSubscriptions.length)} of {filteredSubscriptions.length} entries
         </div>
         <div className="flex space-x-1">
           <button

@@ -78,8 +78,11 @@ function Dashboardcontent() {
       {/* Status Cards Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statusData.map((item, index) => (
-          <Card key={index} className="w-full"
-          onClick={() => navigate(item.route)}>
+          <Card key={index} className="w-full cursor-pointer"
+          onClick={() => navigate(item.route, item.label === "Total Active subscriptions" 
+            ? { state: { initialStatusFilter: 'Active' } } 
+            : {}
+        )}>
             <CardContent className="p-4">
               <div className="flex items-center">
                 <div className={` w-2 h-8  ${item.color}`}></div>
