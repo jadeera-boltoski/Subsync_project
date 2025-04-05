@@ -17,11 +17,58 @@ const View_hardwareDetails = () => {
 
   const formik = useFormik({
     initialValues: {
-      id:device?.id,
-      last_service_date: device?.services?.[0]?.last_service_date || '',
-      service_cost: device?.services?.[0]?.service_cost || '',
+      id: device?.id,
+      // Basic Information
+      hardware_type: device?.hardware_type || '',
+      manufacturer: device?.manufacturer || '',
+      model_number: device?.model_number || '',
+      serial_number: device?.serial_number || '',
       status: device?.status || '',
+      
+      // Assignment Information
       assigned_department: device?.assigned_department || '',
+      
+      // Purchase Information
+      purchase_date: device?.purchase?.purchase_date || '',
+      purchase_cost: device?.purchase?.purchase_cost || '',
+      vendor_name: device?.vendor_name || '',
+      vendor_contact: device?.vendor_contact || '',
+      vendor_email: device?.vendor_email || '',
+      
+      // Warranty Information
+      warranty_expiry_date: device?.warranty?.warranty_expiry_date || '',
+      
+      // Maintenance Information
+      last_service_date: device?.services?.[0]?.last_service_date || '',
+      next_service_date: device?.services?.[0]?.next_service_date || '',
+      service_cost: device?.services?.[0]?.service_cost || '',
+      
+      // Device-specific fields (will conditionally render based on device type)
+      // Computer specs
+      cpu: device?.computer?.cpu || '',
+      ram: device?.computer?.ram || '',
+      storage: device?.computer?.storage || '',
+      
+      // Portable device specs
+      imei_number: device?.portable_device?.imei_number || '',
+      os_version: device?.portable_device?.os_version || '',
+      portable_storage: device?.portable_device?.storage || '',
+      
+      // Air conditioner specs
+      btu_rating: device?.air_conditioner?.btu_rating || '',
+      energy_rating: device?.air_conditioner?.energy_rating || '',
+      
+      // Network device specs
+      throughput: device?.network_device?.throughput || '',
+      ip_address: device?.network_device?.ip_address || '',
+      name_specification: device?.network_device?.name_specification || '',
+      
+      // Printer specs
+      print_technology: device?.printer?.print_technology || '',
+      print_speed: device?.printer?.print_speed || '',
+      connectivity: device?.printer?.connectivity || '',
+      
+      // Notes
       notes: device?.notes || '',
     },
     onSubmit: async (values) => {
@@ -71,6 +118,222 @@ const View_hardwareDetails = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const renderDeviceSpecificFormFields = () => {
+    switch (formik.values.hardware_type.toLowerCase()) {
+      case 'desktop':
+      case 'laptop':
+        return (
+          <div className="space-y-4">
+            <h4 className="font-medium text-gray-700 mb-3">Computer Specifications</h4>
+            <div>
+              <label htmlFor="cpu" className="block text-sm font-medium text-gray-700 mb-1">Processor</label>
+              <input
+                type="text"
+                id="cpu"
+                name="cpu"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.cpu}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="ram" className="block text-sm font-medium text-gray-700 mb-1">RAM</label>
+              <input
+                type="text"
+                id="ram"
+                name="ram"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.ram}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="storage" className="block text-sm font-medium text-gray-700 mb-1">Storage</label>
+              <input
+                type="text"
+                id="storage"
+                name="storage"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.storage}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        );
+
+      case 'mobile phone':
+      case 'tablet':
+        return (
+          <div className="space-y-4">
+            <h4 className="font-medium text-gray-700 mb-3">Mobile Device Specifications</h4>
+            <div>
+              <label htmlFor="imei_number" className="block text-sm font-medium text-gray-700 mb-1">IMEI Number</label>
+              <input
+                type="text"
+                id="imei_number"
+                name="imei_number"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.imei_number}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="os_version" className="block text-sm font-medium text-gray-700 mb-1">OS Version</label>
+              <input
+                type="text"
+                id="os_version"
+                name="os_version"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.os_version}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="portable_storage" className="block text-sm font-medium text-gray-700 mb-1">Storage</label>
+              <input
+                type="text"
+                id="portable_storage"
+                name="portable_storage"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.portable_storage}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        );
+
+      case 'air conditioner':
+        return (
+          <div className="space-y-4">
+            <h4 className="font-medium text-gray-700 mb-3">Air Conditioner Specifications</h4>
+            <div>
+              <label htmlFor="btu_rating" className="block text-sm font-medium text-gray-700 mb-1">BTU Rating</label>
+              <input
+                type="text"
+                id="btu_rating"
+                name="btu_rating"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.btu_rating}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="energy_rating" className="block text-sm font-medium text-gray-700 mb-1">Energy Efficiency Rating</label>
+              <input
+                type="text"
+                id="energy_rating"
+                name="energy_rating"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.energy_rating}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        );
+
+      case 'network device':
+        return (
+          <div className="space-y-4">
+            <h4 className="font-medium text-gray-700 mb-3">Network Device Specifications</h4>
+            <div>
+              <label htmlFor="throughput" className="block text-sm font-medium text-gray-700 mb-1">Throughput</label>
+              <input
+                type="text"
+                id="throughput"
+                name="throughput"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.throughput}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="ip_address" className="block text-sm font-medium text-gray-700 mb-1">IP Address</label>
+              <input
+                type="text"
+                id="ip_address"
+                name="ip_address"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.ip_address}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="name_specification" className="block text-sm font-medium text-gray-700 mb-1">Device Name</label>
+              <input
+                type="text"
+                id="name_specification"
+                name="name_specification"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.name_specification}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        );
+
+      case 'printer':
+        return (
+          <div className="space-y-4">
+            <h4 className="font-medium text-gray-700 mb-3">Printer Specifications</h4>
+            <div>
+              <label htmlFor="print_technology" className="block text-sm font-medium text-gray-700 mb-1">Print Technology</label>
+              <input
+                type="text"
+                id="print_technology"
+                name="print_technology"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.print_technology}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="print_speed" className="block text-sm font-medium text-gray-700 mb-1">Print Speed</label>
+              <input
+                type="text"
+                id="print_speed"
+                name="print_speed"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.print_speed}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="connectivity" className="block text-sm font-medium text-gray-700 mb-1">Connectivity</label>
+              <input
+                type="text"
+                id="connectivity"
+                name="connectivity"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.connectivity}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+
+
+
 
   // Render device-specific details based on type
   const renderDeviceSpecificDetails = () => {
@@ -347,103 +610,242 @@ const View_hardwareDetails = () => {
           <h3 className="text-xl font-semibold mb-6 border-b pb-3">Edit Hardware Details</h3>
 
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
-            {/* Basic Information Section */}
-            <div>
-
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="last_service_date" className="block text-sm font-medium text-gray-700 mb-1">The last maintenance was done on </label>
-                  <input
-                    type="Date"
-                    name="last_service_date"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.last_service_date}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor='service_cost' className="block text-sm font-medium text-gray-700 mb-1">Last maintenance cost</label>
-                  <input
-                    type="text"
-                    name='service_cost'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.service_cost}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor='status' className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                  <select
-                    name='status'
-                    value={formik.values.status}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                    <option value="Maintenance">Maintenance</option>
-                    <option value="Retired">Retired</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-
-            {/* Assignment Information */}
-            <div>
-              <h4 className="font-medium text-gray-700 mb-3">Assignment Information</h4>
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor='assigned_department' className="block text-sm font-medium text-gray-700 mb-1">Assigned Department</label>
-                  <input
-                    type="text"
-                    name='assigned_department'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.assigned_department}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Notes
-            <div>
-              <h4 className="font-medium text-gray-700 mb-3">Notes</h4>
+              {/* Basic Information Section */}
               <div>
-                <textarea
-                  name='notes'
-                  value={formik.values.notes}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  rows="4"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                ></textarea>
+                <h4 className="font-medium text-gray-700 mb-3">Basic Information</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="manufacturer" className="block text-sm font-medium text-gray-700 mb-1">Manufacturer</label>
+                    <input
+                      type="text"
+                      id="manufacturer"
+                      name="manufacturer"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.manufacturer}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="model_number" className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                    <input
+                      type="text"
+                      id="model_number"
+                      name="model_number"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.model_number}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="serial_number" className="block text-sm font-medium text-gray-700 mb-1">Serial Number</label>
+                    <input
+                      type="text"
+                      id="serial_number"
+                      name="serial_number"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.serial_number}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select
+                      id="status"
+                      name="status"
+                      value={formik.values.status}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                      <option value="Maintenance">Maintenance</option>
+                      <option value="Retired">Retired</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-            </div> */}
 
-            {/* Form Buttons */}
-            <div className="flex justify-end space-x-3 pt-4 border-t">
-              <button
-                type="button"
-                onClick={handleedit}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+              {/* Assignment Information */}
+              <div>
+                <h4 className="font-medium text-gray-700 mb-3">Assignment Information</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="assigned_department" className="block text-sm font-medium text-gray-700 mb-1">Assigned Department</label>
+                    <input
+                      type="text"
+                      id="assigned_department"
+                      name="assigned_department"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.assigned_department}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
 
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
+              {/* Device-specific form fields */}
+              {renderDeviceSpecificFormFields()}
+
+              {/* Purchase Information */}
+              <div>
+                <h4 className="font-medium text-gray-700 mb-3">Purchase Information</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="purchase_date" className="block text-sm font-medium text-gray-700 mb-1">Purchase Date</label>
+                    <input
+                      type="date"
+                      id="purchase_date"
+                      name="purchase_date"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.purchase_date}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="purchase_cost" className="block text-sm font-medium text-gray-700 mb-1">Purchase Cost</label>
+                    <input
+                      type="text"
+                      id="purchase_cost"
+                      name="purchase_cost"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.purchase_cost}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="vendor_name" className="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+                    <input
+                      type="text"
+                      id="vendor_name"
+                      name="vendor_name"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.vendor_name}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="vendor_contact" className="block text-sm font-medium text-gray-700 mb-1">Vendor Contact</label>
+                    <input
+                      type="text"
+                      id="vendor_contact"
+                      name="vendor_contact"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.vendor_contact}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="vendor_email" className="block text-sm font-medium text-gray-700 mb-1">Vendor Email</label>
+                    <input
+                      type="email"
+                      id="vendor_email"
+                      name="vendor_email"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.vendor_email}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Warranty & Maintenance */}
+              <div>
+                <h4 className="font-medium text-gray-700 mb-3">Warranty & Maintenance</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="warranty_expiry_date" className="block text-sm font-medium text-gray-700 mb-1">Warranty End Date</label>
+                    <input
+                      type="date"
+                      id="warranty_expiry_date"
+                      name="warranty_expiry_date"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.warranty_expiry_date}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="last_service_date" className="block text-sm font-medium text-gray-700 mb-1">Last Maintenance Date</label>
+                    <input
+                      type="date"
+                      id="last_service_date"
+                      name="last_service_date"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.last_service_date}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="next_service_date" className="block text-sm font-medium text-gray-700 mb-1">Next Maintenance Date</label>
+                    <input
+                      type="date"
+                      id="next_service_date"
+                      name="next_service_date"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.next_service_date}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="service_cost" className="block text-sm font-medium text-gray-700 mb-1">Maintenance Cost</label>
+                    <input
+                      type="text"
+                      id="service_cost"
+                      name="service_cost"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.service_cost}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <h4 className="font-medium text-gray-700 mb-3">Notes</h4>
+                <div>
+                  <textarea
+                    id="notes"
+                    name="notes"
+                    value={formik.values.notes}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    rows="4"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  ></textarea>
+                </div>
+              </div>
+
+              {/* Form Buttons */}
+              <div className="flex justify-end space-x-3 pt-4 border-t">
+                <button
+                  type="button"
+                  onClick={handleedit}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
         </div>
       )}
 
