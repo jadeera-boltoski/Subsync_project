@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { validationHardware } from "../../validation/yup";
 import { addhardware } from "../../services/allapi";
 import { useNavigate } from "react-router-dom";
+import { useUnsavedChangesWarning } from "../../hooks/useUnsavedChangesWarning";
 
 
 const deviceSpecificFields = {
@@ -65,6 +66,11 @@ const Add_hardware = () => {
       // Handle form submission here
     }
   });
+  const isFormDirty = Object.keys(formik.initialValues).some(
+    key => formik.values[key] !== formik.initialValues[key]
+  );
+  
+  useUnsavedChangesWarning(isFormDirty);
 
   // Handle device type change to update both formik state and component state
   const handleDeviceTypeChange = (e) => {

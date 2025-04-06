@@ -1051,6 +1051,48 @@ function Add_subscription() {
                                                                 </div>
                                                             )}
                                                         </div>
+                                                      <div>
+                                                      <label htmlFor="durationType" className="block mt-4 mb-1 text-sm">
+    Subscription Duration:
+  </label>
+  <select
+    id="durationType"
+    name="durationType"
+    value={formik.values.durationType}
+    onChange={formik.handleChange}
+    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+  >
+    <option value="" disabled>
+      Choose duration type
+    </option>
+    <option value="no_end">No End Date (Active until canceled)</option>
+    <option value="fixed">Fixed Duration</option>
+  </select>
+
+  {/* End Date - only if Fixed */}
+  {formik.values.durationType === "fixed" && (
+    <div>
+      <label htmlFor="endDate" className="block mb-1 mt-4 text-sm">
+       Subsription Contract End Date:
+      </label>
+      <input
+        type="date"
+        id="endDate"
+        name="endDate"
+        value={formik.values.endDate}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        min={formik.values.startDate}
+        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+      />
+      {formik.touched.endDate && formik.errors.endDate && (
+        <div className="text-red-500 text-xs mt-1">
+          {formik.errors.endDate}
+        </div>
+      )}
+    </div>
+  )}
+</div>
 
                                                         <div>
                                                             <label htmlFor="billingCycle" className="block mb-1 text-sm">
@@ -1080,53 +1122,7 @@ function Add_subscription() {
                                                         </div>
 
 
-                                                        <div>
-
-
-                                                            <label htmlFor="dateType" className="block mb-1 text-sm">
-                                                                End Date Type:
-                                                            </label>
-                                                            <select
-                                                                id="dateType"
-                                                                name="dateType"
-                                                                value={dateType}
-                                                                onChange={handleDateTypeChange}
-                                                                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                            >
-                                                                <option value="" selected disabled>choose type</option>
-                                                                <option value="specific">Specific Date</option>
-                                                                <option value="lifelong">Life Long</option>
-                                                            </select>
-                                                            {dateType === 'specific' && (
-                                                                <div>
-
-                                                                    <label htmlFor="endDate" className="block mb-1 text-sm">
-                                                                        End date :
-                                                                    </label>
-                                                                    <input
-                                                                        type="date"
-                                                                        id="endDate"
-                                                                        name="endDate"
-                                                                        value={formik.values.endDate}
-                                                                        onChange={formik.handleChange}
-                                                                        onBlur={formik.handleBlur}
-                                                                        min={new Date().toISOString().split("T")[0]}
-                                                                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                                    />
-                                                                    {formik.touched.endDate && formik.errors.endDate && (
-                                                                        <div className="text-red-500 text-xs mt-1">
-                                                                            {formik.errors.endDate}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )}
-
-                                                            {dateType === 'lifelong' && (
-                                                                <div className="text-gray-600 text-sm mt-1">
-                                                                    Billing Period: Life Long
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                                       
 
                                                         <div className="flex items-center gap-4 pt-2">
                                                             <div className="flex items-center gap-1">

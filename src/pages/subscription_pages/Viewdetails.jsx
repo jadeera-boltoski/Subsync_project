@@ -369,10 +369,14 @@ const Viewdetails = () => {
 
 
       {edit && !isEditModalOpen && (
-        <div>
-          <div className="bg-white rounded-lg shadow-xl p-4 m-4 space-y-4 w-100">
+        
+          <div className="w-3/5 bg-white rounded-lg  shadow-xl p-6 ml-4 max-h-[90vh] overflow-y-auto transition-all duration-300">
             <h3 className="text-xl font-semibold mb-4">Edit Subscription Details</h3>
             <form onSubmit={formik.handleSubmit} className="space-y-4">
+
+
+
+              {/* software aahnel */}
               {formik.values.category === "Software" && (
                 <div>
                   {/* Version */}
@@ -427,24 +431,7 @@ const Viewdetails = () => {
                   </div>
 
                   {/* Payment Status */}
-                  {/* <div>
-                    <label htmlFor="paymentStatus" className="block text-gray-700 font-medium mb-2">
-                      Payment Status
-                    </label>
-                    <select
-                      id="paymentStatus"
-                      name="paymentStatus"
-                      value={formik.values.paymentStatus}
-                      onChange={formik.handleChange}
-                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    >
-                      <option value="paid">Paid</option>
-                      <option value="unpaid">Unpaid</option>
-                    </select>
-                    {formik.touched.paymentStatus && formik.errors.paymentStatus && (
-                      <p className="text-red-500 text-sm mt-1">{formik.errors.paymentStatus}</p>
-                    )}
-                  </div> */}
+                  
 
                   {/* Next Payment Date */}
                   {/* <div>
@@ -682,6 +669,24 @@ const Viewdetails = () => {
                       <p className="text-red-500 text-sm mt-1">{formik.errors.last_payment_date}</p>
                     )}
                   </div>
+                  <div>
+                    <label htmlFor="paymentStatus" className="block text-gray-700 font-medium mb-2">
+                      Payment Status
+                    </label>
+                    <select
+                      id="paymentStatus"
+                      name="paymentStatus"
+                      value={formik.values.paymentStatus}
+                      onChange={formik.handleChange}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="paid">Paid</option>
+                      <option value="unpaid">Unpaid</option>
+                    </select>
+                    {formik.touched.paymentStatus && formik.errors.paymentStatus && (
+                      <p className="text-red-500 text-sm mt-1">{formik.errors.paymentStatus}</p>
+                    )}
+                  </div>
 
                   {/* Billed Amount */}
                   <div>
@@ -743,7 +748,7 @@ const Viewdetails = () => {
             </form>
 
           </div>
-        </div>
+        
       )}
 
     </div>

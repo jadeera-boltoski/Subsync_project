@@ -606,7 +606,7 @@ const View_hardwareDetails = () => {
 
       </div>
       {check && (
-        <div className="w-2/5 bg-white rounded-lg shadow-xl p-6 ml-4 max-h-[90vh] overflow-y-auto transition-all duration-300">
+        <div className="w-3/5 bg-white rounded-lg shadow-xl p-6 ml-4 max-h-[90vh] overflow-y-auto transition-all duration-300">
           <h3 className="text-xl font-semibold mb-6 border-b pb-3">Edit Hardware Details</h3>
 
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
