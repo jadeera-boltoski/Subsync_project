@@ -124,7 +124,7 @@ function Add_customers() {
                   )}
                 </div>
 
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <label htmlFor="customer_type" className="block mb-1">Customer type</label>
                   <select name="customer_type" id="customer_type"
                     value={formik.values.customer_type}
@@ -141,7 +141,7 @@ function Add_customers() {
                       {formik.errors.customer_type}
                     </div>
                   )}
-                </div>
+                </div> */}
 
                 <div className="mb-4">
                   <label htmlFor="resource_type" className="block mb-1">Resource type</label>
@@ -180,9 +180,9 @@ function Add_customers() {
                     className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="">--select resource--</option>
-                    {Resources.map((resource) => (
+                    {Array.isArray(Resources) && Resources.map((resource) => (
                       <option key={resource.id} value={resource.id}>
-                        {resource.resource_name}
+                        {resource?.resource_name}
                       </option>
                     ))}
 
@@ -335,7 +335,7 @@ function Add_customers() {
               </div>
             </div>
 
-            <div className="flex justify-center mt-6 md:mt-8">
+            <div className="flex justify-end mt-6 md:mt-8">
               <button
                 type="submit"
                 className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 w-full md:w-auto"

@@ -413,7 +413,7 @@ const Serverusage_report = () => {
         )}
         
         <div className="bg-gray-100 p-4 text-sm text-gray-600">
-          <p className="mb-1">* Report generated on {new Date("dd-MM-yyyy")}</p>
+          <p className="mb-1">* Report generated on {format(new Date(), "dd-MM-yyyy")}</p>
           <p>* Storage values shown in GB</p>
         </div>
       </div>

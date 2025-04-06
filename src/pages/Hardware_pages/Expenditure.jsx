@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { gethardwarespending } from '../../services/allapi';
@@ -18,8 +18,7 @@ function Expenditure() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // In a real application, replace this with your API call
-        // const response = await getHardwareData();
+        
         const response= await gethardwarespending()
         console.log(response);
         
@@ -29,7 +28,7 @@ function Expenditure() {
           const years = Object.keys(response).sort();
           setAvailableYears(years);
           
-          // Set default selected year to the most recent year
+          
           if (years.length > 0 && !years.includes(selectedYear.toString())) {
             setSelectedYear(years[years.length - 1]);
           }
@@ -170,6 +169,7 @@ function Expenditure() {
     // Save the PDF
     doc.save(`Hardware_Expenditure_Report_${selectedYear}.pdf`);
   };
+  
 
   // Component for hardware type card (mobile and desktop)
   const HardwareTypeCard = ({ title, items, totalPurchase, totalMaintenance, totalCost, count }) => (
