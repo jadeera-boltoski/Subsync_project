@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation,  } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -13,14 +13,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../assets/logo.png";
 
-
 function Sidebar() {
   const location = useLocation();
-  const [selectedMenu, setSelectedMenu] = useState(location.pathname);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  // const navigate=useNavigate()
-
+  
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -33,14 +30,27 @@ function Sidebar() {
   }, []);
 
   const menuItems = [
-    { name: "Dashboard", path: "/dashboard", icon: faHouse },
-    { name: "Subscriptions", path: "/dashboard/subscriptions", icon: faNewspaper },
-    { name: "Hardware", path: "/dashboard/hardware", icon: faMicrochip },
-    { name: "Customer Services", path: "/dashboard/services", icon: faTools },
-    { name: "User Management", path: "/dashboard/users", icon: faUsers },
-    { name: "Masters", path: "/dashboard/masters", icon: faTable }
-    
+    { name: "Dashboard", path: "/dashboard", icon: faHouse, exact: true },
+    { name: "Subscriptions", path: "/dashboard/subscriptions", icon: faNewspaper, exact: false },
+    { name: "Hardware", path: "/dashboard/hardware", icon: faMicrochip, exact: false },
+    { name: "Customer Services", path: "/dashboard/services", icon: faTools, exact: false },
+    { name: "User Management", path: "/dashboard/users", icon: faUsers, exact: false },
+    { name: "Masters", path: "/dashboard/masters", icon: faTable, exact: false }
   ];
+
+  // Function to determine if menu item is active based solely on URL
+  const isMenuActive = (itemPath, exactMatch = false) => {
+    const currentPath = location.pathname;
+    
+    if (exactMatch) {
+      // For dashboard, only highlight when it's exactly /dashboard
+      return currentPath === itemPath;
+    } else {
+      // For other items, check if the current path contains this menu item's path
+      // This handles nested routes like /dashboard/subscriptions/add
+      return currentPath.startsWith(itemPath) && currentPath !== "/dashboard";
+    }
+  };
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -52,7 +62,7 @@ function Sidebar() {
           <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} className="text-xs" />
         </button>
       </div>
-      {isMobileMenuOpen && <div className="fixed inset-0  bg-opacity-50 z-40" />}
+      {isMobileMenuOpen && <div className="fixed inset-0 bg-opacity-50 z-40" />}
       <div
         className={`fixed top-0 left-0 w-64 h-full bg-slate-900 text-white z-40 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
@@ -69,8 +79,12 @@ function Sidebar() {
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={() => { setSelectedMenu(item.path); toggleMobileMenu(); }}
-                className={`flex items-center p-3 rounded-lg text-base cursor-pointer transition ${selectedMenu === item.path ? "bg-teal-500" : "hover:bg-slate-800"}`}
+                onClick={toggleMobileMenu}
+                className={`flex items-center p-3 rounded-lg text-base cursor-pointer transition ${
+                  isMenuActive(item.path, item.exact) 
+                    ? "bg-teal-500 text-white" 
+                    : "hover:bg-slate-800 text-gray-300"
+                }`}
               >
                 <FontAwesomeIcon icon={item.icon} className="mr-3 text-lg" />
                 {item.name}
@@ -90,8 +104,11 @@ function Sidebar() {
             <Link
               key={item.path}
               to={item.path}
-              onClick={() => setSelectedMenu(item.path)}
-              className={`flex items-center justify-center p-3 rounded-lg text-lg cursor-pointer transition w-12 h-12 ${selectedMenu === item.path ? "bg-teal-500" : "hover:bg-slate-800"}`}
+              className={`flex items-center justify-center p-3 rounded-lg text-lg cursor-pointer transition w-12 h-12 ${
+                isMenuActive(item.path, item.exact) 
+                  ? "bg-teal-500 text-white" 
+                  : "hover:bg-slate-800 text-gray-300"
+              }`}
             >
               <FontAwesomeIcon icon={item.icon} className="text-xl" />
             </Link>
@@ -113,25 +130,18 @@ function Sidebar() {
             <Link
               key={item.path}
               to={item.path}
-              onClick={() => setSelectedMenu(item.path)}
-              className={`flex items-center p-4 rounded-lg text-lg cursor-pointer transition ${selectedMenu === item.path ? "bg-teal-500" : "hover:bg-slate-800"}`}
+              className={`flex items-center p-4 rounded-lg text-lg cursor-pointer transition ${
+                isMenuActive(item.path, item.exact) 
+                  ? "bg-teal-500 text-white" 
+                  : "hover:bg-slate-800 text-gray-300"
+              }`}
             >
               <FontAwesomeIcon icon={item.icon} className="mr-4 text-xl" />
               {item.name}
             </Link>
           ))}
         </div>
-      {/* <div>
-        <div className="mt-auto p-4 border-t border-gray-700">
-
-        <button  onClick={() => { navigate('/') }} className=" mt-96 w-full py-2 px-4 bg-green-600 hover:bg-red-700 text-white rounded transition duration-200">
-          LOGOUT
-        </button>
       </div>
-    </div> */}
-
-      </div>
-
     </>
   );
 }

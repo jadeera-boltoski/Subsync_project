@@ -349,16 +349,18 @@ export const validationHardware = Yup.object().shape({
 
 
 
+  // .required("Purchase date is required")
+  // .required("Next service date is required")
 
 
-  lastServiceDate: Yup.date().required("Purchase date is required")
+  lastServiceDate: Yup.date()
     .max(new Date(), "Last service date cannot be in the future")
     .typeError("Please enter a valid date"),
 
 
 
   nextServiceDate: Yup.date()
-    .required("Next service date is required")
+    
     .test(
       "is-after-last-service",
       "Next service date should be after last service date",
@@ -385,7 +387,7 @@ export const validationHardware = Yup.object().shape({
     .min(0, "Service cost cannot be negative")
     .typeError("Please enter a valid number"),
   serviceProvider: Yup.string()
-    .required("Enter service provider")
+    // .required("Enter service provider")
     // .nullable()
     .max(100, "Service provider name cannot exceed 100 characters"),
 

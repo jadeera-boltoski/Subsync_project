@@ -164,6 +164,12 @@ export const getreport=()=>{
 }
 
 
+// hardware expenditure analysis
+export const gethardwarespending=()=>{
+    return commonRequest("GET",`${BASE_URL}/yearly-hardware-cost/`,"")
+}
+
+
 
 // add details for hardware
 export const addhardware=(body)=>{

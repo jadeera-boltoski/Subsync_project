@@ -38,26 +38,29 @@ function Hardware() {
       label: 'Total Active Hardware',
       value: total_active_hardware,
       color: 'bg-blue-500',
-      textColor: 'text-blue-500'
+      textColor: 'text-blue-500',
       // route:'/dashboard/hardware/view_hardware'
     },
     {
       label: 'Warranty Expiring Soon',
       value: warranty_expiring,
       color: 'bg-yellow-500',
-      textColor: 'text-yellow-500'
+      textColor: 'text-yellow-500',
+      // route:'/dashboard/hardware/view_hardware'
     },
     {
       label: 'Maintenance Due',
       value: maintenance_due,
       color: 'bg-red-500',
-      textColor: 'text-red-500'
+      textColor: 'text-red-500',
+      // route:'/dashboard/hardware/view_hardware'
     },
     {
       label: 'Yearly spending',
       value: `₹${hardware_cost}`,
       color: 'bg-orange-500',
-      textColor: 'text-orange-500'
+      textColor: 'text-orange-500',
+      route:'/dashboard/hardware/expenditure'
     }
   ];
   
@@ -82,19 +85,23 @@ function Hardware() {
 
          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4">
-            {statusData.map((item, index) => (
-              <Card key={index} className="w-full">
-                <CardContent className="p-4">
-                  <div className="flex items-center">
-                    <div className={`w-2 h-8 mr-4 ${item.color}`}></div>
-                    <div>
-                      <p className="text-sm md:text-base text-gray-600">{item.label}</p>
-                      <p className={`text-xl md:text-2xl font-bold ${item.textColor}`}>{item.value}</p>
-                    </div>
+          {statusData.map((item, index) => (
+            <Card 
+              key={index} 
+              className="w-full cursor-pointer hover:shadow-lg transition-shadow duration-300"
+              onClick={() => navigate(item.route)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center">
+                  <div className={`w-2 h-8 mr-4 ${item.color}`}></div>
+                  <div>
+                    <p className="text-sm md:text-base text-gray-600">{item.label}</p>
+                    <p className={`text-xl md:text-2xl font-bold ${item.textColor}`}>{item.value}</p>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
           </div>
           
         

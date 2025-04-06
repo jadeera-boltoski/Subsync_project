@@ -33,6 +33,7 @@ import View_customerdetails from "./pages/service_pages/View_customerdetails";
 import Master from "./pages/Master";
 import View_resourcedetails from "./pages/service_pages/View_resourcedetails";
 import View_provider from "./pages/masterpages/View_provider";
+import Expenditure from "./pages/Hardware_pages/Expenditure";
 
 
 
@@ -76,6 +77,7 @@ const AppRouter = () => (
             <Route path="add_hardware" element={<Add_hardware />} />
             <Route path="view_hardware" element={<View_hardware />} />
             <Route path="view_hardwaredetails" element={<View_hardwareDetails />} />
+            <Route path="expenditure" element={<Expenditure/>} />
 
 
 

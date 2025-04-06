@@ -7,6 +7,7 @@ import { addsubscription, getprovidername, getsubs_category } from "../../servic
 // import { useRef } from "react";
 import Add_providers from "./Add_providers";
 import { useNavigate } from "react-router-dom";
+import { useUnsavedChangesWarning } from "../../hooks/useUnsavedChangesWarning";
 
 // import { useNavigate } from "react-router-dom";
 // import Add_providers from "./Add_providers";
@@ -113,6 +114,13 @@ function Add_subscription() {
         },
 
     });
+
+      const isFormDirty = Object.keys(formik.initialValues).some(
+        key => formik.values[key] !== formik.initialValues[key]
+      );
+      
+      useUnsavedChangesWarning(isFormDirty);
+    
 
 
 
