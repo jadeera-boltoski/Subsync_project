@@ -1,58 +1,24 @@
 import { useFormik } from "formik";
 import { validationsubscription } from "../../validation/yup";
 import { useEffect, useState } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { addsubscription, getprovidername, getsubs_category } from "../../services/allapi";
-// import { useRef } from "react";
 import Add_providers from "./Add_providers";
 import { useNavigate } from "react-router-dom";
 import { useUnsavedChangesWarning } from "../../hooks/useUnsavedChangesWarning";
 
-// import { useNavigate } from "react-router-dom";
-// import Add_providers from "./Add_providers";
-
-
-// import { useDispatch, useSelector } from "react-redux";
-// import { resetForm, updateField } from "../../Redux/slices/subscriptionSlice";
 
 
 
-function Add_subscription() {
+function Add_subscription() {   
 
-    // end date
-    const [dateType, setDateType] = useState();
-    const handleDateTypeChange = (e) => {
-        const selectedType = e.target.value;
-        setDateType(selectedType);
-
-        if (selectedType === 'lifelong') {
-            // Clear the end date when 'Life Long' is selected
-            formik.setFieldValue('endDate', null);
-            formik.setFieldValue('isLifelong', true);
-        } else {
-            formik.setFieldValue('isLifelong', false);
-        }
-    };
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    // const dispatch = useDispatch();
-    // const subscription = useSelector((state) => state.subscription);
-    // const navigate = useNavigate()
-
-
     const navigate = useNavigate()
     const [categories, setCategories] = useState([]);
-
-    // const [autoRenewal, setAutoRenewal] = useState(null);
     const [extraReminder, setExtraReminder] = useState(false);
     const [needrem, setneedrem] = useState(false)
-    // Create a reference for the input field
-    // const inputRef = useRef(null);
-
-
     const [isAddingNewProvider, setIsAddingNewProvider] = useState(false);
-
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
     const formik = useFormik({
         initialValues:
@@ -62,8 +28,6 @@ function Add_subscription() {
             providerContact: "",
             providerEmail: "",
             websiteLink: "",
-
-            // subscriptionId: "",
             subscriptionCategory: "",
             startDate: "",
             billingCycle: "",
@@ -80,53 +44,50 @@ function Add_subscription() {
             recipients: "",
             customMessage: "",
             daysBeforeEnd: "",
-
-
             additionalDetails: {}
         },
         validationSchema: validationsubscription,
         onSubmit: async (values) => {
             console.log("Submitting Form Data:", values);
-
-            // Filter out empty additionalDetails fields
             const filteredValues = {
                 ...values,
                 additionalDetails: Object.fromEntries(
                     Object.entries(values.additionalDetails).filter(([, v]) => v !== "")
                 ),
             };
-
             console.log("Final Filtered Data:", filteredValues);
-
+        
             // Call API
             const response = await addsubscription(filteredValues);
             console.log("API Response:", response);
-            if (response.code == 201) {
-                alert("successfully added")
-                navigate('/dashboard/subscriptions/Viewsubscription')
+            if (response.status == 201) {
+                // Set formSubmitted before navigating
+                setFormSubmitted(false); 
+
+                
+                alert(response.message);
+                // Small timeout to ensure state update happens
+                setTimeout(() => {
+                    navigate('/dashboard/subscriptions/Viewsubscription');
+                }, 0);
             } else {
-                alert("Data already exist")
+                alert(response.message);
             }
-
-
-            // Reset Redux state after successful submission
-            // dispatch(resetForm());
         },
 
     });
 
-      const isFormDirty = Object.keys(formik.initialValues).some(
+    const isFormDirty = !formSubmitted && Object.keys(formik.initialValues).some(
         key => formik.values[key] !== formik.initialValues[key]
-      );
-      
-      useUnsavedChangesWarning(isFormDirty);
+    );
     
+    useUnsavedChangesWarning(isFormDirty);
+
 
 
 
     const [Providers, setProviders] = useState([])
-    // const [newProviderName, setNewProviderName] = useState("");
-    // console.log(newProviderName);
+    
 
     useEffect(() => {
         const fetchdata = async () => {
@@ -261,17 +222,26 @@ function Add_subscription() {
     return (
         <div className="w-full ">
 
-            <div>
-                <button onClick={() => navigate(-1)}>Go Back</button>
+
+            <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
+                <div
+                    onClick={() => navigate(-1)}
+                    className="hover:text-blue-600 hover:underline cursor-pointer"
+                >
+                    Dashboard
+                </div>
+                <div className="mx-1">&gt;</div>
+                <div className="text-blue-600">Adding Subscription</div>
             </div>
 
 
 
-            <h1 className="text-xl md:text-xl font-bold text-gray-700 mb-6">
-                Add New Subscription
-            </h1>
-
+          
             <div className="w-full p-4 bg-white">
+             <h1 className="text-xl md:text-xl font-bold text-gray-700 mb-6">
+                Add New Subscription
+             </h1>
+
                 <form onSubmit={formik.handleSubmit} className="space-y-8 ">
 
                     {/* Provider Details */}
@@ -570,10 +540,12 @@ function Add_subscription() {
                                                         Number of users                     </label>
                                                     <input
                                                         type="number"
+                                                        // pattern="0-9"
                                                         id="no_of_users"
                                                         name="no_of_users"
-                                                        value={formik.values.additionalDetails.no_of_users || ""}
+                                                        value={formik.values.additionalDetails.no_of_users}
                                                         onChange={handleAdditionalFieldChange}
+                                                        onWheel={(e) => e.target.blur()} 
                                                         onBlur={() => formik.setFieldTouched("additionalDetails.no_of_users", true)}
                                                         className="w-full p-2  border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     />
@@ -1059,48 +1031,48 @@ function Add_subscription() {
                                                                 </div>
                                                             )}
                                                         </div>
-                                                      <div>
-                                                      <label htmlFor="durationType" className="block mt-4 mb-1 text-sm">
-    Subscription Duration:
-  </label>
-  <select
-    id="durationType"
-    name="durationType"
-    value={formik.values.durationType}
-    onChange={formik.handleChange}
-    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-  >
-    <option value="" disabled>
-      Choose duration type
-    </option>
-    <option value="no_end">No End Date (Active until canceled)</option>
-    <option value="fixed">Fixed Duration</option>
-  </select>
+                                                        {/* <div>
+                                                            <label htmlFor="durationType" className="block mt-4 mb-1 text-sm">
+                                                                Subscription Duration:
+                                                            </label>
+                                                            <select
+                                                                id="durationType"
+                                                                name="durationType"
+                                                                value={formik.values.durationType}
+                                                                onChange={formik.handleChange}
+                                                                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                            >
+                                                                <option value="" disabled>
+                                                                    Choose duration type
+                                                                </option>
+                                                                <option value="no_end">No End Date (Active until canceled)</option>
+                                                                <option value="fixed">Fixed Duration</option>
+                                                            </select> */}
 
-  {/* End Date - only if Fixed */}
-  {formik.values.durationType === "fixed" && (
-    <div>
-      <label htmlFor="endDate" className="block mb-1 mt-4 text-sm">
-       Subsription Contract End Date:
-      </label>
-      <input
-        type="date"
-        id="endDate"
-        name="endDate"
-        value={formik.values.endDate}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        min={formik.values.startDate}
-        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-      />
-      {formik.touched.endDate && formik.errors.endDate && (
-        <div className="text-red-500 text-xs mt-1">
-          {formik.errors.endDate}
-        </div>
-      )}
-    </div>
-  )}
-</div>
+                                                        {/* End Date - only if Fixed */}
+                                                        {/* {formik.values.durationType === "fixed" && (
+                                                                <div>
+                                                                    <label htmlFor="endDate" className="block mb-1 mt-4 text-sm">
+                                                                        Subsription Contract End Date:
+                                                                    </label>
+                                                                    <input
+                                                                        type="date"
+                                                                        id="endDate"
+                                                                        name="endDate"
+                                                                        value={formik.values.endDate}
+                                                                        onChange={formik.handleChange}
+                                                                        onBlur={formik.handleBlur}
+                                                                        min={formik.values.startDate}
+                                                                        className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                                    />
+                                                                    {formik.touched.endDate && formik.errors.endDate && (
+                                                                        <div className="text-red-500 text-xs mt-1">
+                                                                            {formik.errors.endDate}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )} */}
+                                                        {/* </div> */}
 
                                                         <div>
                                                             <label htmlFor="billingCycle" className="block mb-1 text-sm">
@@ -1130,7 +1102,7 @@ function Add_subscription() {
                                                         </div>
 
 
-                                                       
+
 
                                                         <div className="flex items-center gap-4 pt-2">
                                                             <div className="flex items-center gap-1">
@@ -1483,7 +1455,7 @@ function Add_subscription() {
                             type="submit"
                             className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                         >
-                            Add Subscription
+                            {formik.isSubmitting ? 'Adding...' : 'Add Subscription'}
                         </button>
                     </div>
                 </form >

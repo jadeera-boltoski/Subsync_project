@@ -103,6 +103,17 @@ const View_hardware = ({ data, limit }) => {
 
   return (
     <div className="w-full">
+       {!limit&&(
+      <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
+        <div
+          onClick={() => navigate(-1)}
+          className="hover:text-blue-600 hover:underline cursor-pointer"
+        >
+          Hardware Dashboard
+        </div>
+        <div className="mx-1">&gt;</div>
+        <div className="text-blue-600">Hardware list</div>
+      </div>)}
       <h1 className="font-bold text-l mb-2 ml-1 text-gray-500">All Hardware Details</h1>
       {!limit&&(
       <div>

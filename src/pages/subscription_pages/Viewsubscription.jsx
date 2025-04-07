@@ -31,8 +31,17 @@ function Viewsubscription() {
       try {
         const result = await getsubscription(); // Fetch data
         console.log(result);
-        const sortedResources = [...result].sort((a, b) => b.id - a.id);
-        setSubscriptions(sortedResources)
+        // const sortedResources = [...result].sort((a, b) => b.start_date - a.start_date);
+        // setSubscriptions(sortedResources)
+        const sortedResources = [...result].sort((a, b) => {
+          // Convert string dates to Date objects for proper comparison
+          const dateA = new Date(a.start_date);
+          const dateB = new Date(b.start_date);
+          
+          // Sort in descending order (newest first)
+          return dateB - dateA;
+        });
+        setSubscriptions(sortedResources);
         setFilteredSubscriptions(sortedResources);
       } catch (error) {
         console.error("Error fetching provider name:", error);
@@ -94,6 +103,16 @@ function Viewsubscription() {
   return (
 
     <div className="w-full">
+       <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
+        <div
+          onClick={() => navigate(-1)}
+          className="hover:text-blue-600 hover:underline cursor-pointer"
+        >
+          Subscription Dashboard
+        </div>
+        <div className="mx-1">&gt;</div>
+        <div className="text-blue-600">Subscription list</div>
+      </div>
       <div className="flex gap-4">
         <div className="mb-4">
           <select
@@ -136,7 +155,7 @@ function Viewsubscription() {
               <th className="py-3 px-4 text-left font-semibold">Category</th>
               <th className="py-3 px-4 text-left font-semibold">Name</th>
               <th className="py-3 px-4 text-left font-semibold">Start Date</th>
-              <th className="py-3 px-4 text-left font-semibold">End Date</th>
+              <th className="py-3 px-4 text-left font-semibold">Renewal Date</th>
               <th className="py-3 px-4 text-left font-semibold">Billing Cycle</th>
               <th className="py-3 px-4 text-left font-semibold">Provider</th>
               <th className="py-3 px-6 text-left font-semibold">Cost</th>
@@ -151,9 +170,13 @@ function Viewsubscription() {
                 <td className="py-3 px-4 text-sm">{subscription.subscription_category}</td>
                 <td className="py-3 px-4 text-sm">{subscription.name}</td>
                 <td className="py-3 px-4 text-sm">{format(new Date(subscription.start_date), "dd-MM-yyyy")}</td>
-                <td className="py-3 px-4 text-sm">{subscription.end_date
+                {/* <td className="py-3 px-4 text-sm">{subscription.end_date
                   ? format(new Date(subscription.end_date), "dd-MM-yyyy")
-                  : "life long"}</td>
+                  : "life long"}</td> */}
+                <td className="py-3 px-4 text-sm"> {format(new Date(subscription.next_payment_date), "dd-MM-yyyy")}</td>
+                   {/* {subscription.next_payment_date && (
+                    <p><span className="font-medium">Next Payment:</span> {format(new Date(subscription.next_payment_date), "dd-MM-yyyy")}</p>
+                  )} */}
                 <td className="py-3 px-4 text-sm">{subscription.billing_cycle}</td>
                 <td className="py-3 px-4 text-sm">{subscription.providerName}</td>
                 <td className="py-3 px-4 text-sm text-right">{subscription.cost}</td>

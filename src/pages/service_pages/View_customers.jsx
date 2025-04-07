@@ -130,7 +130,7 @@
                     <th className="py-3 px-4 text-left font-semibold">Email</th>
                     <th className="py-3 px-4 text-left font-semibold">Status</th>
                     <th className="py-3 px-4 text-center font-semibold">Cost</th>
-                    <th className="py-3 px-4 text-left font-semibold">Customer Type</th>
+                    {/* <th className="py-3 px-4 text-left font-semibold">Customer Type</th> */}
                     <th className="py-3 px-4 text-left font-semibold">Actions</th>
                   </tr>
                 </thead>
@@ -146,7 +146,7 @@
                         </span>
                       </td>
                       <td className="py-3 px-4 text-sm text-right">₹{customer.cost}</td>
-                      <td className="py-3 px-4 text-sm">{customer.customer_type}</td>
+                      {/* <td className="py-3 px-4 text-sm">{customer.customer_type}</td> */}
                       <td className="py-3 px-4 text-sm">
                         <button
                         onClick={() => handleViewDetails(customer)}

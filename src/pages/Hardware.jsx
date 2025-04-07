@@ -109,7 +109,7 @@ function Hardware() {
           {/* Hardware view  */}
 
          <div>
-          <h1 className="text-end mr-6 font-bold text-blue-500" onClick={()=>{navigate('view_hardware')}}>View All Hardware</h1>
+          <h1 className="text-end mr-6 font-bold cursor-pointer text-blue-500" onClick={()=>{navigate('view_hardware')}}>View All Hardware</h1>
             <div className="">
               <View_hardware limit={7} />
             </div>

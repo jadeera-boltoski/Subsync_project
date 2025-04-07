@@ -9,7 +9,13 @@ const Serverusage = () => {
     const getdata = async () => {
       try {
         const response = await getserverusage();
-        setServers(response);
+        console.log("helooo servers", response);
+        
+        // Check the structure of the response and extract the array if needed
+        const serversArray = Array.isArray(response) ? response : 
+                           (response.data ? response.data : []);
+        
+        setServers(serversArray);
       } catch (error) {
         console.error("Error fetching server data:", error);
       } finally {

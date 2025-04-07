@@ -95,6 +95,10 @@ export const getsubscription=async()=>{
     return commonRequest("GET",`${BASE_URL}/subscriptions/`,"")
 }
 
+// get single subscription details 
+export const getSingleSubscription=(body)=>{
+    return commonRequest("GET",`${BASE_URL}/subscriptions/${encodeURIComponent(body)}/`,"")
+}
 
 // get subscription details that going to expire
 export const getexpiredsub=async()=>{
@@ -208,6 +212,10 @@ export const addresources=(body)=>{
     
 
     return commonRequest("POST",`${BASE_URL}/resources/add/`,body)
+}
+
+export const updateresource=(body)=>{
+    return commonRequest("PATCH",`${BASE_URL}/resources/${encodeURIComponent(body.id)}/`,body)
 }
 
 

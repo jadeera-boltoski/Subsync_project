@@ -121,7 +121,7 @@ const View_customerdetails = () => {
                 <p><span className="font-medium">Name:</span> {customer.customer_name}</p>
                 <p><span className="font-medium">Email:</span> <a href={`mailto:${customer.customer_email}`} className="text-blue-500 hover:underline">{customer.customer_email}</a></p>
                 <p><span className="font-medium">Phone:</span> {customer.customer_phone}</p>
-                <p><span className="font-medium">Type:</span> {customer.customer_type}</p>
+                {/* <p><span className="font-medium">Type:</span> {customer.customer_type}</p> */}
               </div>
             </div>
 
@@ -141,8 +141,8 @@ const View_customerdetails = () => {
               <h4 className="font-medium text-gray-700 mb-3">Date Information</h4>
               <div className="space-y-2">
 
-                <p><span className="font-medium">Start Date:</span>{format(new Date(customer.startDate), "dd-MM-yyyy")}</p>
-                <p><span className="font-medium">End Date:</span>{format(new Date(customer.endDate), "dd-MM-yyyy")}
+                <p><span className="font-medium">Service start Date:</span>{format(new Date(customer.startDate), "dd-MM-yyyy")}</p>
+                <p><span className="font-medium">Service end Date:</span>{format(new Date(customer.endDate), "dd-MM-yyyy")}
                 </p>
                 {customer.lastPaymentDate && (
                   <p><span className="font-medium">Last Payment Date:</span> {format(new Date(customer?.lastPaymentDate), "dd-MM-yyyy")}</p>)}
@@ -156,10 +156,19 @@ const View_customerdetails = () => {
                   </p>
                 ) : (
                   <p className="mt-2">
-                    {/* <span className="font-medium">customer Status:</span>
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-medium">
-                      Expired
-                    </span> */}
+                    <span className="font-medium">customer service Status:</span>
+                    <span
+                      className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${customer.status === 'Active'
+                          ? 'bg-green-100 text-green-800'
+                          : customer.status === 'Pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : customer.status === 'Inactive'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-gray-100 text-gray-800' // Default fallback
+                        }`}
+                    >
+                      {customer.status}
+                    </span>
                   </p>
                 )}
               </div>
@@ -292,7 +301,7 @@ const View_customerdetails = () => {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">Service start Date</label>
                 <input
                   type="date"
                   name="startDate"
@@ -304,7 +313,7 @@ const View_customerdetails = () => {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">Service End Date</label>
                 <input
                   type="date"
                   name="endDate"
@@ -367,7 +376,7 @@ const View_customerdetails = () => {
                   placeholder=""
                 />
                 {/* <p className="text-xs text-gray-500 mt-1">Enter resources in JSON format: [{"resource_name":"Resource 1"},{"resource_name":"Resource 2"}]</p> */}
-              {/* </div> */} 
+              {/* </div> */}
 
               <div className="flex justify-end space-x-3 pt-4 border-t">
                 <button

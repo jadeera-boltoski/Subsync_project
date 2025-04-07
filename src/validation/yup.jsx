@@ -567,7 +567,7 @@ export const validationresource = Yup.object({
     .required("Provisioned date is required"),
 
   last_updated_date: Yup.date()
-    .required("Last updated date is required")
+    // .required("Last updated date is required")
     .min(Yup.ref("provisioned_date"), "Last updated date cannot be before provisioned date"),
 
   // status: Yup.string()

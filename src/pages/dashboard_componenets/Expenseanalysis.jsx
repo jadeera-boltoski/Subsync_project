@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getexpenditure_data } from '../../services/allapi';
 
 
 const Expenseanalysis = () => {
-  const navigate=useNavigate()
+  // const navigate=useNavigate()
   
 
   const[monthlyData,setmonthlyData]=useState([])
@@ -119,7 +119,7 @@ const Expenseanalysis = () => {
       </div>
 
       <div className="mb-2 flex justify-end space-x-4 ">
-      <h6 className='font-bold text-blue-400 cursor-default mr-auto ml-2' onClick={() => navigate("/dashboard/expense_report")}>View Report</h6>
+   
         <div>
           
           <label className="mr-2 text-xs text-gray-600">View:</label>

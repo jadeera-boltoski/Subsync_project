@@ -123,7 +123,7 @@ function Dashboardcontent() {
       {/* Analytics Section - Stacks vertically on mobile */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="w-full mt-6" >
-          
+        <h6 className='font-bold text-blue-400 cursor-default mr-auto ml-2' onClick={() => navigate("/dashboard/expense_report")}>View Report of Subscription Expenditure</h6>
           <Expenseanalysis />
         </div>
         <div className="w-full mt-6" >

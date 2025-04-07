@@ -34,7 +34,7 @@ const Subscription = () => {
       route: "/dashboard/subscriptions/Viewsubscription"
      },
     { label: "Total Monthly Cost", value: ` ₹${total_subscription_cost}`, color: "bg-blue-500", textColor: "text-blue-700",
-    route: null }
+    route: "/dashboard/expense_report" }
   ];
   const handleViewDetails = (subscription) => {
 
@@ -65,7 +65,7 @@ const Subscription = () => {
                       ? { state: { initialStatusFilter: 'Active' }} 
                       : (item.label === "Total Expired Subscriptions" 
                           ? { state: { initialStatusFilter: 'Expired' }} 
-                          : null)
+                          : {})
                   );
                 }
               }}
@@ -104,7 +104,7 @@ const Subscription = () => {
                     <th className="py-3 px-4 text-left font-semibold">Category</th>
                     <th className="py-3 px-4 text-left font-semibold">Name</th>
                     <th className="py-3 px-4 text-left font-semibold">Start Date</th>
-                    <th className="py-3 px-4 text-left font-semibold">End Date</th>
+                    <th className="py-3 px-4 text-left font-semibold">Renewal Date</th>
                     <th className="py-3 px-4 text-left font-semibold">Billing Cycle</th>
                     <th className="py-3 px-4 text-left font-semibold">Provider</th>
                     <th className="py-3 px-7 text-left font-semibold">Cost</th>
@@ -118,7 +118,9 @@ const Subscription = () => {
                       <td className="py-3 px-4 text-sm">{subscription.subscription_category}</td>
                       <td className="py-3 px-4 text-sm">{subscription.name}</td>
                       <td className="py-3 px-4 text-sm">{format(new Date(subscription.start_date), "dd-MM-yyyy")}</td>
-                      <td className="py-3 px-4 text-sm">{format(new Date(subscription.end_date), "dd-MM-yyyy")}</td>
+                      <td className="py-3 px-4 text-sm">{format(new Date(subscription.next_payment_date), "dd-MM-yyyy")}</td>
+                     
+                      {/* <td className="py-3 px-4 text-sm">{format(new Date(subscription.end_date), "dd-MM-yyyy")}</td> */}
                       <td className="py-3 px-4 text-sm">{subscription.billing_cycle}</td>
                       <td className="py-3 px-4 text-sm">{subscription.providerName}</td>
                       <td className="py-3 px-4 text-sm text-right">{subscription.cost}</td>

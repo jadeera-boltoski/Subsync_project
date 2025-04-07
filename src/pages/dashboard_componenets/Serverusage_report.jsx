@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import Serverusage from './Serverusage'
 import { getserverusage_report } from '../../services/allapi';
 import { format } from "date-fns";
+import { useNavigate } from 'react-router-dom';
 
 const Serverusage_report = () => {
   // Sample data - replace with your actual API call
   const [serverData, setServerData] = useState([]);
+  const navigate=useNavigate()
 
   useEffect(()=>{
     const getdata=async()=>{
@@ -234,6 +236,16 @@ const Serverusage_report = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center text-sm text-gray-600 pl-3 mb-2">
+  <div
+    onClick={() => navigate(-1)}
+    className="hover:text-blue-600 hover:underline cursor-pointer"
+  >
+    Dashboard
+  </div>
+  <div className="mx-1">&gt;</div>
+  <div className="text-blue-600">server usage Report</div>
+</div>
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="bg-blue-950 text-white text-center py-4">
           <h1 className="text-2xl font-bold">SERVER & RESOURCE USAGE REPORT</h1>

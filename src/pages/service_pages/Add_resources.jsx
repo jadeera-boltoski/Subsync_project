@@ -18,6 +18,7 @@ function Add_resources() {
       // next_payment_date: "",
       provisioned_date: "",
       last_updated_date: "",
+      payment_method:"",
       // status: "",
       hosting_type: "",
       hosting_location: ""
@@ -68,283 +69,319 @@ function Add_resources() {
   }, [formik.values.hosting_type]);
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Add New Resource</h1>
-
-      <form onSubmit={formik.handleSubmit}>
-        <div className="grid grid-cols-1 gap-8">
-          {/* First row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left column */}
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">General Resource Information</h2>
-
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="resource_name" className="block text-sm font-medium text-gray-700 mb-1">Resource Name:</label>
-                  <input
-                    type="text"
-                    name="resource_name"
-                    id="resource_name"
-                    value={formik.values.resource_name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  {formik.touched.resource_name && formik.errors.resource_name && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.resource_name}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="resource_type" className="block text-sm font-medium text-gray-700 mb-1">Resource Type:</label>
-                  <select
-                    name="resource_type"
-                    id="resource_type"
+    <div >
+         <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
           
-                    value={formik.values.resource_type}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="">Select a type</option>
-                    <option value="Web and app hosting">Web & Application Hosting</option>
-                    <option value="Database and Storage">Database & Storage</option>
-                    <option value="Security and Compliance">Security & Compliance</option>
-                    <option value="CI/CD and DevOps">CI/CD & DevOps</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {formik.touched.resource_type && formik.errors.resource_type && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.resource_type}</p>
-                  )}
+                <div
+                    onClick={() => navigate(-1)}
+                    className="hover:text-blue-600 hover:underline cursor-pointer"
+                >
+                    Dashboard
                 </div>
-
-                <div>
-                  <label htmlFor="storage_capacity" className="block text-sm font-medium text-gray-700 mb-1">Storage Capacity:</label>
-                  <input
-                    type="text"
-                    name="storage_capacity"
-                    id="storage_capacity"
-                    placeholder="In terms of GB ot TB"
-                    value={formik.values.storage_capacity}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  {formik.touched.storage_capacity && formik.errors.storage_capacity && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.storage_capacity}</p>
-                  )}
-                </div>
-              </div>
+                <div className="mx-1">&gt;</div>
+                <div className="text-blue-600">Adding New Resource</div>
             </div>
-
-            {/* Right column */}
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Financial & Billing Details</h2>
-
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="billing_cycle" className="block text-sm font-medium text-gray-700 mb-1">Billing Cycle:</label>
-                  <select
-                    name="billing_cycle"
-                    id="billing_cycle"
-                    value={formik.values.billing_cycle}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="">Select cycle</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="yearly">Yearly</option>
-                  </select>
-                  {formik.touched.billing_cycle && formik.errors.billing_cycle && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.billing_cycle}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="resource_cost" className="block text-sm font-medium text-gray-700 mb-1">Resource Cost:</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500 sm:text-sm">₹</span>
-                    </div>
+      <div className="p-6 bg-white rounded-lg shadow-md max-w-full mx-auto">
+        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Add New Resource</h1>
+  
+        <form onSubmit={formik.handleSubmit}>
+          <div className="grid grid-cols-1 gap-8">
+            {/* First row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left column */}
+              <div className="bg-gray-50 p-4 rounded-md">
+                <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">General Resource Information</h2>
+  
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="resource_name" className="block text-sm font-medium text-gray-700 mb-1">Resource Name:</label>
                     <input
                       type="text"
-                      name="resource_cost"
-                      id="resource_cost"
-                      value={formik.values.resource_cost}
+                      name="resource_name"
+                      id="resource_name"
+                      value={formik.values.resource_name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      className="w-full p-2 pl-7 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
+                    {formik.touched.resource_name && formik.errors.resource_name && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.resource_name}</p>
+                    )}
                   </div>
-                  {formik.touched.resource_cost && formik.errors.resource_cost && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.resource_cost}</p>
-                  )}
+  
+                  <div>
+                    <label htmlFor="resource_type" className="block text-sm font-medium text-gray-700 mb-1">Resource Type:</label>
+                    <select
+                      name="resource_type"
+                      id="resource_type"
+            
+                      value={formik.values.resource_type}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="">Select a type</option>
+                      <option value="Web and app hosting">Web & Application Hosting</option>
+                      <option value="Database and Storage">Database & Storage</option>
+                      <option value="Security and Compliance">Security & Compliance</option>
+                      <option value="CI/CD and DevOps">CI/CD & DevOps</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    {formik.touched.resource_type && formik.errors.resource_type && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.resource_type}</p>
+                    )}
+                  </div>
+  
+                  <div>
+                    <label htmlFor="storage_capacity" className="block text-sm font-medium text-gray-700 mb-1">Storage Capacity:</label>
+                    <input
+                      type="text"
+                      name="storage_capacity"
+                      id="storage_capacity"
+                      placeholder="In terms of GB ot TB"
+                      value={formik.values.storage_capacity}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.storage_capacity && formik.errors.storage_capacity && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.storage_capacity}</p>
+                    )}
+                  </div>
                 </div>
-
-                {/* <div>
-                  <label htmlFor="next_payment_date" className="block text-sm font-medium text-gray-700 mb-1">Next Payment Date:</label>
-                  <input
-                    type="date"
-                    name="next_payment_date"
-                    id="next_payment_date"
-                    value={formik.values.next_payment_date}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    min={new Date().toISOString().split("T")[0]} // Restricts to today & future dates
-
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  {formik.touched.next_payment_date && formik.errors.next_payment_date && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.next_payment_date}</p>
-                  )}
-                </div> */}
+              </div>
+  
+              {/* Right column */}
+              <div className="bg-gray-50 p-4 rounded-md">
+                <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Financial & Billing Details</h2>
+  
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="billing_cycle" className="block text-sm font-medium text-gray-700 mb-1">Billing Cycle:</label>
+                    <select
+                      name="billing_cycle"
+                      id="billing_cycle"
+                      value={formik.values.billing_cycle}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="">Select cycle</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="quarterly">Quarterly</option>
+                      <option value="yearly">Yearly</option>
+                    </select>
+                    {formik.touched.billing_cycle && formik.errors.billing_cycle && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.billing_cycle}</p>
+                    )}
+                  </div>
+  
+                  <div>
+                    <label htmlFor="resource_cost" className="block text-sm font-medium text-gray-700 mb-1">Resource Cost:</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500 sm:text-sm">₹</span>
+                      </div>
+                      <input
+                        type="text"
+                        name="resource_cost"
+                        id="resource_cost"
+                        value={formik.values.resource_cost}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="w-full p-2 pl-7 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    {formik.touched.resource_cost && formik.errors.resource_cost && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.resource_cost}</p>
+                    )}
+                  </div>
+                  
+                                          <div className="mt-4">
+                                              <label htmlFor="paymentMethod" className="block mb-1 text-sm">
+                                                  Payment method
+                                              </label>
+                                              <select name="paymentMethod" id="paymentMethod"
+                                                  value={formik.values.paymentMethod}
+                                                  onChange={formik.handleChange}
+                                                  onBlur={formik.handleBlur}
+                                                  className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                                  <option value="" disabled selected>--select method--</option>
+                                                  <option value="Credit/Debit Card">Credit/Debit Card</option>
+                                                  <option value="Bank_Transfer">Bank Transfer</option>
+                                                  <option value="Prepaid_Cards">Gift Cards & Prepaid Cards</option>
+                                                  <option value="Cash_Payments">Cash Payments (For offline or manual renewals)</option>
+                                              </select>
+  
+                                              {formik.touched.paymentMethod && formik.errors.paymentMethod && (
+                                                  <div className="text-red-500 text-xs mt-1">
+                                                      {formik.errors.paymentMethod}
+                                                  </div>
+                                              )}
+                                          </div>
+  
+                  {/* <div>
+                    <label htmlFor="next_payment_date" className="block text-sm font-medium text-gray-700 mb-1">Next Payment Date:</label>
+                    <input
+                      type="date"
+                      name="next_payment_date"
+                      id="next_payment_date"
+                      value={formik.values.next_payment_date}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      min={new Date().toISOString().split("T")[0]} // Restricts to today & future dates
+  
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.next_payment_date && formik.errors.next_payment_date && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.next_payment_date}</p>
+                    )}
+                  </div> */}
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Second row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left column */}
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Status & Lifecycle Management</h2>
-
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="provisioned_date" className="block text-sm font-medium text-gray-700 mb-1">Provisioned Date:</label>
-                  <input
-                    type="date"
-                    name="provisioned_date"
-                    id="provisioned_date"
-                    value={formik.values.provisioned_date}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  {formik.touched.provisioned_date && formik.errors.provisioned_date && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.provisioned_date}</p>
-                  )}
+  
+            {/* Second row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left column */}
+              <div className="bg-gray-50 p-4 rounded-md">
+                <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Status & Lifecycle Management</h2>
+  
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="provisioned_date" className="block text-sm font-medium text-gray-700 mb-1">Provisioned Date:</label>
+                    <input
+                      type="date"
+                      name="provisioned_date"
+                      id="provisioned_date"
+                      value={formik.values.provisioned_date}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.provisioned_date && formik.errors.provisioned_date && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.provisioned_date}</p>
+                    )}
+                  </div>
+  
+                  <div>
+                    <label htmlFor="last_updated_date" className="block text-sm font-medium text-gray-700 mb-1">Last Payment Date:</label>
+                    <input
+                      type="date"
+                      name="last_updated_date"
+                      id="last_updated_date"
+                      value={formik.values.last_updated_date}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    {formik.touched.last_updated_date && formik.errors.last_updated_date && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.last_updated_date}</p>
+                    )}
+                  </div>
+  
+                  {/* <div>
+                    <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status:</label>
+                    <select
+                      name="status"
+                      id="status"
+                      value={formik.values.status}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="">Select status</option>
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="pending">Pending</option>
+                      <option value="deprecated">Deprecated</option>
+                    </select>
+                    {formik.touched.status && formik.errors.status && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.status}</p>
+                    )}
+                  </div> */}
                 </div>
-
-                <div>
-                  <label htmlFor="last_updated_date" className="block text-sm font-medium text-gray-700 mb-1">Last Updated Date:</label>
-                  <input
-                    type="date"
-                    name="last_updated_date"
-                    id="last_updated_date"
-                    value={formik.values.last_updated_date}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  {formik.touched.last_updated_date && formik.errors.last_updated_date && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.last_updated_date}</p>
-                  )}
+              </div>
+  
+              {/* Right column */}
+              <div className="bg-gray-50 p-4 rounded-md">
+                <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Hosting Information</h2>
+  
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="hosting_type" className="block text-sm font-medium text-gray-700 mb-1">Hosting Type:</label>
+                    <select
+                      name="hosting_type"
+                      id="hosting_type"
+                      value={formik.values.hosting_type}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value=""selected>Choose a type</option>
+                      
+                      <option value="inhouse">On-Premise Server</option>
+                      <option value="external">External Server</option>
+                      <option value="cloud"> Cloud Hosting Providers </option>
+                      
+                      
+                    </select>
+                    {formik.touched.hosting_type && formik.errors.hosting_type && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.hosting_type}</p>
+                    )}
+                  </div>
+  
+                  <div>
+  
+                    <label htmlFor="hosting_location" className="block text-sm font-medium text-gray-700 mb-1">Hosting Location Name:</label>
+                    <select
+                      // type="text"
+                      name="hosting_location"
+                      id="hosting_location"
+                      value={formik.values.hosting_location}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="" selected disabled>select</option>
+                     
+                      {serverLocations.map((server, index) => (
+                        <option key={index} value={server?.name || server?.id || server}>
+                          {server?.name || server?.id || server}
+                        </option>
+                      ))}
+                    </select>
+                    {formik.touched.hosting_location && formik.errors.hosting_location && (
+                      <p className="text-red-500 text-xs mt-1">{formik.errors.hosting_location}</p>
+                    )}
+                  </div>
+  
+                  {/* <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="auto_renewal"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="auto_renewal" className="ml-2 block text-sm text-gray-700">
+                      Enable Auto-Renewal
+                    </label>
+                  </div> */}
                 </div>
-
-                {/* <div>
-                  <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status:</label>
-                  <select
-                    name="status"
-                    id="status"
-                    value={formik.values.status}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="">Select status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="pending">Pending</option>
-                    <option value="deprecated">Deprecated</option>
-                  </select>
-                  {formik.touched.status && formik.errors.status && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.status}</p>
-                  )}
-                </div> */}
               </div>
             </div>
-
-            {/* Right column */}
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h2 className="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Hosting Information</h2>
-
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="hosting_type" className="block text-sm font-medium text-gray-700 mb-1">Hosting Type:</label>
-                  <select
-                    name="hosting_type"
-                    id="hosting_type"
-                    value={formik.values.hosting_type}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value=""selected>Choose a type</option>
-                    
-                    <option value="inhouse">On-Premise Server</option>
-                    <option value="external">External Server</option>
-                    <option value="cloud"> Cloud Hosting Providers </option>
-                    
-                    
-                  </select>
-                  {formik.touched.hosting_type && formik.errors.hosting_type && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.hosting_type}</p>
-                  )}
-                </div>
-
-                <div>
-
-                  <label htmlFor="hosting_location" className="block text-sm font-medium text-gray-700 mb-1">Hosting Location Name:</label>
-                  <select
-                    // type="text"
-                    name="hosting_location"
-                    id="hosting_location"
-                    value={formik.values.hosting_location}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="" selected disabled>select</option>
-                   
-                    {serverLocations.map((server, index) => (
-                      <option key={index} value={server?.name || server?.id || server}>
-                        {server?.name || server?.id || server}
-                      </option>
-                    ))}
-                  </select>
-                  {formik.touched.hosting_location && formik.errors.hosting_location && (
-                    <p className="text-red-500 text-xs mt-1">{formik.errors.hosting_location}</p>
-                  )}
-                </div>
-
-                {/* <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="auto_renewal"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="auto_renewal" className="ml-2 block text-sm text-gray-700">
-                    Enable Auto-Renewal
-                  </label>
-                </div> */}
-              </div>
+  
+            {/* Submit button */}
+            <div className="flex justify-end mt-4">
+              <button
+                type="submit"
+                className="px-6 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Save Resource
+              </button>
             </div>
           </div>
-
-          {/* Submit button */}
-          <div className="flex justify-end mt-4">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Save Resource
-            </button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
