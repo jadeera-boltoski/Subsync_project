@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Deletehardware, edithardware } from '../../services/allapi';
+import { Deletehardware, edithardware, getSingledevice } from '../../services/allapi';
 import { format } from "date-fns";
 
 const View_hardwareDetails = () => {
@@ -11,8 +11,9 @@ const View_hardwareDetails = () => {
   const [check, setcheck] = useState(false)
 
   
-  const device = location.state?.device;
-  console.log("dfdf", device);
+  const devices = location.state?.device;
+  console.log("dfdf", devices);
+  const [device, setdevice] = useState(devices || {});
 
 
   const formik = useFormik({
@@ -77,6 +78,8 @@ const View_hardwareDetails = () => {
         const response = await edithardware(values)
         console.log(response);
         if(response.status==200){
+           const updateddevice = await getSingledevice(devices.id);
+          setdevice(updateddevice);
           alert(response.message)
         }
         else{
@@ -341,7 +344,7 @@ const View_hardwareDetails = () => {
 
     switch (device.hardware_type.toLowerCase()) {
 
-      // case 'on-premise server':
+      case 'on-premise server':
       case 'desktop':
       case 'laptop':
         return (
@@ -351,11 +354,14 @@ const View_hardwareDetails = () => {
               <p><span className="font-medium">Processor:</span> {device.computer.cpu}</p>
               <p><span className="font-medium">RAM:</span> {device.computer.ram}</p>
               <p><span className="font-medium">Storage:</span> {device.computer?.storage}</p>
-{/* 
+              
+              {/* "On-Premise Server": ["Server_Name", "CPU", "RAM", "Storage", "Operating_System"], */}
               {device.hardware_type.toLowerCase() === "on-premise server" && (
-                <p><span className="font-medium">Operating System:</span> {device?.computer.os}</p>
-                <p><span className="font-medium">Server Name:</span> {device.computer.os}</p>
-              )} */}
+              <div>
+                  <p><span className="font-medium">Operating System:</span> {device?.computer.operating_system}</p>
+                  <p><span className="font-medium">Server Name:</span> {device.computer.hardware_server_name}</p>
+              </div>
+              )}
 
             </div>
           </div>
@@ -873,7 +879,8 @@ const View_hardwareDetails = () => {
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                   >
-                    Save Changes
+                    {formik.isSubmitting ? 'Updating...' : ' Save Changes'}
+                   
                   </button>
                 </div>
               </form>

@@ -97,6 +97,7 @@ function Services() {
 
               {/* Server Usage - spans 2 columns on larger screens */}
               <div className="bg-white rounded-lg shadow-md h-auto sm:col-span-2">
+              <h6 className='font-bold text-s text-blue-400 ml-auto mt-2 mb-4 cursor-default ' onClick={() => navigate("/dashboard/server_usage")}>View Report of Server Usage</h6> 
                 <Serverusage />
               </div>
 

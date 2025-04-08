@@ -262,8 +262,13 @@ export const subscriptionValidationSchema = Yup.object().shape({
   autoRenewal: Yup.boolean(),
   id: Yup.string().required("need id"),
   no_of_users: Yup.number()
-    .positive('Number of users must be positive')
-    .integer('Number of users must be an integer'),
+  .nullable()
+  .transform((value, originalValue) =>
+    originalValue === '' ? null : value
+  )
+  .positive('Number of users must be positive')
+  .integer('Number of users must be an integer'),
+
   // .required('Number of users is required'),
   // paymentStatus: Yup.string()
   //   .oneOf(['paid', 'unpaid'], 'Invalid payment status')

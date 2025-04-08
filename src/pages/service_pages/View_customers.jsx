@@ -92,7 +92,20 @@
 
     return (
       <div className="w-full">
+        {!limit&&(
+          <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
+          <div
+            onClick={() => navigate(-1)}
+            className="hover:text-blue-600 hover:underline cursor-pointer"
+          >
+            Customer service Dashboard
+          </div>
+          <div className="mx-1">&gt;</div>
+          <div className="text-blue-600">Customer list</div>
+        </div>
+        )}
           {!limit && (
+            
           <div className="mb-4 flex">
           <div>
             <select

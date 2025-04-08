@@ -373,7 +373,7 @@ const RecycleBin = () => {
                       </td>
                       <td className="p-3">
                         <div className="font-medium text-gray-800">{item.name}</div>
-                        <div className="text-xs text-gray-500">{item.id}</div>
+                        {/* <div className="text-xs text-gray-500">{item.id}</div> */}
                       </td>
                       <td className="p-3">
                         <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getTypeColor(item.type)}`}>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { get_hardware } from '../../services/allapi';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { format } from "date-fns";
 
 const View_hardware = ({ data, limit }) => {
   const navigate = useNavigate();
@@ -184,6 +185,8 @@ const View_hardware = ({ data, limit }) => {
                   <th className="py-3 px-7 text-left font-semibold">Type</th>
                   <th className="py-3 px-7 text-left font-semibold">Manufacturer</th>
                   <th className="py-3 px-7 text-left font-semibold">Model Number</th>
+                  <th className="py-3 px-7 text-left font-semibold">Warrenty end date</th>
+
                   <th className="py-3 px-7 text-right font-semibold">Cost</th>
                   <th className="py-3 px-7 text-left font-semibold">Status</th>
                   <th className="py-3 px-7 text-left font-semibold">Actions</th>
@@ -195,6 +198,9 @@ const View_hardware = ({ data, limit }) => {
                     <td className="py-3 px-7 text-sm">{device.hardware_type}</td>
                     <td className="py-3 px-7 text-sm">{device.manufacturer}</td>
                     <td className="py-3 px-7 text-sm">{device.model_number}</td>
+                   
+                    <td className="py-3 px-7 text-sm"> {format(new Date(device?.warranty?.warranty_expiry_date), "dd-MM-yyyy")}</td>
+                   
                     <td className="py-3 px-7 text-sm text-right">{device?.purchase?.purchase_cost}</td>
                     <td className={`py-3 px-7 text-sm capitalize ${
                       device.status === "Active" ? "text-green-600" : "text-red-600"

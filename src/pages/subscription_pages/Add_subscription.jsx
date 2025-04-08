@@ -9,7 +9,7 @@ import { useUnsavedChangesWarning } from "../../hooks/useUnsavedChangesWarning";
 
 
 
-function Add_subscription() {   
+function Add_subscription() {
 
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -56,20 +56,18 @@ function Add_subscription() {
                 ),
             };
             console.log("Final Filtered Data:", filteredValues);
-        
+
             // Call API
             const response = await addsubscription(filteredValues);
             console.log("API Response:", response);
             if (response.status == 201) {
-                // Set formSubmitted before navigating
-                setFormSubmitted(false); 
-
-                
+                setFormSubmitted(true);
+                formik.resetForm();
                 alert(response.message);
-                // Small timeout to ensure state update happens
+
                 setTimeout(() => {
                     navigate('/dashboard/subscriptions/Viewsubscription');
-                }, 0);
+                }, 100); // Give time for state and formik reset to propagate
             } else {
                 alert(response.message);
             }
@@ -77,17 +75,22 @@ function Add_subscription() {
 
     });
 
+    useEffect(() => {
+        if (formSubmitted) {
+            navigate('/dashboard/subscriptions/Viewsubscription');
+        }
+    }, [formSubmitted]);
     const isFormDirty = !formSubmitted && Object.keys(formik.initialValues).some(
         key => formik.values[key] !== formik.initialValues[key]
     );
-    
+
     useUnsavedChangesWarning(isFormDirty);
 
 
 
 
     const [Providers, setProviders] = useState([])
-    
+
 
     useEffect(() => {
         const fetchdata = async () => {
@@ -236,11 +239,11 @@ function Add_subscription() {
 
 
 
-          
+
             <div className="w-full p-4 bg-white">
-             <h1 className="text-xl md:text-xl font-bold text-gray-700 mb-6">
-                Add New Subscription
-             </h1>
+                <h1 className="text-xl md:text-xl font-bold text-gray-700 mb-6">
+                    Add New Subscription
+                </h1>
 
                 <form onSubmit={formik.handleSubmit} className="space-y-8 ">
 
@@ -545,7 +548,7 @@ function Add_subscription() {
                                                         name="no_of_users"
                                                         value={formik.values.additionalDetails.no_of_users}
                                                         onChange={handleAdditionalFieldChange}
-                                                        onWheel={(e) => e.target.blur()} 
+                                                        onWheel={(e) => e.target.blur()}
                                                         onBlur={() => formik.setFieldTouched("additionalDetails.no_of_users", true)}
                                                         className="w-full p-2  border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     />

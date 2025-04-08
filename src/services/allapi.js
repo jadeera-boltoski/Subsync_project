@@ -190,6 +190,11 @@ export const get_hardware=()=>{
 
 }
 
+// get the details of single device
+export const getSingledevice=(body)=>{
+    return commonRequest("GET",`${BASE_URL}/hardware/${encodeURIComponent(body)}/`,"")
+}
+
 // DElete hardware
 export const Deletehardware=(body)=>{
     return commonRequest("DELETE",`${BASE_URL}/hardware/${encodeURIComponent(body)}/`,"")
@@ -216,6 +221,15 @@ export const addresources=(body)=>{
 
 export const updateresource=(body)=>{
     return commonRequest("PATCH",`${BASE_URL}/resources/${encodeURIComponent(body.id)}/`,body)
+}
+// delete resource
+export const deleteresource=(body)=>{
+    return commonRequest("DELETE",`${BASE_URL}/resources/${encodeURIComponent(body)}/`,"")
+}
+
+// get single resource details
+export const getSingleresources=(body)=>{
+    return commonRequest("GET",`${BASE_URL}/resources/${encodeURIComponent(body)}/`,"")
 }
 
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { validationHardware } from "../../validation/yup";
 import { addhardware } from "../../services/allapi";
@@ -11,23 +11,23 @@ const deviceSpecificFields = {
   Desktop: ["CPU", "RAM", "Storage"],
   "Mobile Phone": ["OS_Version", "Storage", "IMEI_Number"],
   Tablet: ["OS_Version", "Storage"],
-  "Network Device": ["Name_Specification","Throughput", "IP_Address"],
+  "Network Device": ["Name_Specification", "Throughput", "IP_Address"],
   "Air Conditioner": ["BTU_Rating", "EnergyP_Rating"],
-  "On-Premise Server": ["Server_Name","CPU", "RAM", "Storage", "Operating_System"],
+  "On-Premise Server": ["Server_Name", "CPU", "RAM", "Storage", "Operating_System"],
   Printer: ["Print_Technology", "Print_Speed", "Connectivity"],
   Scanner: ["Scan_Resolution", "Scan_Type", "Connectivity"],
-  other:["specify_Device"],
-  
+  other: ["specify_Device"],
+
 };
 
 const Add_hardware = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   const [selectedDevice, setSelectedDevice] = useState("");
   // console.log(selectedDevice);
-  
+
   const [isExtendedWarranty, setIsExtendedWarranty] = useState(false);
   const [deviceFields, setDeviceFields] = useState([]);
-
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const formik = useFormik({
     initialValues: {
       deviceType: "",
@@ -36,10 +36,10 @@ const Add_hardware = () => {
       serialNumber: "",
       assignedTo: "",
       purchaseDate: "",
-      purchasecost:"",
-      vendor_name:"",
-      vendor_contact:"",
-      vendor_email:"",
+      purchasecost: "",
+      vendor_name: "",
+      vendor_contact: "",
+      vendor_email: "",
       warrantyExpiryDate: "",
       isExtendedWarranty: false,  // Boolean to indicate if warranty is extended
       extendedWarrantyPeriod: "", // Duration of extended warranty if applicable
@@ -51,25 +51,37 @@ const Add_hardware = () => {
       notes: ""
     },
     validationSchema: validationHardware,
-    onSubmit: async(values) => {
+    onSubmit: async (values) => {
       console.log("Form Data:", values);
-      const response=await addhardware(values)
-      console.log("addhardware",response);
-      if(response.status==201){
-        alert("New hardware successfully added")
-        navigate("/dashboard/hardware/view_hardware")
+      const response = await addhardware(values)
+      console.log("addhardware", response);
+      if (response.status == 201) {
+        setFormSubmitted(true);
+        formik.resetForm();
+        alert(response.message);
+
+        setTimeout(() => {
+          navigate('/dashboard/hardware/view_hardware');
+        }, 100); // Give time for state and formik reset to propagate
+        // alert("New hardware successfully added")
+        // navigate("/dashboard/hardware/view_hardware")
       }
-      else{
+      else {
         alert(response.message)
       }
 
       // Handle form submission here
     }
   });
-  const isFormDirty = Object.keys(formik.initialValues).some(
+  useEffect(() => {
+    if (formSubmitted) {
+      navigate('/dashboard/hardware/view_hardware');
+    }
+  }, [formSubmitted]);
+  const isFormDirty = !formSubmitted && Object.keys(formik.initialValues).some(
     key => formik.values[key] !== formik.initialValues[key]
   );
-  
+
   useUnsavedChangesWarning(isFormDirty);
 
   // Handle device type change to update both formik state and component state
@@ -77,7 +89,7 @@ const Add_hardware = () => {
     const deviceType = e.target.value;
     setSelectedDevice(deviceType);
     formik.setFieldValue("deviceType", deviceType);
-    
+
     // Update device-specific fields
     if (deviceType && deviceSpecificFields[deviceType]) {
       setDeviceFields(deviceSpecificFields[deviceType]);
@@ -99,18 +111,18 @@ const Add_hardware = () => {
   return (
     <div >
       <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
-                <div
-                    onClick={() => navigate(-1)}
-                    className="hover:text-blue-600 hover:underline cursor-pointer"
-                >
-                    Dashboard
-                </div>
-                <div className="mx-1">&gt;</div>
-                <div className="text-blue-600">Adding Hardware assets</div>
-            </div>
+        <div
+          onClick={() => navigate(-1)}
+          className="hover:text-blue-600 hover:underline cursor-pointer"
+        >
+          Dashboard
+        </div>
+        <div className="mx-1">&gt;</div>
+        <div className="text-blue-600">Adding Hardware assets</div>
+      </div>
       <div className="max-w-full mx-auto p-4 sm:p-6 lg:p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center">IT Hardware Inventory Form</h2>
-        
+
         <form onSubmit={formik.handleSubmit} className="space-y-4 sm:space-y-6">
           {/* Common Fields - First Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -119,7 +131,7 @@ const Add_hardware = () => {
               <select
                 id="deviceType"
                 name="deviceType"
-  
+
                 className="border p-2 rounded w-full focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleDeviceTypeChange}
                 onBlur={formik.handleBlur}
@@ -151,7 +163,7 @@ const Add_hardware = () => {
               ) : null}
             </div>
           </div>
-  
+
           {/* Common Fields - Second Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -185,7 +197,7 @@ const Add_hardware = () => {
               ) : null}
             </div>
           </div>
-  
+
           {/* Purchase Date Field */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -204,7 +216,7 @@ const Add_hardware = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.purchaseDate}</div>
               ) : null}
             </div>
-            
+
             <div>
               <label htmlFor="purchasecost" className="block text-sm font-medium text-gray-700 mb-1">Purchase Cost(₹)</label>
               <input
@@ -221,8 +233,8 @@ const Add_hardware = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.purchasecost}</div>
               ) : null}
             </div>
-  
-            
+
+
             <div>
               <label htmlFor="vendor_name" className="block text-sm font-medium text-gray-700 mb-1">Vendor Name</label>
               <input
@@ -239,7 +251,7 @@ const Add_hardware = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.vendor_name}</div>
               ) : null}
             </div>
-  
+
             <div>
               <label htmlFor="vendor_contact" className="block text-sm font-medium text-gray-700 mb-1">Vendor Contact</label>
               <input
@@ -256,7 +268,7 @@ const Add_hardware = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.vendor_contact}</div>
               ) : null}
             </div>
-  
+
             <div>
               <label htmlFor="vendor_email" className="block text-sm font-medium text-gray-700 mb-1">Vendor Email</label>
               <input
@@ -273,10 +285,10 @@ const Add_hardware = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.vendor_email}</div>
               ) : null}
             </div>
-  
-  
-  
-  
+
+
+
+
             <div className="col-span-1">
               <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
               <select
@@ -300,11 +312,11 @@ const Add_hardware = () => {
               ) : null}
             </div>
           </div>
-  
+
           {/* Service Information Section */}
           <div className="border p-4 rounded-md bg-gray-50">
             <h3 className="text-lg font-medium mb-3">Service Information</h3>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label htmlFor="lastServiceDate" className="block text-sm font-medium text-gray-700 mb-1">Last Service Date</label>
@@ -339,7 +351,7 @@ const Add_hardware = () => {
                 ) : null}
               </div>
             </div>
-  
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label htmlFor="freeServiceUntil" className="block text-sm font-medium text-gray-700 mb-1">Free Service Until <span className="text-gray-500">(Optional)</span></label>
@@ -372,7 +384,7 @@ const Add_hardware = () => {
                 ) : null}
               </div>
             </div>
-  
+
             <div>
               <label htmlFor="serviceProvider" className="block text-sm font-medium text-gray-700 mb-1">Service Provider</label>
               <input
@@ -389,11 +401,11 @@ const Add_hardware = () => {
               ) : null}
             </div>
           </div>
-  
+
           {/* Warranty Section */}
           <div className="border p-4 rounded-md bg-gray-50">
             <h3 className="text-lg font-medium mb-3">Warranty Information</h3>
-            
+
             <div className="mb-4">
               <label htmlFor="warrantyExpiryDate" className="block text-sm font-medium text-gray-700 mb-1">Warranty Expiry Date</label>
               <input
@@ -409,7 +421,7 @@ const Add_hardware = () => {
                 <div className="text-red-500 text-sm mt-1">{formik.errors.warrantyExpiryDate}</div>
               ) : null}
             </div>
-            
+
             <div className="mb-4">
               <div className="flex items-center">
                 <input
@@ -425,7 +437,7 @@ const Add_hardware = () => {
                 </label>
               </div>
             </div>
-            
+
             {isExtendedWarranty && (
               <div>
                 <label htmlFor="extendedWarrantyPeriod" className="block text-sm font-medium text-gray-700 mb-1">Extended Warranty Period</label>
@@ -449,35 +461,35 @@ const Add_hardware = () => {
               </div>
             )}
           </div>
-  
+
           {/* Device-specific fields section */}
           {deviceFields.length > 0 && (
-    <div className="border p-4 rounded-md bg-gray-50">
-      <h3 className="text-lg font-medium mb-3">Device-Specific Details</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {deviceFields.map((field) => (
-          <div key={field}>
-            <label htmlFor={field} className="block text-sm font-medium text-gray-700 mb-1">
-              {field}
-            </label>
-            <input
-              id={field}
-              name={field}
-              type="text"
-              className="border p-2 rounded w-full focus:ring-blue-500 focus:border-blue-500"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values[field] || ""}
-            />
-            {formik.touched[field] && formik.errors[field] && (
-              <div className="text-red-500 text-sm mt-1">{formik.errors[field]}</div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  )}
-  
+            <div className="border p-4 rounded-md bg-gray-50">
+              <h3 className="text-lg font-medium mb-3">Device-Specific Details</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {deviceFields.map((field) => (
+                  <div key={field}>
+                    <label htmlFor={field} className="block text-sm font-medium text-gray-700 mb-1">
+                      {field}
+                    </label>
+                    <input
+                      id={field}
+                      name={field}
+                      type="text"
+                      className="border p-2 rounded w-full focus:ring-blue-500 focus:border-blue-500"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values[field] || ""}
+                    />
+                    {formik.touched[field] && formik.errors[field] && (
+                      <div className="text-red-500 text-sm mt-1">{formik.errors[field]}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Notes Section */}
           <div>
             <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
@@ -494,7 +506,7 @@ const Add_hardware = () => {
               <div className="text-red-500 text-sm mt-1">{formik.errors.notes}</div>
             ) : null}
           </div>
-  
+
           {/* Submit Button */}
           <div className="flex justify-end space-x-3">
             <button

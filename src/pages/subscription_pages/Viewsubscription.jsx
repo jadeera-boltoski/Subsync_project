@@ -129,7 +129,7 @@ function Viewsubscription() {
           </select>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 ">
           <select
             id="statusFilter"
             value={statusFilter}

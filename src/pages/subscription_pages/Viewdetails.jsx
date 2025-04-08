@@ -21,27 +21,27 @@ const Viewdetails = () => {
   // Initialize formik
   const formik = useFormik({
     initialValues: {
-      id: subscription?.id || null,
-      providerName: subscription?.providerName || '',
-      providerid: subscription?.providerid || '',
-      category: subscription?.subscription_category || '',
-      version: subscription?.software_version || '',
-      auto_renewal: subscription?.auto_renewal || false,
-      no_of_users: subscription?.software_no_of_users|| '',
-      cost: subscription?.cost|| '',
-      name_servers: subscription?.name_servers || '',
-      server_capacity: subscription?.server_capacity || '',
+      id: subscription?.id ?? null,
+      providerName: subscription?.providerName ?? null,
+      providerid: subscription?.providerid ?? null,
+      category: subscription?.subscription_category ?? null,
+      version: subscription?.software_version ?? null,
+      auto_renewal: subscription?.auto_renewal ?? false,
+      no_of_users: subscription?.software_no_of_users?? null,
+      cost: subscription?.cost?? null,
+      name_servers: subscription?.name_servers ?? null,
+      server_capacity: subscription?.server_capacity ?? null,
       // last_payment_date: subscription?.last_payment_date?.toString() ?? null,
-      billing_cycle: subscription?.billing_cycle || '',
+      billing_cycle: subscription?.billing_cycle ?? null,
       paymentStatus: subscription?.payment_status || 'paid',
       consumer_no: subscription?.consumer_no ?? null,
-      server_type: subscription?.server_type || '',
-      domain_type: subscription?.domain_type || '',
+      server_type: subscription?.server_type ?? null,
+      domain_type: subscription?.domain_type ?? null,
 
-      ssl_certification: subscription?.ssl_certification || '',
-      whois_protection: subscription?.whois_protection || '',
-      ssl_expiry_date: subscription?.ssl_expiry_date?.toString() || '',
-      hosting_provider: subscription?.hosting_provider || '',
+      ssl_certification: subscription?.ssl_certification || null,
+      whois_protection: subscription?.whois_protection || null,
+      ssl_expiry_date: subscription?.ssl_expiry_date?.toString() || null,
+      hosting_provider: subscription?.hosting_provider || null,
     },
     validationSchema: subscriptionValidationSchema,
     onSubmit: async (values) => {
@@ -76,6 +76,8 @@ const Viewdetails = () => {
       }
     }
   });
+  console.log(formik.errors);
+  
 
   // Fetch updated subscription data
   useEffect(() => {
@@ -87,27 +89,27 @@ const Viewdetails = () => {
 
           setSubscription(updated);
           formik.setValues({
-            id: subscription?.id || null,
-            providerName: subscription?.providerName || '',
-            providerid: subscription?.providerid || '',
-            category: subscription?.subscription_category || '',
-            version: subscription?.software_version || '',
-            auto_renewal: subscription?.auto_renewal|| false,
-            no_of_users: subscription?.software_no_of_users || '',
-            cost: subscription?.cost || '',
-            name_servers: subscription?.name_servers || '',
-            server_capacity: subscription?.server_capacity || '',
+            id: subscription?.id ?? null,
+            providerName: subscription?.providerName ?? null,
+            providerid: subscription?.providerid ?? null,
+            category: subscription?.subscription_category ?? null,
+            version: subscription?.software_version ?? null,
+            auto_renewal: subscription?.auto_renewal ?? false,
+            no_of_users: subscription?.software_no_of_users?? null,
+            cost: subscription?.cost?? null,
+            name_servers: subscription?.name_servers ?? null,
+            server_capacity: subscription?.server_capacity ?? null,
             // last_payment_date: subscription?.last_payment_date?.toString() ?? null,
-            billing_cycle: subscription?.billing_cycle || '',
+            billing_cycle: subscription?.billing_cycle ?? null,
             paymentStatus: subscription?.payment_status || 'paid',
             consumer_no: subscription?.consumer_no ?? null,
-            server_type: subscription?.server_type || '',
-            domain_type: subscription?.domain_type || '',
+            server_type: subscription?.server_type ?? null,
+            domain_type: subscription?.domain_type ?? null,
       
-            ssl_certification: subscription?.ssl_certification || '',
-            whois_protection: subscription?.whois_protection || '',
-            ssl_expiry_date: subscription?.ssl_expiry_date?.toString() || '',
-            hosting_provider: subscription?.hosting_provider || '',
+            ssl_certification: subscription?.ssl_certification || null,
+            whois_protection: subscription?.whois_protection || null,
+            ssl_expiry_date: subscription?.ssl_expiry_date?.toString() || null,
+            hosting_provider: subscription?.hosting_provider || null,
           });
         } catch (err) {
           console.error("Failed to fetch updated subscription:", err);
@@ -248,7 +250,7 @@ const Viewdetails = () => {
           <div className="bg-gray-50 p-4 rounded">
             <h4 className="font-medium text-gray-700 mb-3">Server Details</h4>
             <div className="space-y-2">
-              <p><span className="font-medium">Server ID:</span> {subscription.server_id}</p>
+              {/* <p><span className="font-medium">Server ID:</span> {subscription.server_id}</p> */}
               <p><span className="font-medium">Server Type:</span> {subscription.server_type}</p>
               <p><span className="font-medium">Server Capacity:</span> {subscription.server_capacity}</p>
               <p><span className="font-medium">Auto Renewal:</span> {subscription.auto_renewal ? 'Yes' : 'No'}</p>
