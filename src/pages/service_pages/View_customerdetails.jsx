@@ -15,6 +15,7 @@ const View_customerdetails = () => {
 
   const formik = useFormik({
     initialValues: {
+      customer:customer?.id||'',
       customer_name: customer?.customer_name || '',
       customer_email: customer?.customer_email || '',
       customer_phone: customer?.customer_phone || '',
