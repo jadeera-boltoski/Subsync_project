@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { deletecustomer } from '../../services/allapi';
+import { deletecustomer, editcustomer } from '../../services/allapi';
 import { format } from "date-fns";
 
 const View_customerdetails = () => {
@@ -29,6 +29,23 @@ const View_customerdetails = () => {
     },
     onSubmit: async (values) => {
       console.log("hello jadeera", values);
+           try {
+             const response = await editcustomer(values)
+             console.log(response);
+             if(response.status==200){
+                // const updateddevice = await getSingledevice(devices.id);
+              //  setdevice(updateddevice);
+               alert(response.message)
+             }
+             else{
+               alert(response.message)
+             }
+             
+             
+           } catch (error) {
+             console.error("Error deleting hardware:", error);
+             alert("Something went wrong!");
+           }
 
     }
 
@@ -411,7 +428,7 @@ const View_customerdetails = () => {
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                   >
-                    Update
+                     {formik.isSubmitting ? 'Updating...' : ' Save Changes'}
                   </button>
                 </div>
               </div>

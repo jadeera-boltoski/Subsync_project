@@ -18,7 +18,7 @@ function Add_resources() {
       // next_payment_date: "",
       provisioned_date: "",
       last_updated_date: "",
-      payment_method:"",
+      paymentMethod:"",
       // status: "",
       hosting_type: "",
       hosting_location: ""
@@ -206,7 +206,7 @@ function Add_resources() {
                                                   onChange={formik.handleChange}
                                                   onBlur={formik.handleBlur}
                                                   className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500">
-                                                  <option value="" disabled selected>--select method--</option>
+                                                  <option value="" disabled >--select method--</option>
                                                   <option value="Credit/Debit Card">Credit/Debit Card</option>
                                                   <option value="Bank_Transfer">Bank Transfer</option>
                                                   <option value="Prepaid_Cards">Gift Cards & Prepaid Cards</option>
@@ -376,7 +376,8 @@ function Add_resources() {
                 type="submit"
                 className="px-6 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                Save Resource
+                {formik.isSubmitting ? 'Submitting...' : 'Save Resource'}
+                
               </button>
             </div>
           </div>

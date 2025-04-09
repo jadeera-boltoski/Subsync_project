@@ -269,6 +269,11 @@ export const getcustomerpiechart=()=>{
     return commonRequest("GET",`${BASE_URL}/customer-type-percentage/`,"")
 }
 
+// edit details of customers
+export const editcustomer=(body)=>{
+    return commonRequest("PATCH",`${BASE_URL}/customers/${encodeURIComponent(body)}/`,"")
+}
+
 // get details of customers
 export const getcustomers=()=>{
     return commonRequest("GET",`${BASE_URL}/customers/`,"")

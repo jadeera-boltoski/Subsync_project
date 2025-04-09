@@ -546,9 +546,8 @@ export const validationresource = Yup.object({
 
   resource_type: Yup.string()
     .oneOf(
-      ["Web and Application Hosting", "Database and Storage", "Security and Compliance", "CI/CD and DevOps", "Other"],
-      "Invalid resource type selected"
-    )
+      ["Web and app hosting", "Database and Storage", "Security and Compliance", "CI/CD and DevOps", "Other"],
+      "Invalid resource type selected")
     .required("Resource type is required"),
 
   storage_capacity: Yup.string()
