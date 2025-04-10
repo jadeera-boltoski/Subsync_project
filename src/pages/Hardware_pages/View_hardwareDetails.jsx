@@ -40,9 +40,9 @@ const View_hardwareDetails = () => {
       warranty_expiry_date: device?.warranty?.warranty_expiry_date || '',
 
       // Maintenance Information
-      last_service_date: device?.services?.[0]?.last_service_date || '',
-      next_service_date: device?.services?.[0]?.next_service_date || '',
-      service_cost: device?.services?.[0]?.service_cost || '',
+      last_service_date: device?.services?.last_service_date || null,
+      next_service_date: device?.services?.next_service_date || null,
+      service_cost: device?.services?.service_cost || '',
 
       // Device-specific fields (will conditionally render based on device type)
       // Computer specs

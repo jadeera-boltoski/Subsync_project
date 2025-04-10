@@ -427,7 +427,7 @@ export const validationHardware = Yup.object().shape({
   Storage: Yup.string().required("isjsidj")
     .when("deviceType", {
       is: (val) => ["Laptop", "Desktop", "Mobile Phone", "Tablet", "Server"].includes(val),
-      then: () => Yup.string().required("Storage information is required"),
+      then: () => Yup.string().required("Storage information is required").matches(/^\d+(GB|TB)$/, 'Enter valid storage (e.g., 128GB or 1TB)'),
       otherwise: () => Yup.string(),
     }),
 

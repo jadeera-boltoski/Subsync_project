@@ -95,7 +95,7 @@
         {!limit&&(
           <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
           <div
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/dashboard/services')}
             className="hover:text-blue-600 hover:underline cursor-pointer"
           >
             Customer service Dashboard
