@@ -10,74 +10,82 @@ const View_resourcedetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const resources = location.state?.resource;
-  console.log("resources", resources);
-  const[resource,setresource]=useState(resources || {})
+  console.log("resourcessssss", resources);
+  const [resource, setresource] = useState(resources || {})
 
   const [edit, setEdit] = useState(false);
+  console.log("jadeera", resource?.server?.server_name);
 
-   const formik = useFormik({
-      initialValues: {
-        resource_name:resource?.resource_name|| "",
-        resource_type:resource?.resource_type|| "",
-        storage_capacity:resource?.storage_capacity|| "",
-        billing_cycle:resource?.billing_cycle|| "",
-        resource_cost:resource?.resource_cost|| "",
-        // next_payment_date: "",
-        provisioned_date:resource?.provisioned_date|| "",
-        last_updated_date:resource?.last_updated_date|| "",
-        payment_method:resource?.payment_method|| "",
-        // status: "",
-        hosting_type: resource?.hosting_type|| "",
-        server_name: resource?.server?.server_name|| ""
-      },
-      validationSchema: validationresource,
-      onSubmit: async(values) => {
-        console.log("saving resources",values);
-  
-          const response=await updateresource(values)
-          console.log("resources",response);
-          if(response.status==200){
-            const updatedresource = await getSingleresources(resource.id);
-            console.log("response resoyre",updatedresource);
-            
-            setresource(updatedresource);
-                     
-            setEdit(!edit);
-            alert(response.message)
-            navigate("/dashboard/services/view_resources_details")
-          }
-          else{
-            alert(response.message.storage_capacity||response.message)
-          }
+  const formik = useFormik({
+    initialValues: {
+      resource_name: resource?.resource_name || "",
+      resource_type: resource?.resource_type || "",
+      storage_capacity: resource?.storage_capacity || "",
+      billing_cycle: resource?.billing_cycle || "",
+      resource_cost: resource?.resource_cost || "",
+      // next_payment_date: "",
+      provisioned_date: resource?.provisioned_date || "",
+      last_updated_date: resource?.last_updated_date || "",
+      payment_method: resource?.payment_method || "",
+      // status: "",
+      // hosting_type: resource?.hosting_type || "",
+      // hosting_location: resource?.server?.server_name || "",
+      // hosting_location:resource?.server?.server_name||'',
+    },
+
+
+    // validationSchema: validationresource,
+    onSubmit: async (values) => {
+
+      console.log("saving resources", values);
+
+      const response = await updateresource(values)
+      console.log("resources", response);
+      if (response.status == 200) {
+        const updatedresource = await getSingleresources(resource.id);
+        console.log("response resoyre", updatedresource);
+
+        setresource(updatedresource);
+
+        setEdit(!edit);
+        alert(response.message)
+        navigate("/dashboard/services/view_resources_details")
       }
-    });
-      const [serverLocations, setServerLocations] = useState([]);
-      useEffect(() => {
-        const fetchData = async () => {
-          try {
-            if (formik.values.hosting_type) {
-              const response = await getservername(formik.values.hosting_type);
-              console.log("getservername",response);
-           
-              if (response && response.servers && Array.isArray(response.servers)) {
-                setServerLocations(response.servers);
-                formik.setFieldValue("hosting_location", "");
-              }
-              
-            }
-          } catch (error) {
-            console.error("Error fetching provider name:", error);
-            // You can also update state with error information if needed
-          }
-        };
-      
-        // Call fetchData only if hosting_type is present
+      else {
+        alert(response.message.storage_capacity || response.message)
+      }
+    },
+    enableReinitialize: true,
+  });
+  const [serverLocations, setServerLocations] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         if (formik.values.hosting_type) {
-          fetchData();
+          const response = await getservername(formik.values.hosting_type);
+          console.log("getservername", response);
+
+          if (response && response.servers && Array.isArray(response.servers)) {
+            setServerLocations(response.servers);
+            formik.setFieldValue("hosting_location", "");
+          }
+
         }
-      
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [formik.values.hosting_type]);
+      } catch (error) {
+        console.error("Error fetching provider name:", error);
+        // You can also update state with error information if needed
+      }
+    };
+
+    // Call fetchData only if hosting_type is present
+    if (formik.values.hosting_type) {
+      fetchData();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formik.values.hosting_type]);
+
+  console.log("heloooooooooo", formik.values.hosting_location);
 
   const handleEdit = () => {
     setEdit(!edit);
@@ -121,33 +129,33 @@ const View_resourcedetails = () => {
   //   });
   // };
 
-  const handledelete=async()=>{
+  const handledelete = async () => {
     const confirmChange = window.confirm("Are you sure you want to delete this subscription?");
     if (confirmChange) {
-      try { 
+      try {
         const response = await deleteresource(resource.id)
         console.log(response);
-        if(response.status==200){
+        if (response.status == 200) {
           alert(response.message)
           navigate("/dashboard/services/view_resources")
         }
-        else{
+        else {
           alert(response.message)
         }
-      }catch (error) {
+      } catch (error) {
         console.error("Delete failed:", error);
         alert("An error occurred while deleting the subscription");
       }
     }
 
 
-   
-    
+
+
   }
 
   return (
     <div >
-       <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
+      <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
         <div
           onClick={() => navigate("/dashboard/services")}
           className="hover:text-blue-600 hover:underline cursor-pointer"
@@ -171,7 +179,7 @@ const View_resourcedetails = () => {
           <div className="flex justify-between items-center border-b px-6 py-4">
             <h3 className="text-lg font-semibold">Resource Details</h3>
           </div>
-  
+
           <div className="p-6">
             <div className="mb-6 border-b pb-4">
               <div className="flex justify-between items-start">
@@ -186,7 +194,7 @@ const View_resourcedetails = () => {
                 </div>
               </div>
             </div>
-  
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Resource Information */}
               <div className="bg-gray-50 p-4 rounded">
@@ -200,7 +208,7 @@ const View_resourcedetails = () => {
                   {/* {formatPrice(resource.resource_cost)} */}
                 </div>
               </div>
-  
+
               {/* Customer Information */}
               <div className="bg-gray-50 p-4 rounded">
                 <h4 className="font-medium text-gray-700 mb-3">Customer Information</h4>
@@ -210,21 +218,21 @@ const View_resourcedetails = () => {
                   <p><span className="font-medium">Phone:</span> {resource?.customer?.contact_phone}</p>
                   {/* <p><span className="font-medium">Type:</span> {resource?.customer?.customer_type}</p>  */}
                 </div>
-                <h4 className="font-medium text-gray-700 mb-3">Server Information</h4>
+                <h4 className="font-medium text-gray-700 mt-5 mb-3">Server Information</h4>
                 <div className="space-y-2">
                   <p><span className="font-medium">Server type:</span> {resource?.server?.server_type}</p>
                   <p><span className="font-medium">Server name:</span> {resource?.server?.server_name}</p>
                 </div>
               </div>
-  
+
               {/* Date Information */}
               <div className="bg-gray-50 p-4 rounded">
                 <h4 className="font-medium text-gray-700 mb-3">Date Information</h4>
                 <div className="space-y-2">
-  
+
                   <p><span className="font-medium">Provisioned Date:</span>{format(new Date(resource.provisioned_date), "dd-MM-yyyy")}</p>
                   {/* <p><span className="font-medium">Last Payment Date:</span>{format(new Date(resource.last_updated_date), "dd-MM-yyyy")}</p> */}
-  
+
                   <p><span className="font-medium">Next Payment Date:</span>{format(new Date(resource.next_payment_date), "dd-MM-yyyy")}</p>
                   {calculateDaysRemaining(resource.next_payment_date) > 0 && calculateDaysRemaining(resource.next_payment_date) < 10 ? (
                     <p className="mt-2">
@@ -243,7 +251,7 @@ const View_resourcedetails = () => {
                   )}
                 </div>
               </div>
-  
+
               {/* Billing Information */}
               <div className="bg-gray-50 p-4 rounded">
                 <h4 className="font-medium text-gray-700 mb-3">Billing Information</h4>
@@ -255,21 +263,21 @@ const View_resourcedetails = () => {
                     {resource?.last_payment_date ?
                       resource?.last_payment_date?.split('-').reverse().join('-') :
                       "Not available"}</p>
-  
+
                 </div>
               </div>
             </div>
-  
+
             {/* Server Information */}
             <div className="mt-6 bg-gray-50 p-4 rounded">
               {/* <h4 className="font-medium text-gray-700 mb-3">Server Information</h4> */}
               <div className="space-y-2">
                 {/* <p><span className="font-medium">Server ID:</span> {resource.server}</p> */}
-  
+
               </div>
             </div>
           </div>
-  
+
           <div className="border-t px-6 py-4 flex justify-end">
             <button
               onClick={() => navigate('/dashboard/services/view_resources')}
@@ -283,14 +291,14 @@ const View_resourcedetails = () => {
               Edit
             </button>
             <button
-            onClick={handledelete}
+              onClick={handledelete}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
             >
               Delete
             </button>
           </div>
         </div>
-  
+
         {edit && (
           <div className='w-2/5 bg-white rounded-lg mt-4 shadow-xl p-6 ml-4 max-h-[90vh] overflow-y-auto transition-all duration-300'>
             <h3 className="text-xl font-semibold mb-6 border-b pb-3">Edit Resource Details</h3>
@@ -304,20 +312,20 @@ const View_resourcedetails = () => {
                     id="resource_name"
                     value={formik.values.resource_name}
                     onChange={formik.handleChange}
-                    
+
                     className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   {formik.touched.resource_name && formik.errors.resource_name && (
                     <p className="text-red-500 text-xs mt-1">{formik.errors.resource_name}</p>
                   )}
                 </div>
-  
+
                 <div>
                   <label htmlFor="resource_type" className="block text-sm font-medium text-gray-700 mb-1">Resource Type:</label>
                   <select
                     name="resource_type"
                     id="resource_type"
-  
+
                     value={formik.values.resource_type}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -334,7 +342,7 @@ const View_resourcedetails = () => {
                     <p className="text-red-500 text-xs mt-1">{formik.errors.resource_type}</p>
                   )}
                 </div>
-  
+
                 <div>
                   <label htmlFor="storage_capacity" className="block text-sm font-medium text-gray-700 mb-1">Storage Capacity:</label>
                   <input
@@ -370,7 +378,7 @@ const View_resourcedetails = () => {
                     <p className="text-red-500 text-xs mt-1">{formik.errors.billing_cycle}</p>
                   )}
                 </div>
-  
+
                 <div>
                   <label htmlFor="resource_cost" className="block text-sm font-medium text-gray-700 mb-1">Resource Cost:</label>
                   <div className="relative">
@@ -391,7 +399,7 @@ const View_resourcedetails = () => {
                     <p className="text-red-500 text-xs mt-1">{formik.errors.resource_cost}</p>
                   )}
                 </div>
-  
+
                 <div className="mt-4">
                   <label htmlFor="paymentMethod" className="block mb-1 text-sm">
                     Payment method
@@ -407,7 +415,7 @@ const View_resourcedetails = () => {
                     <option value="Prepaid_Cards">Gift Cards & Prepaid Cards</option>
                     <option value="Cash_Payments">Cash Payments (For offline or manual renewals)</option>
                   </select>
-  
+
                   {formik.touched.paymentMethod && formik.errors.paymentMethod && (
                     <div className="text-red-500 text-xs mt-1">
                       {formik.errors.paymentMethod}
@@ -428,7 +436,7 @@ const View_resourcedetails = () => {
                   <p className="text-red-500 text-xs mt-1">{formik.errors.provisioned_date}</p>
                 )}
               </div>
-  
+
               <div>
                 <label htmlFor="last_updated_date" className="block text-sm font-medium text-gray-700 mb-1">Last Payment Date:</label>
                 <input
@@ -444,7 +452,7 @@ const View_resourcedetails = () => {
                   <p className="text-red-500 text-xs mt-1">{formik.errors.last_updated_date}</p>
                 )}
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="hosting_type" className="block text-sm font-medium text-gray-700 mb-1">Hosting Type:</label>
                 <select
                   name="hosting_type"
@@ -455,32 +463,32 @@ const View_resourcedetails = () => {
                   className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="" selected>Choose a type</option>
-  
+
                   <option value="inhouse">On-Premise Server</option>
-                  <option value="external">External Server</option>
-                  <option value="cloud"> Cloud Hosting Providers </option>
-  
-  
+                  <option value="external">External Server</option> */}
+                  {/* <option value="cloud"> Cloud Hosting Providers </option> */}
+
+{/* 
                 </select>
                 {formik.touched.hosting_type && formik.errors.hosting_type && (
                   <p className="text-red-500 text-xs mt-1">{formik.errors.hosting_type}</p>
                 )}
-              </div>
-  
-              <div>
-  
+              </div> */}
+
+              {/* <div>
+
                 <label htmlFor="hosting_location" className="block text-sm font-medium text-gray-700 mb-1">Server Name that resource hosted on:</label>
                 <select
                   // type="text"
                   name="hosting_location"
                   id="hosting_location"
-                  value={formik.values.server_name}
+                  value={formik.values.hosting_location}
                   onChange={formik.handleChange}
                   // onBlur={formik.handleBlur}
                   className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
-                  <option value=""  disabled>select</option>
-  
+                  <option value="" disabled>select</option>
+
                   {serverLocations.map((server, index) => (
                     <option key={index} value={server?.name || server?.id || server}>
                       {server?.name || server?.id || server}
@@ -490,8 +498,8 @@ const View_resourcedetails = () => {
                 {formik.touched.hosting_location && formik.errors.hosting_location && (
                   <p className="text-red-500 text-xs mt-1">{formik.errors.hosting_location}</p>
                 )}
-              </div>
-  
+              </div> */}
+
               <div className="flex justify-end space-x-2 mt-4">
                 <button
                   type="button"
@@ -503,15 +511,15 @@ const View_resourcedetails = () => {
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                  disabled={formik.isSubmitting}
+                  // disabled={formik.isSubmitting}
                 >
                   {formik.isSubmitting ? 'Updating...' : 'Save Changes'}
                 </button>
               </div>
-  
-          
-              
-            
+
+
+
+
             </form>
           </div >
         )}

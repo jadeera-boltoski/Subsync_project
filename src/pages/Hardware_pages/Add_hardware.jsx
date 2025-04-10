@@ -300,11 +300,13 @@ const Add_hardware = () => {
                 value={formik.values.assignedTo}
               >
                 <option value="" disabled>Select Department</option>
-                <option value="HR">Human Resources</option>
-                <option value="IT">Information Technology</option>
-                <option value="Finance">Finance</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Operations">Operations</option>
+                <option value="Development">Development</option>
+                <option value="Service/Support">Service/Support</option>
+                <option value="HR (Human Resources)">HR (Human Resources)</option>
+                <option value="Project/Product Management">Project/Product Management</option>
+                <option value="Sales and Marketing">Sales and Marketing</option>
+                <option value="Finance and Accounts">Finance and Accounts</option>
+             
                 <option value="other">Other</option>
               </select>
               {formik.touched.assignedTo && formik.errors.assignedTo ? (
