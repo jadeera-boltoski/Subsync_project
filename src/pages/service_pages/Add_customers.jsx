@@ -14,7 +14,7 @@ function Add_customers() {
       customer_phone: "",
       customer_type: "",
       resource_type: "",
-      resource_id: "",
+      resource_id: null,
       paymentMethod: "",
       lastPaymentDate: "",
       startDate: "",
