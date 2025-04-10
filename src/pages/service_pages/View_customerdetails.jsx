@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { deletecustomer, editcustomer } from '../../services/allapi';
+import { deletecustomer, editcustomer, getSinglecustomer } from '../../services/allapi';
 import { format } from "date-fns";
 
 const View_customerdetails = () => {
@@ -10,12 +10,13 @@ const View_customerdetails = () => {
 
   const location = useLocation()
 
-  const customer = location.state?.customer;
-  console.log("dfdf", customer);
+  const customers = location.state?.customer;
+  console.log("dfdf", customers);
+  const [customer, setcustomer] = useState(customers || {});
 
   const formik = useFormik({
     initialValues: {
-      id:customer?.id||'',
+      id: customer?.id || '',
       customer_name: customer?.customer_name || '',
       customer_email: customer?.customer_email || '',
       customer_phone: customer?.customer_phone || '',
@@ -30,23 +31,29 @@ const View_customerdetails = () => {
     },
     onSubmit: async (values) => {
       console.log("hello jadeera", values);
-           try {
-             const response = await editcustomer(values)
-             console.log(response);
-             if(response.status==200){
-                // const updateddevice = await getSingledevice(devices.id);
-              //  setdevice(updateddevice);
-               alert(response.message)
-             }
-             else{
-               alert(response.message)
-             }
-             
-             
-           } catch (error) {
-             console.error("Error deleting hardware:", error);
-             alert("Something went wrong!");
-           }
+      try {
+        const response = await editcustomer(values)
+        console.log(response);
+        if (response.status == 200) {
+          console.log("hello");
+          
+          const updatedcustomer = await getSinglecustomer(customers.id);
+          setcustomer(updatedcustomer);
+          alert(response.message)
+          setedit(!edit);
+        
+          navigate("/dashboard/services/View_customerdetails")
+
+        }
+        else {
+          alert(response.message)
+        }
+
+
+      } catch (error) {
+        console.error("Error deleting hardware:", error);
+        alert("Something went wrong!");
+      }
 
     }
 
@@ -309,7 +316,7 @@ const View_customerdetails = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-{/* 
+                {/* 
                 <div className="mb-4">
                   <label htmlFor="customer_type" className="block text-sm font-medium text-gray-700 mb-1">Customer Type</label>
                   <input
@@ -429,7 +436,7 @@ const View_customerdetails = () => {
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                   >
-                     {formik.isSubmitting ? 'Updating...' : ' Save Changes'}
+                    {formik.isSubmitting ? 'Updating...' : ' Save Changes'}
                   </button>
                 </div>
               </div>

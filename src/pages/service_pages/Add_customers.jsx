@@ -3,10 +3,13 @@ import { validationCustomerform } from "../../validation/yup"
 import { useEffect, useState } from "react";
 import { addcustomers, getresources } from "../../services/allapi";
 import { useNavigate } from "react-router-dom";
+import { useUnsavedChangesWarning } from "../../hooks/useUnsavedChangesWarning";
 
 function Add_customers() {
   const [Resources, setResources] = useState([])
   const navigate = useNavigate()
+  
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const formik = useFormik({
     initialValues: {
       customer_name: "",
@@ -28,8 +31,15 @@ function Add_customers() {
       const response = await addcustomers(values)
       console.log(response);
       if (response.status == 201) {
-        alert(response.message)
-        navigate("/dashboard/services/view_customers")
+        setFormSubmitted(true);
+        formik.resetForm();
+        alert(response.message);
+
+        setTimeout(() => {
+          navigate("/dashboard/services/view_customers")
+        }, 100);
+       
+       
       }
       else {
         alert("something went wrong")
@@ -38,6 +48,16 @@ function Add_customers() {
 
     }
   })
+   useEffect(() => {
+        if (formSubmitted) {
+          navigate('/dashboard/hardware/view_hardware');
+        }
+      }, [formSubmitted]);
+      const isFormDirty = !formSubmitted && Object.keys(formik.initialValues).some(
+        key => formik.values[key] !== formik.initialValues[key]
+      );
+    
+      useUnsavedChangesWarning(isFormDirty);
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -218,6 +238,7 @@ function Add_customers() {
                       <option value="" disabled>--select method--</option>
                       <option value="Credit/Debit Card">Credit/Debit Card</option>
                       <option value="Bank_Transfer">Bank Transfer</option>
+                      <option value="UPI">UPI</option>
                       <option value="Prepaid_Cards">Gift Cards & Prepaid Cards</option>
                       <option value="Cash_Payments">Cash Payments (For offline or manual renewals)</option>
                     </select>

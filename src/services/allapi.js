@@ -282,6 +282,10 @@ export const getcustomers=()=>{
 export const deletecustomer=(body)=>{
     return commonRequest("DELETE",`${BASE_URL}/customers/${encodeURIComponent(body)}/`,"")
 }
+// get single customer details
+export const getSinglecustomer=(body)=>{
+    return commonRequest("GET",`${BASE_URL}/customers/${encodeURIComponent(body)}/`,"")
+}
 
 
 

@@ -594,11 +594,11 @@ const View_hardwareDetails = () => {
                     </p>
                   )}
 
-                  <p><span className="font-medium">Last Maintenance:</span>{device?.services[0]?.last_service_date ?
-                    format(new Date(device.services[0].last_service_date), "dd-MM-yyyy") :
+                  <p><span className="font-medium">Last Maintenance:</span>{device?.services?.last_service_date ?
+                    format(new Date(device.services?.last_service_date), "dd-MM-yyyy") :
                     'N/A'}</p>
-                  <p><span className="font-medium">Next Maintenance:</span>{device?.services?.[0]?.next_service_date ? 
-    format(new Date(device.services[0].next_service_date), "dd-MM-yyyy") : 
+                  <p><span className="font-medium">Next Maintenance:</span>{device?.services?.next_service_date ? 
+    format(new Date(device.services.next_service_date), "dd-MM-yyyy") : 
     'N/A'}</p>
                 </div>
               </div>

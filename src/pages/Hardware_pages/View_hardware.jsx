@@ -107,7 +107,7 @@ const View_hardware = ({ data, limit }) => {
        {!limit&&(
       <div className="flex items-center text-sm text-gray-600 pl-1 mb-2">
         <div
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/dashboard/hardware')}
           className="hover:text-blue-600 hover:underline cursor-pointer"
         >
           Hardware Dashboard

@@ -136,7 +136,7 @@ function Services() {
                   </div>
 
                   {/* Box 3: Warning */}
-                  <div className="bg-red-50 p-3 sm:p-4 rounded-lg border border-red-200"   onClick={()=>{navigate('/dashboard/notifications')}}>
+                  {/* <div className="bg-red-50 p-3 sm:p-4 rounded-lg border border-red-200"   onClick={()=>{navigate('/dashboard/notifications')}}>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs sm:text-sm text-gray-500">Critical Warnings</p>
@@ -148,7 +148,7 @@ function Services() {
                         </svg>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
