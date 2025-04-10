@@ -18,6 +18,7 @@ const View_resourcedetails = () => {
 
   const formik = useFormik({
     initialValues: {
+      id:resource?.id||"",
       resource_name: resource?.resource_name || "",
       resource_type: resource?.resource_type || "",
       storage_capacity: resource?.storage_capacity || "",
