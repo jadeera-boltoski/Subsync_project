@@ -177,10 +177,10 @@ function Add_customers() {
                   </div>
   
                   <div className="mb-4">
-                    <label htmlFor="resource_name" className="block mb-1">Resource Name</label>
-                    <select name="resource_name" id="resource_name"
+                    <label htmlFor="resource_id" className="block mb-1">Resource Name</label>
+                    <select name="resource_id" id="resource_id"
   
-                      value={formik.values.resource_name}
+                      value={formik.values.resource_id}
                       onChange={(e) => {
                         formik.handleChange(e);
                         if (e.target.value === "add_new") {
@@ -199,9 +199,9 @@ function Add_customers() {
   
                       <option value="add_new" className="bg-blue-400">Add New</option>
                     </select>
-                    {formik.touched.resource_name && formik.errors.resource_name && (
+                    {formik.touched.resource_id && formik.errors.resource_id && (
                       <div className="text-red-500 text-xs w-full p-2">
-                        {formik.errors.resource_name}
+                        {formik.errors.resource_id}
                       </div>
                     )}
                   </div>
