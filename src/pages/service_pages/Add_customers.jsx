@@ -163,7 +163,7 @@ function Add_customers() {
                       className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                     >
                       <option value="">--Choose resource type--</option>
-                      <option value="Web and Application Hosting">Web & Application Hosting</option>
+                      <option value="Web and app hosting">Web & Application Hosting</option>
                       <option value="Database and Storage">Database & Storage</option>
                       <option value="Security and Compliance">Security & Compliance</option>
                       <option value="CI/CD and DevOps">CI/CD & DevOps</option>
@@ -351,7 +351,8 @@ function Add_customers() {
                   type="submit"
                   className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 w-full md:w-auto"
                 >
-                  Add Customer
+                  {formik.isSubmitting ? 'Adding...' : 'Add Customer'}
+                  
                 </button>
               </div>
             </form>

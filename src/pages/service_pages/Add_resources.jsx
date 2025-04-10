@@ -3,11 +3,13 @@ import { validationresource } from "../../validation/yup";
 import { useEffect, useState } from "react";
 import { addresources, getservername } from "../../services/allapi";
 import { useNavigate } from "react-router-dom";
+import { useUnsavedChangesWarning } from "../../hooks/useUnsavedChangesWarning";
 
 
 
 function Add_resources() {
   const navigate=useNavigate()
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const formik = useFormik({
     initialValues: {
       resource_name: "",
@@ -27,11 +29,20 @@ function Add_resources() {
     onSubmit: async(values) => {
       console.log("saving resources",values);
 
+      
+
         const response=await addresources(values)
         console.log("resources",response);
         if(response.status==201){
-          alert(response.message)
-          navigate("/dashboard/services/view_resources")
+          setFormSubmitted(true);
+          formik.resetForm();
+          alert(response.message);
+  
+          setTimeout(() => {
+            navigate("/dashboard/services/view_resources")
+          }, 100);
+        
+         
         }
         else{
           alert(response.message.storage_capacity||response.message)
@@ -39,6 +50,16 @@ function Add_resources() {
     }
   });
   console.log(formik.errors);
+   useEffect(() => {
+      if (formSubmitted) {
+        navigate('/dashboard/hardware/view_hardware');
+      }
+    }, [formSubmitted]);
+    const isFormDirty = !formSubmitted && Object.keys(formik.initialValues).some(
+      key => formik.values[key] !== formik.initialValues[key]
+    );
+  
+    useUnsavedChangesWarning(isFormDirty);
   
   const [serverLocations, setServerLocations] = useState([]);
   useEffect(() => {
@@ -320,9 +341,9 @@ function Add_resources() {
                     >
                       <option value=""selected>Choose a type</option>
                       
-                      <option value="inhouse">On-Premise Server</option>
+                      <option value="on-premise">On-Premise Server</option>
                       <option value="external">External Server</option>
-                      <option value="cloud"> Cloud Hosting Providers </option>
+                      {/* <option value="cloud"> Cloud Hosting Providers </option> */}
                       
                       
                     </select>

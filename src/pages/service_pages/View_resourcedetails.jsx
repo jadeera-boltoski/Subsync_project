@@ -211,13 +211,17 @@ const View_resourcedetails = () => {
 
               {/* Customer Information */}
               <div className="bg-gray-50 p-4 rounded">
-                <h4 className="font-medium text-gray-700 mb-3">Customer Information</h4>
-                <div className="space-y-2">
-                  <p><span className="font-medium">Customer Name:</span> {resource?.customer?.customer_name}</p>
-                  <p><span className="font-medium">Email:</span> <a href={`mailto:${resource?.customer?.email}`} className="text-blue-500 hover:underline">{resource?.customer?.email}</a></p>
-                  <p><span className="font-medium">Phone:</span> {resource?.customer?.contact_phone}</p>
-                  {/* <p><span className="font-medium">Type:</span> {resource?.customer?.customer_type}</p>  */}
+                {resource?.customer?.customer_name&&(
+                <div>
+                  <h4 className="font-medium text-gray-700 mb-3">Customer Information</h4>
+                  <div className="space-y-2">
+                    <p><span className="font-medium">Customer Name:</span> {resource?.customer?.customer_name}</p>
+                    <p><span className="font-medium">Email:</span> <a href={`mailto:${resource?.customer?.email}`} className="text-blue-500 hover:underline">{resource?.customer?.email}</a></p>
+                    <p><span className="font-medium">Phone:</span> {resource?.customer?.contact_phone}</p>
+                    {/* <p><span className="font-medium">Type:</span> {resource?.customer?.customer_type}</p>  */}
+                  </div>
                 </div>
+                )}
                 <h4 className="font-medium text-gray-700 mt-5 mb-3">Server Information</h4>
                 <div className="space-y-2">
                   <p><span className="font-medium">Server type:</span> {resource?.server?.server_type}</p>

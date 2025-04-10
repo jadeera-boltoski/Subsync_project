@@ -561,7 +561,10 @@ export const validationresource = Yup.object({
   resource_cost: Yup.number()
     .typeError("Resource cost must be a valid number")
     .positive("Resource cost must be greater than zero")
+    .max(10000000, "Resource cost must not exceed 10,000,00")
     .required("Resource cost is required"),
+
+
 
   // next_payment_date: Yup.date()
   //     .required("Next payment date is required")
