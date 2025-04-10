@@ -271,7 +271,7 @@ export const getcustomerpiechart=()=>{
 
 // edit details of customers
 export const editcustomer=(body)=>{
-    return commonRequest("PATCH",`${BASE_URL}/customers/${encodeURIComponent(body)}/`,"")
+    return commonRequest("PATCH",`${BASE_URL}/customers/${encodeURIComponent(body.id)}/`,body)
 }
 
 // get details of customers
