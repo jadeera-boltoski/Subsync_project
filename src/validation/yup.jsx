@@ -583,7 +583,7 @@ export const validationresource = Yup.object({
 
   hosting_type: Yup.string()
     .required("Hosting type is required")
-    .oneOf(["inhouse", "external", "cloud"], "Invalid hosting type"),
+    .oneOf(["on-premise", "external"], "Invalid hosting type"),
 
   hosting_location: Yup.string()
     .required("Hosting location is required")
